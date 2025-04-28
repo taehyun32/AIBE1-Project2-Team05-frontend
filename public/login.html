@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>재능 기부 플랫폼 - 로그인</title>
+    <link rel="stylesheet" href="css/main.compiled.css" />
+    <link rel="stylesheet" href="css/match.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <script src="js/include.js"></script>
+  </head>
+  <body class="bg-gray-50">
+    <div id="header-placeholder"></div>
+
+    <main class="py-16">
+      <div class="container mx-auto px-4">
+        <div class="max-w-md mx-auto bg-white rounded-lg shadow-sm p-8">
+          <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold mb-2">로그인</h1>
+            <p class="text-gray-600">재능나눔에 오신 것을 환영합니다</p>
+          </div>
+
+          <div class="space-y-4">
+            <!-- 카카오 로그인 -->
+            <button class="w-full flex items-center justify-center gap-3 bg-kakao text-gray-800 py-3 px-4 rounded-button hover:bg-yellow-300 transition">
+              <div class="w-6 h-6 flex items-center justify-center">
+                <i class="ri-kakao-talk-fill text-xl"></i>
+              </div>
+              <span class="font-medium">카카오로 로그인</span>
+            </button>
+
+            <!-- 네이버 로그인 -->
+            <button class="w-full flex items-center justify-center gap-3 bg-naver text-white py-3 px-4 rounded-button hover:bg-green-600 transition">
+              <div class="w-6 h-6 flex items-center justify-center">
+                <span class="font-bold text-lg">N</span>
+              </div>
+              <span class="font-medium">네이버로 로그인</span>
+            </button>
+
+            <!-- 구글 로그인 -->
+            <button class="w-full flex items-center justify-center gap-3 bg-google text-gray-700 py-3 px-4 rounded-button border border-gray-300 hover:bg-gray-100 transition">
+              <div class="w-6 h-6 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+              </div>
+              <span class="font-medium">구글로 로그인</span>
+            </button>
+          </div>
+
+          <div class="mt-8 text-center">
+            <p class="text-gray-600 text-sm">
+              아직 계정이 없으신가요? <a href="/register" class="text-primary hover:underline">회원가입</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div id="footer-placeholder" class="mt-auto"></div>
+
+    <script src="js/match.js"></script>
+  </body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>재능 기부 플랫폼 - 사용자 유형 선택</title>
+    <link rel="stylesheet" href="css/main.compiled.css" />
+    <link rel="stylesheet" href="css/match.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <script src="js/include.js"></script>
+    <style>
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes scaleIn {
+        from { transform: scale(0.95); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+      }
+
+      .animate-fadeIn {
+        animation: fadeIn 0.5s ease-out forwards;
+      }
+
+      .animate-scaleIn {
+        animation: scaleIn 0.3s ease-out forwards;
+      }
+
+      .user-type-option.selected {
+        border-color: #4F46E5;
+        background-color: #EEF2FF;
+      }
+
+      .hover-scale:hover {
+        transform: scale(1.05);
+        transition: transform 0.2s ease;
+      }
+      
+      .selection-container {
+        animation: fadeIn 0.5s ease-out forwards;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <div id="header-placeholder"></div>
+
+    <main class="py-16">
+      <div class="container mx-auto px-4">
+        <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-sm p-8 selection-container">
+          <div class="text-center mb-8">
+            <div class="w-20 h-20 bg-indigo-100 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="ri-user-add-line text-4xl"></i>
+            </div>
+            <h1 class="text-3xl font-bold mb-3">사용자 유형 선택</h1>
+            <p class="text-gray-600 text-lg">재능나눔에서 어떤 역할로 활동하고 싶으신가요?</p>
+            <div class="w-24 h-1 bg-primary mx-auto mt-4"></div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="border-2 border-gray-200 rounded-lg p-6 hover:shadow-md transition cursor-pointer user-type-option" data-type="mentee">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-6 h-6 flex items-center justify-center">
+                  <input type="radio" name="userType" value="mentee" class="custom-radio" checked>
+                </div>
+                <h4 class="font-medium text-lg">멘티로 가입</h4>
+              </div>
+              <div class="pl-9">
+                <p class="text-sm text-gray-600 mb-2">다양한 분야의 멘토에게 도움을 받고 배우고 싶은 분들을 위한 옵션입니다.</p>
+                <ul class="text-sm text-gray-600 list-disc list-inside">
+                  <li>전문가의 지식과 경험을 배울 수 있습니다</li>
+                  <li>다양한 분야의 멘토를 찾을 수 있습니다</li>
+                  <li>맞춤형 학습과 피드백을 받을 수 있습니다</li>
+                </ul>
+              </div>
+            </div>
+            <div class="border-2 border-gray-200 rounded-lg p-6 hover:shadow-md transition cursor-pointer user-type-option" data-type="mentor">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-6 h-6 flex items-center justify-center">
+                  <input type="radio" name="userType" value="mentor" class="custom-radio">
+                </div>
+                <h4 class="font-medium text-lg">멘토로 가입</h4>
+              </div>
+              <div class="pl-9">
+                <p class="text-sm text-gray-600 mb-2">자신의 지식과 경험을 나누고 다른 사람들을 도와주고 싶은 분들을 위한 옵션입니다.</p>
+                <ul class="text-sm text-gray-600 list-disc list-inside">
+                  <li>자신의 전문 지식과 경험을 공유할 수 있습니다</li>
+                  <li>다른 사람의 성장을 도울 수 있습니다</li>
+                  <li>멘토링을 통해 자신의 역량도 향상시킬 수 있습니다</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center">
+            <p class="text-gray-600 mb-6">
+              선택하신 유형으로 회원가입이 진행됩니다. 회원가입 후에는 유형을 변경할 수 없습니다.
+            </p>
+            <button id="confirmUserType"
+                    class="bg-primary text-white text-lg px-10 py-4 w-full max-w-xs rounded-button font-semibold hover:bg-indigo-600 transition-all transform hover:scale-105">
+              완료
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div id="footer-placeholder" class="mt-auto"></div>
+
+    <script src="js/user-type-selection.js"></script>
+  </body>
+</html>

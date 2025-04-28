@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>재능 기부 플랫폼 - 커뮤니티</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primary: "#4F46E5", secondary: "#10B981" },
+          borderRadius: {
+            none: "0px",
+            sm: "4px",
+            DEFAULT: "8px",
+            md: "12px",
+            lg: "16px",
+            xl: "20px",
+            "2xl": "24px",
+            "3xl": "32px",
+            full: "9999px",
+            button: "8px",
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Google Fonts (Pacifico) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+          href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+          rel="stylesheet"
+  />
+  <!-- Google Fonts (Noto Sans KR) - 이전 CSS에서 사용했으므로 추가 -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet"/>
+
+  <!-- Remix Icon CDN -->
+  <link
+          href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+          rel="stylesheet"
+  />
+
+  <!-- 분리된 커스텀 CSS 파일 링크 -->
+  <link rel="stylesheet" href="./css/community.css">
+
+
+</head>
+<body>
+<div data-include-path="./includes/header.html"></div>
+
+<main class="container mx-auto px-4 py-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold">커뮤니티</h1>
+    <div class="flex items-center space-x-3">
+      <div class="relative">
+        <input
+                type="text"
+                placeholder="검색어를 입력하세요"
+                class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+        />
+        <div
+                class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 flex items-center justify-center text-gray-400"
+        >
+          <i class="ri-search-line"></i>
+        </div>
+      </div>
+      <a
+              href="/newPost"
+              data-readdy="true"
+              class="bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap hover:bg-indigo-600 flex items-center"
+      >
+        <div class="w-5 h-5 flex items-center justify-center mr-1">
+          <i class="ri-edit-line"></i>
+        </div>
+        글쓰기
+      </a>
+    </div>
+  </div>
+  <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+    <div class="flex space-x-1 overflow-x-auto pb-2">
+      <button
+              class="px-4 py-2 bg-primary text-white rounded-full whitespace-nowrap"
+      >
+        전체
+      </button>
+      <button
+              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full whitespace-nowrap hover:bg-gray-200"
+      >
+        질문/답변
+      </button>
+      <button
+              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full whitespace-nowrap hover:bg-gray-200"
+      >
+        정보공유
+      </button>
+      <button
+              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full whitespace-nowrap hover:bg-gray-200"
+      >
+        후기
+      </button>
+      <button
+              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full whitespace-nowrap hover:bg-gray-200"
+      >
+        자유게시판
+      </button>
+      <button
+              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full whitespace-nowrap hover:bg-gray-200"
+      >
+        재능 나눔
+      </button>
+    </div>
+  </div>
+  <div class="flex flex-col md:flex-row gap-6">
+    <div class="w-full md:w-3/4">
+      <!-- 인기 게시글 섹션 -->
+      <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-lg font-semibold">인기 게시글</h2>
+<!--          <div class="flex items-center text-sm text-gray-500">-->
+<!--            <span>더보기</span>-->
+<!--            <div class="w-4 h-4 flex items-center justify-center ml-1">-->
+<!--              <i class="ri-arrow-right-s-line"></i>-->
+<!--            </div>-->
+<!--          </div>-->
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div
+                  class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition cursor-pointer"
+          >
+            <div class="flex items-start gap-3 mb-3">
+              <div
+                      class="w-10 h-10 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden"
+              >
+                <img
+                        src="https://readdy.ai/api/search-image?query=professional%2520asian%2520female%2520portrait%252C%2520neutral%2520background%252C%2520friendly%2520smile%252C%2520high%2520quality&width=100&height=100&seq=2&orientation=squarish"
+                        alt="프로필"
+                        class="w-full h-full object-cover object-top"
+                />
+              </div>
+              <div>
+                <h3 class="font-medium">이지은</h3>
+                <div class="flex items-center text-xs text-gray-500">
+                  <span>2025-04-22</span>
+                  <span class="mx-1">•</span>
+                  <span>정보공유</span>
+                </div>
+              </div>
+            </div>
+            <h4 class="font-medium mb-2">
+              UI/UX 디자인 초보자를 위한 필수 도구 모음
+            </h4>
+            <p class="text-sm text-gray-600 mb-3 line-clamp-2">
+              UI/UX 디자인을 시작하는 분들을 위해 실무에서 꼭 필요한
+              도구들을 정리했습니다. 피그마, 스케치부터 프로토타이핑
+              도구까지 상세 설명과 함께 공유합니다.
+            </p>
+            <div
+                    class="flex items-center justify-between text-sm text-gray-500"
+            >
+              <div class="flex items-center space-x-3">
+                <div class="flex items-center">
+                  <div
+                          class="w-4 h-4 flex items-center justify-center mr-1"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </div>
+                  <span>256</span>
+                </div>
+                <div class="flex items-center">
+                  <div
+                          class="w-4 h-4 flex items-center justify-center mr-1"
+                  >
+                    <i class="ri-heart-line"></i>
+                  </div>
+                  <span>42</span>
+                </div>
+                <div class="flex items-center">
+                  <div
+                          class="w-4 h-4 flex items-center justify-center mr-1"
+                  >
+                    <i class="ri-chat-1-line"></i>
+                  </div>
+                  <span>18</span>
+                </div>
+              </div>
+              <span class="text-primary">HOT</span>
+            </div>
+          </div>
+          <div
+                  class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition cursor-pointer"
+          >
+            <div class="flex items-start gap-3 mb-3">
+              <div
+                      class="w-10 h-10 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden"
+              >
+                <img
+                        src="https://readdy.ai/api/search-image?query=professional%2520asian%2520male%2520portrait%252C%2520neutral%2520background%252C%2520professional%2520looking%252C%2520high%2520quality&width=100&height=100&seq=1&orientation=squarish"
+                        alt="프로필"
+                        class="w-full h-full object-cover object-top"
+                />
+              </div>
+              <div>
+                <h3 class="font-medium">김민준</h3>
+                <div class="flex items-center text-xs text-gray-500">
+                  <span>2025-04-21</span>
+                  <span class="mx-1">•</span>
+                  <span>질문/답변</span>
+                </div>
+              </div>
+            </div>
+            <h4 class="font-medium mb-2">
+              React와 Next.js 중 어떤 것을 먼저 배워야 할까요?
+            </h4>
+            <p class="text-sm text-gray-600 mb-3 line-clamp-2">
+              웹 개발을 시작하는 초보자입니다. React와 Next.js 중 어떤 것을
+              먼저 배우는 것이 좋을까요? 각각의 장단점과 학습 경로에 대한
+              조언 부탁드립니다.
+            </p>
+            <div
+                    class="flex items-center justify-between text-sm text-gray-500"
+            >
+              <div class="flex items-center space-x-3">
+                <div class="flex items-center">
+                  <div
+                          class="w-4 h-4 flex items-center justify-center mr-1"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </div>
+                  <span>312</span>
+                </div>
+                <div class="flex items-center">
+                  <div
+                          class="w-4 h-4 flex items-center justify-center mr-1"
+                  >
+                    <i class="ri-heart-line"></i>
+                  </div>
+                  <span>28</span>
+                </div>
+                <div class="flex items-center">
+                  <div
+                          class="w-4 h-4 flex items-center justify-center mr-1"
+                  >
+                    <i class="ri-chat-1-line"></i>
+                  </div>
+                  <span>34</span>
+                </div>
+              </div>
+              <span class="text-primary">HOT</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 게시글 목록 -->
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-lg font-semibold">전체 게시글</h2>
+          <div class="relative">
+            <button
+                    class="flex items-center text-sm text-gray-700 border border-gray-300 rounded px-3 py-1"
+                    id="sortButton"
+            >
+              <span>최신순</span>
+              <div class="w-4 h-4 flex items-center justify-center ml-1">
+                <i class="ri-arrow-down-s-line"></i>
+              </div>
+            </button>
+            <div
+                    class="absolute right-0 mt-1 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-10 hidden"
+                    id="sortDropdown"
+            >
+              <button
+                      class="w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
+              >
+                최신순
+              </button>
+              <button
+                      class="w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
+              >
+                인기순
+              </button>
+              <button
+                      class="w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
+              >
+                조회순
+              </button>
+              <button
+                      class="w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
+              >
+                댓글순
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="space-y-4">
+          <div
+                  class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition cursor-pointer"
+          >
+            <div class="flex items-start gap-3 mb-3">
+              <div
+                      class="w-10 h-10 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden"
+              >
+                <img
+                        src="https://readdy.ai/api/search-image?query=professional%2520asian%2520male%2520portrait%252C%2520neutral%2520background%252C%2520glasses%252C%2520friendly%2520look%252C%2520high%2520quality&width=100&height=100&seq=3&orientation=squarish"
+                        alt="프로필"
+                        class="w-full h-full object-cover object-top"
+                />
+              </div>
+              <div>
+                <h3 class="font-medium">박준호</h3>
+                <div class="flex items-center text-xs text-gray-500">
+                  <span>2025-04-24</span>
+                  <span class="mx-1">•</span>
+                  <span>정보공유</span>
+                </div>
+              </div>
+            </div>
+            <h4 class="font-medium mb-2">
+              수학 학습에 도움이 되는 무료 온라인 자료 모음
+            </h4>
+            <p class="text-sm text-gray-600 mb-3">
+              중고등학생들의 수학 학습에 도움이 될 만한 무료 온라인 자료들을
+              모아봤습니다. 개념 설명부터 문제 풀이까지 다양한 자료가 있으니
+              참고하세요.
+            </p>
+            <div
+                    class="flex items-center justify-between text-sm text-gray-500"
+            >
+              <div class="flex items-center space-x-3">
+                <div class="flex items-center">
+                  <div
+                          class="w-4 h-4 flex items-center justify-center mr-1"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </div>
+                  <span>87</span>
+                </div>
+                <div class="flex items-center">
+                  <div
+                          class="w-4 h-4 flex items-center justify-center mr-1"
+                  >
+                    <i class="ri-heart-line"></i>
+                  </div>
+                  <span>12</span>
+                </div>
+                <div class="flex items-center">
+                  <div
+                          class="w-4 h-4 flex items-center justify-center mr-1"
+                  >
+                    <i class="ri-chat-1-line"></i>
+                  </div>
+                  <span>5</span>
+                </div>
+              </div>
+              <span
+                      class="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded-full"
+              >NEW</span
+              >
+            </div>
+          </div>
+          <div
+                  class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition cursor-pointer"
+          >
+            <div class="flex items-start gap-3 mb-3">
+              <div
+                      class="w-10 h-10 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden"
+              >
+                <img
+                        src="https://readdy.ai/api/search-image?query=professional%2520asian%2520female%2520portrait%252C%2520neutral%2520background%252C%2520casual%2520style%252C%2520high%2520quality&width=100&height=100&seq=4&orientation=squarish"
+                        alt="프로필"
+                        class="w-full h-full object-cover object-top"
+                />
+              </div>
+              <div>
+                <h3 class="font-medium">최서연</h3>
+                <div class="flex items-center text-xs text-gray-500">
+                  <span>2025-04-23</span>
+                  <span class="mx-1">•</span>
+                  <span>후기</span>
+                </div>
+              </div>
+            </div>
+            <h4 class="font-medium mb-2">
+              피아노 재능 기부 후기 - 아이들과의 특별한 시간
+            </h4>
+            <p class="text-sm text-gray-600 mb-3">
+              지역 아동센터에서 3개월간 피아노 레슨을 진행했습니다. 아이들의
+              성장 과정과 음악을 통해 나누었던 특별한 경험을 공유합니다.
+            </p>
+            <div
+                    class="flex items-center justify-between text-sm text-gray-500"
+            >
+              <div class="flex items-center space-x-3">
+                <div class="flex items-center">
+                  <div
+                          class="w-4 h-4 flex items-center justify-center mr-1"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </div>
+                  <span>156</span>
+                </div>
+                <div class="flex items-center">
+                  <div
+                          class="w-4 h-4 flex items-center justify-center mr-1"
+                  >
+                    <i class="ri-heart-line"></i>
+                  </div>
+                  <span>32</span>
+                </div>
+                <div class="flex items-center">
+                  <div
+                          class="w-4 h-4 flex items-center justify-center mr-1"
+                  >
+                    <i class="ri-chat-1-line"></i>
+                  </div>
+                  <span>14</span>
+                </div>
+              </div>
+              <span
+                      class="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded-full"
+              >NEW</span
+              >
+            </div>
+          </div>
+          <div
+                  class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition cursor-pointer"
+          >
+            <div class="flex items-start gap-3 mb-3">
+              <div
+                      class="w-10 h-10 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden"
+              >
+                <img
+                        src="https://readdy.ai/api/search-image?query=professional%2520asian%2520male%2520portrait%252C%2520neutral%2520background%252C%2520athletic%2520build%252C%2520high%2520quality&width=100&height=100&seq=5&orientation=squarish"
+                        alt="프로필"
+                        class="w-full h-full object-cover object-top"
+                />
+              </div>
+              <div>
+                <h3 class="font-medium">정우진</h3>
+                <div class="flex items-center text-xs text-gray-500">
+                  <span>2025-04-22</span>
+                  <span class="mx-1">•</span>
+                  <span>질문/답변</span>
+                </div>
+              </div>
+            </div>
+            <h4 class="font-medium mb-2">
+              요가 초보자를 위한 추천 동작이 있을까요?
+            </h4>
+            <p class="text-sm text-gray-600 mb-3">
+              요가를 처음 시작하는 40대 남성입니다. 유연성이 부족한 초보자도
+              쉽게 따라할 수 있는 기본 동작이나 루틴을 추천해주세요.
+            </p>
+            <div
+                    class="flex items-center justify-between text-sm text-gray-500"
+            >
+              <div class="flex items-center space-x-3">
+                <div class="flex items-center">
+                  <div
+                          class="w-4 h-4 flex items-center justify-center mr-1"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </div>
+                  <span>124</span>
+                </div>
+                <div class="flex items-center">
+                  <div
+                          class="w-4 h-4 flex items-center justify-center mr-1"
+                  >
+                    <i class="ri-heart-line"></i>
+                  </div>
+                  <span>8</span>
+                </div>
+                <div class="flex items-center">
+                  <div
+                          class="w-4 h-4 flex items-center justify-center mr-1"
+                  >
+                    <i class="ri-chat-1-line"></i>
+                  </div>
+                  <span>22</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+                  class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition cursor-pointer"
+          >
+            <div class="flex items-start gap-3 mb-3">
+              <div
+                      class="w-10 h-10 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden"
+              >
+                <img
+                        src="https://readdy.ai/api/search-image?query=professional%2520asian%2520female%2520portrait%252C%2520neutral%2520background%252C%2520business%2520attire%252C%2520high%2520quality&width=100&height=100&seq=6&orientation=squarish"
+                        alt="프로필"
+                        class="w-full h-full object-cover object-top"
+                />
+              </div>
+              <div>
+                <h3 class="font-medium">김유진</h3>
+                <div class="flex items-center text-xs text-gray-500">
+                  <span>2025-04-21</span>
+                  <span class="mx-1">•</span>
+                  <span>자유게시판</span>
+                </div>
+              </div>
+            </div>
+            <h4 class="font-medium mb-2">
+              재능 기부를 통해 얻은 소중한 깨달음
+            </h4>
+            <p class="text-sm text-gray-600 mb-3">
+              1년간 영어 멘토링을 진행하면서 느낀 점과 배운 점을 공유합니다.
+              재능 기부는 나눔이 아닌 함께 성장하는 과정이었습니다.
+            </p>
+            <div
+                    class="flex items-center justify-between text-sm text-gray-500"
+            >
+              <div class="flex items-center space-x-3">
+                <div class="flex items-center">
+                  <div
+                          class="w-4 h-4 flex items-center justify-center mr-1"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </div>
+                  <span>178</span>
+                </div>
+                <div class="flex items-center">
+                  <div
+                          class="w-4 h-4 flex items-center justify-center mr-1"
+                  >
+                    <i class="ri-heart-line"></i>
+                  </div>
+                  <span>45</span>
+                </div>
+                <div class="flex items-center">
+                  <div
+                          class="w-4 h-4 flex items-center justify-center mr-1"
+                  >
+                    <i class="ri-chat-1-line"></i>
+                  </div>
+                  <span>12</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+                  class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition cursor-pointer"
+          >
+            <div class="flex items-start gap-3 mb-3">
+              <div
+                      class="w-10 h-10 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden"
+              >
+                <img
+                        src="https://readdy.ai/api/search-image?query=professional%2520asian%2520male%2520portrait%252C%2520neutral%2520background%252C%2520casual%2520business%2520attire%252C%2520high%2520quality&width=100&height=100&seq=7&orientation=squarish"
+                        alt="프로필"
+                        class="w-full h-full object-cover object-top"
+                />
+              </div>
+              <div>
+                <h3 class="font-medium">이태준</h3>
+                <div class="flex items-center text-xs text-gray-500">
+                  <span>2025-04-20</span>
+                  <span class="mx-1">•</span>
+                  <span>정보공유</span>
+                </div>
+              </div>
+            </div>
+            <h4 class="font-medium mb-2">
+              비전공자를 위한 프로그래밍 학습 로드맵
+            </h4>
+            <p class="text-sm text-gray-600 mb-3">
+              비전공자가 프로그래밍을 시작할 때 어떤 순서로 공부하면 좋을지
+              로드맵을 정리했습니다. 실제 현업에서 필요한 기술 위주로
+              구성했습니다.
+            </p>
+            <div
+                    class="flex items-center justify-between text-sm text-gray-500"
+            >
+              <div class="flex items-center space-x-3">
+                <div class="flex items-center">
+                  <div
+                          class="w-4 h-4 flex items-center justify-center mr-1"
+                  >
+                    <i class="ri-eye-line"></i>
+                  </div>
+                  <span>245</span>
+                </div>
+                <div class="flex items-center">
+                  <div
+                          class="w-4 h-4 flex items-center justify-center mr-1"
+                  >
+                    <i class="ri-heart-line"></i>
+                  </div>
+                  <span>67</span>
+                </div>
+                <div class="flex items-center">
+                  <div
+                          class="w-4 h-4 flex items-center justify-center mr-1"
+                  >
+                    <i class="ri-chat-1-line"></i>
+                  </div>
+                  <span>28</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 페이징 HTML 구조는 그대로 사용 -->
+        <div class="flex justify-center mt-6">
+          <nav class="inline-flex rounded-md shadow-sm">
+            <a
+                    href="#"
+                    class="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 rounded-l-md"
+            >이전</a
+            >
+            <a
+                    href="#"
+                    class="px-3 py-2 border-t border-b border-gray-300 bg-primary text-white"
+            >1</a
+            >
+            <a
+                    href="#"
+                    class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+            >2</a
+            >
+            <a
+                    href="#"
+                    class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+            >3</a
+            >
+            <a
+                    href="#"
+                    class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+            >4</a
+            >
+            <a
+                    href="#"
+                    class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+            >5</a
+            >
+            <a
+                    href="#"
+                    class="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 rounded-r-md"
+            >다음</a
+            >
+          </nav>
+        </div>
+      </div>
+    </div>
+    <div class="w-full md:w-1/4">
+      <!-- 사이드바 -->
+      <div class="space-y-6">
+        <!-- 인기 태그 -->
+        <div class="bg-white rounded-lg shadow-sm p-4">
+          <h3 class="font-medium mb-3">인기 태그</h3>
+          <div class="flex flex-wrap gap-2">
+            <a
+                    href="#"
+                    class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200"
+            >#프로그래밍</a
+            >
+            <a
+                    href="#"
+                    class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200"
+            >#디자인</a
+            >
+            <a
+                    href="#"
+                    class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200"
+            >#교육</a
+            >
+            <a
+                    href="#"
+                    class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200"
+            >#음악</a
+            >
+            <a
+                    href="#"
+                    class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200"
+            >#언어</a
+            >
+            <a
+                    href="#"
+                    class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200"
+            >#요가</a
+            >
+            <a
+                    href="#"
+                    class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200"
+            >#취미</a
+            >
+            <a
+                    href="#"
+                    class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200"
+            >#재능기부</a
+            >
+          </div>
+        </div>
+        <!-- 주간 인기 게시글 -->
+        <div class="bg-white rounded-lg shadow-sm p-4">
+          <h3 class="font-medium mb-3">주간 인기 게시글</h3>
+          <ul class="space-y-3">
+            <li class="border-b border-gray-100 pb-3">
+              <a href="#" class="block hover:text-primary">
+                <div class="flex items-center text-xs text-gray-500 mb-1">
+                      <span class="bg-red-100 text-red-600 px-1.5 rounded mr-1"
+                      >1</span
+                      >
+                  <span>정보공유</span>
+                </div>
+                <p class="text-sm font-medium line-clamp-2">
+                  UI/UX 디자인 초보자를 위한 필수 도구 모음
+                </p>
+              </a>
+            </li>
+            <li class="border-b border-gray-100 pb-3">
+              <a href="#" class="block hover:text-primary">
+                <div class="flex items-center text-xs text-gray-500 mb-1">
+                      <span
+                              class="bg-orange-100 text-orange-600 px-1.5 rounded mr-1"
+                      >2</span
+                      >
+                  <span>질문/답변</span>
+                </div>
+                <p class="text-sm font-medium line-clamp-2">
+                  React와 Next.js 중 어떤 것을 먼저 배워야 할까요?
+                </p>
+              </a>
+            </li>
+            <li class="border-b border-gray-100 pb-3">
+              <a href="#" class="block hover:text-primary">
+                <div class="flex items-center text-xs text-gray-500 mb-1">
+                      <span
+                              class="bg-yellow-100 text-yellow-600 px-1.5 rounded mr-1"
+                      >3</span
+                      >
+                  <span>정보공유</span>
+                </div>
+                <p class="text-sm font-medium line-clamp-2">
+                  비전공자를 위한 프로그래밍 학습 로드맵
+                </p>
+              </a>
+            </li>
+            <li class="border-b border-gray-100 pb-3">
+              <a href="#" class="block hover:text-primary">
+                <div class="flex items-center text-xs text-gray-500 mb-1">
+                      <span
+                              class="bg-gray-100 text-gray-600 px-1.5 rounded mr-1"
+                      >4</span
+                      >
+                  <span>후기</span>
+                </div>
+                <p class="text-sm font-medium line-clamp-2">
+                  피아노 재능 기부 후기 - 아이들과의 특별한 시간
+                </p>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="block hover:text-primary">
+                <div class="flex items-center text-xs text-gray-500 mb-1">
+                      <span
+                              class="bg-gray-100 text-gray-600 px-1.5 rounded mr-1"
+                      >5</span
+                      >
+                  <span>자유게시판</span>
+                </div>
+                <p class="text-sm font-medium line-clamp-2">
+                  재능 기부를 통해 얻은 소중한 깨달음
+                </p>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <!-- 활발한 사용자 -->
+        <div class="bg-white rounded-lg shadow-sm p-4">
+          <h3 class="font-medium mb-3">활발한 사용자</h3>
+          <ul class="space-y-3">
+            <li class="flex items-center gap-2">
+              <div
+                      class="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden"
+              >
+                <img
+                        src="https://readdy.ai/api/search-image?query=professional%2520asian%2520male%2520portrait%252C%2520neutral%2520background%252C%2520professional%2520looking%252C%2520high%2520quality&width=100&height=100&seq=1&orientation=squarish"
+                        alt="프로필"
+                        class="w-full h-full object-cover object-top"
+                />
+              </div>
+              <div class="flex-1">
+                <p class="text-sm font-medium">김민준</p>
+                <p class="text-xs text-gray-500">게시글 32 | 댓글 128</p>
+              </div>
+            </li>
+            <li class="flex items-center gap-2">
+              <div
+                      class="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden"
+              >
+                <img
+                        src="https://readdy.ai/api/search-image?query=professional%2520asian%2520female%2520portrait%252C%2520neutral%2520background%252C%2520friendly%2520smile%252C%2520high%2520quality&width=100&height=100&seq=2&orientation=squarish"
+                        alt="프로필"
+                        class="w-full h-full object-cover object-top"
+                />
+              </div>
+              <div class="flex-1">
+                <p class="text-sm font-medium">이지은</p>
+                <p class="text-xs text-gray-500">게시글 28 | 댓글 95</p>
+              </div>
+            </li>
+            <li class="flex items-center gap-2">
+              <div
+                      class="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden"
+              >
+                <img
+                        src="https://readdy.ai/api/search-image?query=professional%2520asian%2520male%2520portrait%252C%2520neutral%2520background%252C%2520casual%2520business%2520attire%252C%2520high%2520quality&width=100&height=100&seq=7&orientation=squarish"
+                        alt="프로필"
+                        class="w-full h-full object-cover object-top"
+                />
+              </div>
+              <div class="flex-1">
+                <p class="text-sm font-medium">이태준</p>
+                <p class="text-xs text-gray-500">게시글 24 | 댓글 87</p>
+              </div>
+            </li>
+            <li class="flex items-center gap-2">
+              <div
+                      class="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden"
+              >
+                <img
+                        src="https://readdy.ai/api/search-image?query=professional%2520asian%2520female%2520portrait%252C%2520neutral%2520background%252C%2520casual%2520style%252C%2520high%2520quality&width=100&height=100&seq=4&orientation=squarish"
+                        alt="프로필"
+                        class="w-full h-full object-cover object-top"
+                />
+              </div>
+              <div class="flex-1">
+                <p class="text-sm font-medium">최서연</p>
+                <p class="text-xs text-gray-500">게시글 21 | 댓글 76</p>
+              </div>
+            </li>
+            <li class="flex items-center gap-2">
+              <div
+                      class="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden"
+              >
+                <img
+                        src="https://readdy.ai/api/search-image?query=professional%2520asian%2520male%2520portrait%252C%2520neutral%2520background%252C%2520glasses%252C%2520friendly%2520look%252C%2520high%2520quality&width=100&height=100&seq=3&orientation=squarish"
+                        alt="프로필"
+                        class="w-full h-full object-cover object-top"
+                />
+              </div>
+              <div class="flex-1">
+                <p class="text-sm font-medium">박준호</p>
+                <p class="text-xs text-gray-500">게시글 19 | 댓글 64</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<script src="js/community.js"></script>
+<div data-include-path="./includes/footer.html"></div>
+</body>
+</html>

@@ -1,0 +1,168 @@
+.tab-button {
+  padding: 1rem 1.5rem;
+  font-weight: 500;
+  color: #6b7280;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+}
+.tab-button:hover {
+  color: #4F46E5;
+}
+.tab-button.active {
+  color: #4F46E5;
+  border-bottom-color: #4F46E5;
+}
+.tab-content {
+  display: block;
+}
+.tab-content.hidden {
+  display: none;
+}
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 24px;
+}
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+input:checked + .toggle-slider {
+  background-color: #4F46E5;
+}
+input:checked + .toggle-slider:before {
+  transform: translateX(26px);
+}
+
+/* ====== 페이징 스타일 ====== */
+/* 페이징 컨테이너에 더 구체적인 선택자 사용 */
+.flex.justify-center.mt-6 > nav.inline-flex {
+  /* 전체 테두리 적용 */
+  border: 1px solid #e5e7eb; /* border-gray-200 색상 */
+  border-radius: 9999px !important; /* 완전한 라운드 모양으로 오버라이드 */
+  overflow: hidden;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm과 동일 */
+  display: flex;
+  flex-direction: row; /* 명시적으로 가로 방향 설정 */
+}
+
+/* 페이징 링크에 더 구체적인 선택자 사용 */
+.flex.justify-center.mt-6 > nav.inline-flex > a {
+  /* HTML에 적용된 개별 테두리 관련 Tailwind 클래스들을 오버라이드 */
+  border: none !important;
+  border-radius: 0 !important; /* 개별 버튼의 라운드 제거 (컨테이너가 전체 라운드 처리) */
+
+  /* 이미지에 따른 비활성 상태의 배경 및 글씨색 */
+  background-color: #f3f4f6; /* 이미지 상의 연한 회색 배경 */
+  color: #4b5563; /* 이미지 상의 진한 회색 글씨 */
+
+  /* flexbox 속성들은 HTML 클래스(inline-flex)에 의해 적용됨. 필요시 추가 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  text-decoration: none; /* 링크 밑줄 제거 */
+  cursor: pointer; /* 마우스 오버 시 포인터 모양 */
+  flex-shrink: 0; /* 내용이 줄어들지 않도록 */
+}
+
+/* 첫 번째 자식 (이전 버튼)을 제외한 모든 자식 요소에 좌측 테두리 추가 (구분선) */
+.flex.justify-center.mt-6 > nav.inline-flex > a:not(:first-child) {
+  border-left: 1px solid #e5e7eb !important; /* 세로 구분선, border-gray-200 색상 */
+}
+
+/* 활성 페이지 스타일 (HTML 클래스: bg-primary text-white) */
+.flex.justify-center.mt-6 > nav.inline-flex > a.bg-primary {
+  /* HTML 클래스의 배경/글씨색을 사용하지만, !important로 우선순위 보장 */
+  background-color: #4F46E5 !important; /* primary 색상 */
+  color: #fff !important; /* 흰색 글씨 */
+}
+
+/* 비활성 항목 호버 스타일 (HTML 클래스: hover:bg-gray-50) */
+.flex.justify-center.mt-6 > nav.inline-flex > a:hover:not(.bg-primary) {
+  /* 이미지 상의 호버 배경색으로 재정의 */
+  background-color: #e5e7eb !important; /* 이미지 상 호버 배경색, gray-200 색상 */
+  /* 글씨색은 비활성 기본색 유지 */
+}
+/* Fix for black ri-star-fill icons in Received Reviews */
+.tab-content#matching-content .space-y-4 i.ri-star-fill {
+  color: #FACC15; /* Tailwind yellow-400 color */
+}
+
+/* Optional: Fix for ri-star-line if it should be gray instead of yellow */
+/* Note: Your HTML currently applies text-yellow-400 to ri-star-line as well. */
+/* If empty stars should be gray, you can add this rule: */
+.tab-content#matching-content .space-y-4 i.ri-star-line {
+  color: #9CA3AF; /* Tailwind gray-400 color */
+}
+
+/* Ensure star icon in Average Satisfaction (Mentoring Stats) has the yellow-400 color */
+.tab-content#matching-content .bg-purple-50 i.ri-star-fill {
+  color: #FACC15; /* Tailwind yellow-400 color */
+  /* If the above line doesn't work, uncomment the line below */
+  /* color: #FACC15 !important; */
+}
+
+.tab-content#reviews-content .space-y-6 > div.border i.ri-star-half-fill {
+  color: #FACC15 !important; /* Tailwind yellow-400 color - Forced */
+}
+
+
+/* ====== Fix for star icon color in Written Reviews (Mentee Page) ====== */
+/* Target star icons within the rating container inside review items */
+.tab-content#reviews-content .space-y-6 div.border div.flex.items-center i.ri-star-fill {
+  color: #FACC15 !important; /* Tailwind yellow-400 color - Forced */
+}
+
+.tab-content#reviews-content .space-y-6 div.border div.flex.items-center i.ri-star-half-fill {
+  color: #FACC15 !important; /* Tailwind yellow-400 color - Forced */
+}
+
+/* Optional: Ensure line star icons are gray-400 (if present and should be gray) */
+/* Note: Your HTML currently applies text-yellow-400 to ri-star-line as well. */
+/* If you want empty stars to be gray: */
+.tab-content#reviews-content .space-y-6 div.border div.flex.items-center i.ri-star-line {
+  color: #9CA3AF !important; /* Tailwind gray-400 color - Forced */
+}
+/* ====== End Fix (Written Reviews - Mentee Page) ====== */
+
+/* ====== Fix for star icon color in more-details.html ====== */
+/* Target star icons within the content-list in more-details.html */
+#content-list div.border i.ri-star-fill {
+  color: #FACC15 !important; /* Tailwind yellow-400 color - Forced */
+}
+
+#content-list div.border i.ri-star-half-fill {
+  color: #FACC15 !important; /* Tailwind yellow-400 color - Forced */
+}
+
+#content-list div.border i.ri-star-line {
+  color: #9CA3AF !important; /* Tailwind gray-400 color - Forced */
+}
+/* ====== End Fix (more-details.html) ====== */
+
+/* ====== 페이징 스타일 끝 ====== */

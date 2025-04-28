@@ -1,0 +1,45 @@
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f9fafb;
+}
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+.editor-toolbar button {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    color: #4b5563;
+    transition: all 0.2s;
+}
+.editor-toolbar button:hover {
+    background-color: #f3f4f6;
+}
+.editor-toolbar button.active {
+    background-color: #e5e7eb;
+    color: #4F46E5;
+}
+.tag-input:focus {
+    outline: none;
+    box-shadow: none;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

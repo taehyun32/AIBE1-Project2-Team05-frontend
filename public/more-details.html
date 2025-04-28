@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>재능 기부 플랫폼 - 상세 정보</title>
+    <link rel="stylesheet" href="css/main.compiled.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/mypage.css" />
+  </head>
+  <body class="bg-gray-50">
+    <div data-include-path="./includes/header.html"></div>
+
+    <main class="container mx-auto px-4 py-8">
+      <!-- 페이지 헤더 -->
+      <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <div class="flex justify-between items-center">
+          <h1 id="page-title" class="text-2xl font-bold">상세 정보</h1>
+          <a href="javascript:history.back()" class="text-gray-500 hover:text-gray-700">
+            <i class="ri-arrow-left-line mr-1"></i> 돌아가기
+          </a>
+        </div>
+      </div>
+
+      <!-- 컨텐츠 영역 -->
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <!-- 필터 및 검색 영역 -->
+        <div id="filter-section" class="mb-6">
+          <div class="flex flex-wrap justify-between items-center gap-4">
+            <div class="flex space-x-2 overflow-x-auto">
+              <button id="filter-all" class="px-4 py-2 bg-primary text-white rounded-full whitespace-nowrap">
+                전체
+              </button>
+              <!-- 동적으로 필터 버튼이 추가될 수 있음 -->
+            </div>
+            <div class="relative">
+              <input
+                type="text"
+                id="search-input"
+                placeholder="검색어를 입력하세요"
+                class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              />
+              <div
+                class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 flex items-center justify-center text-gray-400"
+              >
+                <i class="ri-search-line"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 컨텐츠 목록 -->
+        <div id="content-list" class="space-y-4">
+          <!-- 여기에 동적으로 컨텐츠가 추가됨 -->
+        </div>
+
+        <!-- 페이지네이션 -->
+        <div class="flex justify-center mt-6">
+          <nav class="inline-flex rounded-md shadow-sm">
+            <a
+              href="#"
+              class="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 rounded-l-md"
+            >이전</a>
+            <a
+              href="#"
+              class="px-3 py-2 border-t border-b border-gray-300 bg-primary text-white"
+            >1</a>
+            <a
+              href="#"
+              class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+            >2</a>
+            <a
+              href="#"
+              class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+            >3</a>
+            <a
+              href="#"
+              class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+            >4</a>
+            <a
+              href="#"
+              class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+            >5</a>
+            <a
+              href="#"
+              class="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 rounded-r-md"
+            >다음</a>
+          </nav>
+        </div>
+      </div>
+    </main>
+
+    <div data-include-path="./includes/footer.html"></div>
+    <script src="./js/more-details.js"></script>
+  </body>
+</html>
