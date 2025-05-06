@@ -1,20 +1,19 @@
-app = "your-app-name" # 원하는 앱 이름으로 바꿔주세요
-primary_region = "nrt" # 가까운 리전을 선택하세요 (도쿄는 "nrt")
+app = "your-app-name"  # 실제 앱 이름으로 변경
 
 [build]
-builder = "heroku/buildpacks:20" # Node.js 앱을 위한 빌드팩
+dockerfile = "Dockerfile"
 
 [env]
-PORT = "3000" # Express에서 사용하는 포트. 코드에서도 이 포트와 일치시켜야 함
+PORT = "3000"
 
-[[services]]
+[vm]
+memory = 1024         # 1GB로 설정
+cpu_kind = "shared"
+cpus = 1
+
+[http_service]
 internal_port = 3000
-protocol = "tcp"
-
-[[services.ports]]
-handlers = ["http"]
-port = 80
-
-[[services.ports]]
-handlers = ["tls", "http"]
-port = 443
+force_https = true
+auto_stop_machines = false
+auto_start_machines = true
+min_machines_running = 1
