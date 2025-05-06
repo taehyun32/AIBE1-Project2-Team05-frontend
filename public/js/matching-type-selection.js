@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }, 2000); // 2초 후 결과 표시 (로딩 효과)
     } else {
       // 수동 매칭 페이지로 이동
-      window.location.href = 'match.html';
+      window.location.href = '/match';
     }
   });
 
