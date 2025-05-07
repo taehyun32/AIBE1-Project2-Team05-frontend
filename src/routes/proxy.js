@@ -8,7 +8,7 @@ router.use('/api', createProxyMiddleware({
     ...config.apiProxy,
     changeOrigin: true,
     cookieDomainRewrite: '', // 모든 도메인을 현재 호스트로 재작성
-    secure: true, // 개발 환경에서는 false로 설정
+    secure: true, // HTTPS 환경 지원
     pathRewrite: {
         '^/api': '' // '/api' 경로를 제거하고 백엔드로 요청
     },
@@ -22,17 +22,27 @@ router.use('/api', createProxyMiddleware({
         }
 
         // 원본 호스트 헤더 추가
-        proxyReq.setHeader('X-Forwarded-Host', req.headers.host);
+        const host = req.headers.host;
+        proxyReq.setHeader('X-Forwarded-Host', host);
         proxyReq.setHeader('X-Forwarded-Proto', req.protocol);
+
+        // 실제 클라이언트 IP 전달
+        const realIp = req.headers['x-real-ip'] ||
+            req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress;
+        proxyReq.setHeader('X-Real-IP', realIp);
+
+        console.log(`Forwarding request: ${req.method} ${req.url} from ${host}`);
     },
     onProxyRes: (proxyRes, req, res) => {
         // 쿠키 헤더 처리
         if (proxyRes.headers['set-cookie']) {
             const cookies = proxyRes.headers['set-cookie'].map(cookie => {
-                // 개발 환경에서는 Secure 속성 제거 (http에서 테스트할 경우)
+                // SameSite=None 및 Secure 속성을 유지 (HTTPS 환경에서 필요)
                 return cookie
-                    .replace(/Secure;/gi, '')
-                    .replace(/SameSite=None/gi, 'SameSite=Lax');
+                    .replace(/SameSite=None/gi, 'SameSite=None')
+                    // Domain 속성이 있는 경우 현재 호스트로 설정
+                    .replace(/Domain=[^;]+/gi, `Domain=${req.headers.host}`);
             });
             proxyRes.headers['set-cookie'] = cookies;
         }
@@ -51,16 +61,32 @@ if (config.serviceProxies) {
         router.use(proxyConfig.path, createProxyMiddleware({
             ...proxyConfig,
             changeOrigin: true,
-            cookieDomainRewrite: '', // 모든 도메인을 현재 호스트로 재작성
-            secure: false, // 개발 환경에서는 false로 설정
+            cookieDomainRewrite: '',
+            secure: true, // HTTPS 환경 지원
+            onProxyReq: (proxyReq, req, res) => {
+                // 요청 본문이 있는 경우 처리
+                if (req.body) {
+                    const bodyData = JSON.stringify(req.body);
+                    proxyReq.setHeader('Content-Type', 'application/json');
+                    proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+                    proxyReq.write(bodyData);
+                }
+
+                // 원본 호스트 헤더 추가
+                const host = req.headers.host;
+                proxyReq.setHeader('X-Forwarded-Host', host);
+                proxyReq.setHeader('X-Forwarded-Proto', req.protocol);
+
+                console.log(`[${name}] Forwarding request: ${req.method} ${req.url} from ${host}`);
+            },
             onProxyRes: (proxyRes, req, res) => {
                 // 쿠키 헤더 처리
                 if (proxyRes.headers['set-cookie']) {
                     const cookies = proxyRes.headers['set-cookie'].map(cookie => {
-                        // 개발 환경에서는 Secure 속성 제거 (http에서 테스트할 경우)
+                        // SameSite=None 및 Secure 속성을 유지
                         return cookie
-                            .replace(/Secure;/gi, '')
-                            .replace(/SameSite=None/gi, 'SameSite=Lax');
+                            .replace(/SameSite=None/gi, 'SameSite=None')
+                            .replace(/Domain=[^;]+/gi, `Domain=${req.headers.host}`);
                     });
                     proxyRes.headers['set-cookie'] = cookies;
                 }
@@ -80,6 +106,8 @@ router.get('/proxy-status', (req, res) => {
     res.json({
         status: 'active',
         timestamp: new Date().toISOString(),
+        host: req.headers.host,
+        protocol: req.protocol,
         proxies: {
             main: config.apiProxy.target,
             ...Object.fromEntries(
