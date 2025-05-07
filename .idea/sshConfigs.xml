@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig host="158.180.73.20" id="2b37cb78-1902-4438-ae6a-a97b7c6b8cd1" keyPath="$USER_HOME$/Downloads/ssh-key-2025-05-04.key" port="22" nameFormat="DESCRIPTIVE" username="ubuntu" useOpenSSHConfig="true" />
+    </configs>
+  </component>
+</project>

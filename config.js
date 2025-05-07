@@ -38,18 +38,6 @@ module.exports = {
             // http용 설정 (필요한 경우)
             secure: false,
         },
-        uploads: {
-            path: '/uploads',
-            target: 'https://dev-linkup.duckdns.org',
-            changeOrigin: true,
-            pathRewrite: {
-                '^/uploads': '/files',
-            },
-            cookieDomainRewrite: {
-                '*': '' // 모든 도메인의 쿠키를 현재 호스트로 재작성
-            }
-        }
-        // 추가 프록시 엔드포인트 필요시 여기에 추가
     },
 
     // CORS 설정
@@ -57,7 +45,9 @@ module.exports = {
         // 허용할 출처 목록
         allowedOrigins: [
             'http://localhost:3000',
+            'https://localhost:3000',
             'http://localhost:8080',
+            'https://localhost:8080',
             'https://eastern-rowena-jack6767-df59f302.koyeb.app',
             'https://dev-linkup.duckdns.org',
 

@@ -8,7 +8,10 @@ router.use('/api', createProxyMiddleware({
     ...config.apiProxy,
     changeOrigin: true,
     cookieDomainRewrite: '', // 모든 도메인을 현재 호스트로 재작성
-    secure: false, // 개발 환경에서는 false로 설정
+    secure: true, // 개발 환경에서는 false로 설정
+    pathRewrite: {
+        '^/api': '' // '/api' 경로를 제거하고 백엔드로 요청
+    },
     onProxyReq: (proxyReq, req, res) => {
         // 요청 본문이 있는 경우 처리
         if (req.body) {
@@ -18,15 +21,15 @@ router.use('/api', createProxyMiddleware({
             proxyReq.write(bodyData);
         }
 
-        // 원본 호스트 헤더 추가 (필요한 경우)
-        // proxyReq.setHeader('X-Forwarded-Host', req.headers.host);
+        // 원본 호스트 헤더 추가
+        proxyReq.setHeader('X-Forwarded-Host', req.headers.host);
+        proxyReq.setHeader('X-Forwarded-Proto', req.protocol);
     },
     onProxyRes: (proxyRes, req, res) => {
         // 쿠키 헤더 처리
         if (proxyRes.headers['set-cookie']) {
             const cookies = proxyRes.headers['set-cookie'].map(cookie => {
                 // 개발 환경에서는 Secure 속성 제거 (http에서 테스트할 경우)
-                // SameSite를 Lax로 변경하여 일반적인 탐색에서 쿠키 전송
                 return cookie
                     .replace(/Secure;/gi, '')
                     .replace(/SameSite=None/gi, 'SameSite=Lax');
@@ -55,7 +58,6 @@ if (config.serviceProxies) {
                 if (proxyRes.headers['set-cookie']) {
                     const cookies = proxyRes.headers['set-cookie'].map(cookie => {
                         // 개발 환경에서는 Secure 속성 제거 (http에서 테스트할 경우)
-                        // SameSite를 Lax로 변경하여 일반적인 탐색에서 쿠키 전송
                         return cookie
                             .replace(/Secure;/gi, '')
                             .replace(/SameSite=None/gi, 'SameSite=Lax');
