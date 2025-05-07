@@ -78,12 +78,6 @@
       if (cookie.startsWith('isLoggedIn=true')) {
         return true;
       }
-      if (cookie.startsWith('authToken=') && cookie.substring(10) !== '') {
-        return true;
-      }
-      if (cookie.startsWith('sessionId=') && cookie.substring(10) !== '') {
-        return true;
-      }
     }
 
     return false;

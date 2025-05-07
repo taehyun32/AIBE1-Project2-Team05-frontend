@@ -47,20 +47,6 @@ function checkLoginStatus() {
             console.log('jwt_token 쿠키 발견');
             return true;
         }
-
-        // 기존 체크 로직 유지
-        if (cookie.startsWith('isLoggedIn=true')) {
-            console.log('isLoggedIn 쿠키 발견');
-            return true;
-        }
-        if (cookie.startsWith('authToken=') && cookie.substring(10) !== '') {
-            console.log('authToken 쿠키 발견');
-            return true;
-        }
-        if (cookie.startsWith('sessionId=') && cookie.substring(10) !== '') {
-            console.log('sessionId 쿠키 발견');
-            return true;
-        }
     }
 
     console.log('로그인 관련 쿠키가 없음');
@@ -98,8 +84,4 @@ document.addEventListener('DOMContentLoaded', function() {
     const isLoggedIn = checkLoginStatus();
     console.log('로그인 상태:', isLoggedIn ? '✅ 로그인됨' : '❌ 로그인 안됨');
 
-    // 필요하다면 세션 API 호출
-    // checkSessionAPI().then(result => {
-    //   console.log('세션 API 확인 결과:', result ? '✅ 로그인됨' : '❌ 로그인 안됨');
-    // });
 });

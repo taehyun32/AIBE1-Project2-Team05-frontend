@@ -17,8 +17,27 @@ document.addEventListener('DOMContentLoaded', function() {
         authUrl = '/auth/oauth2/authorization/google';
       }
 
-      // ✅ fetch 대신 직접 이동
+      // OAuth2 로그인 페이지로 이동
       window.location.href = authUrl;
+
+      // OAuth2 로그인 성공 후에는 자동으로 OAuth2AuthenticationSuccessHandler에서
+      // 리다이렉트 없이 JSON 응답을 반환하고, 그 후 user-type-selection.html로 리다이렉트됨
     });
   });
+
+  // OAuth2 로그인 후 리다이렉트된 경우 처리
+  function handleOAuthRedirect() {
+    // URL에 로그인 성공 파라미터가 있는지 확인
+    const urlParams = new URLSearchParams(window.location.search);
+    const loggedIn = urlParams.get('loggedIn') === 'true';
+    const socialType = urlParams.get('socialType');
+
+    if (loggedIn && socialType) {
+      // 로그인 성공 시 사용자 유형 선택 페이지로 이동
+      window.location.href = `/user-type-selection.html?socialType=${socialType}`;
+    }
+  }
+
+  // 페이지 로드 시 OAuth 리다이렉트 처리 실행
+  handleOAuthRedirect();
 });
