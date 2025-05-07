@@ -7,7 +7,7 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "build": "npm run build:css",
-    "build:css": "postcss public/css/main.css public/css/community.css --dir public/css -o public/css/main.compiled.css",
+    "build:css": "postcss public/css/main.css -o public/css/main.compiled.css && postcss public/css/community.css -o public/css/community.compiled.css",
     "watch:css": "postcss public/css/main.css public/css/community.css --dir public/css --watch"
   },
   "dependencies": {
