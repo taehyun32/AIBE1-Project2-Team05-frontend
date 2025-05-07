@@ -66,21 +66,21 @@
   function checkLoginCookie() {
     const cookies = document.cookie.split(';');
 
-    // 쿠키 배열을 순회하면서 로그인 관련 쿠키 확인
     for (let i = 0; i < cookies.length; i++) {
       const cookie = cookies[i].trim();
 
-      // 예: 'isLoggedIn=true' 쿠키가 있는지 확인
+      // JWT 토큰 확인
+      if (cookie.startsWith('jwt_token=') && cookie.substring(10) !== '') {
+        return true;
+      }
+
+      // 기존 체크 로직 유지
       if (cookie.startsWith('isLoggedIn=true')) {
         return true;
       }
-
-      // 또는 인증 토큰이 있는지 확인 (예: 'authToken=xyz')
       if (cookie.startsWith('authToken=') && cookie.substring(10) !== '') {
         return true;
       }
-
-      // 또는 세션 ID 쿠키가 있는지 확인
       if (cookie.startsWith('sessionId=') && cookie.substring(10) !== '') {
         return true;
       }

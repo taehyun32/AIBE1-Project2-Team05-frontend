@@ -6,6 +6,10 @@ const router = express.Router();
 // 메인 API 프록시 설정
 router.use('/api', createProxyMiddleware({
     ...config.apiProxy,
+    changeOrigin: true,
+    cookieDomainRewrite: {
+        '*': ''
+    },
     onProxyReq: (proxyReq, req, res) => {
         // 요청 본문이 있는 경우 처리
         if (req.body) {
@@ -29,6 +33,10 @@ if (config.serviceProxies) {
     Object.entries(config.serviceProxies).forEach(([name, proxyConfig]) => {
         router.use(proxyConfig.path, createProxyMiddleware({
             ...proxyConfig,
+            changeOrigin: true,
+            cookieDomainRewrite: {
+                '*': '' // 모든 도메인의 쿠키를 현재 도메인으로 재작성
+            },
             onProxyRes: (proxyRes, req, res) => {
                 console.log(`[${name} Proxy] ${req.method} ${req.url} -> ${proxyRes.statusCode}`);
             }
