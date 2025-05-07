@@ -2,7 +2,7 @@
   "name": "project02",
   "version": "1.0.0",
   "description": "Talent sharing platform",
-  "main": "index.js",
+  "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
@@ -14,9 +14,11 @@
     "autoprefixer": "^10.4.14",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
+    "http-proxy-middleware": "^3.0.5",
     "postcss": "^8.4.24",
     "postcss-cli": "^10.1.0",
-    "tailwindcss": "^3.3.2"
+    "tailwindcss": "^3.3.2",
+    "cors": "^2.8.5"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
