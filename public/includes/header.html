@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <header class="bg-white shadow-sm">
   <div class="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -20,16 +21,71 @@
         </ul>
       </nav>
     </div>
-    <div class="flex items-center space-x-4">
-      <a href="/login" class="bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-button whitespace-nowrap hover:bg-gray-50">
-        로그인
-      </a>
-      <a href="/register" class="bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap hover:bg-indigo-600">
-        회원가입
-      </a>
+    <div class="flex items-center space-x-4" id="auth-buttons">
+      <!-- 로그인 상태에 따라 표시될 버튼들 -->
+      <div id="logged-out-buttons">
+        <a href="/login" class="bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-button whitespace-nowrap hover:bg-gray-50 mr-4">
+          로그인
+        </a>
+        <a href="/register" class="bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap hover:bg-indigo-600">
+          회원가입
+        </a>
+      </div>
+      <div id="logged-in-buttons" style="display: none;">
+        <a href="/logout" class="bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-button whitespace-nowrap hover:bg-gray-50">
+          로그아웃
+        </a>
+      </div>
       <div class="w-10 h-10 flex items-center justify-center md:hidden">
         <i class="ri-menu-line text-gray-700 ri-lg"></i>
       </div>
     </div>
   </div>
 </header>
+
+<script>
+  // 로그인 상태 확인 및 버튼 표시 로직
+  document.addEventListener('DOMContentLoaded', function() {
+    // 쿠키에서's 로그인 상태 확인
+    const isLoggedIn = checkLoginCookie();
+
+    // 로그인 상태에 따라 버튼 표시 변경
+    const loggedOutButtons = document.getElementById('logged-out-buttons');
+    const loggedInButtons = document.getElementById('logged-in-buttons');
+
+    if (isLoggedIn) {
+      loggedOutButtons.style.display = 'none';
+      loggedInButtons.style.display = 'block';
+    } else {
+      loggedOutButtons.style.display = 'block';
+      loggedInButtons.style.display = 'none';
+    }
+  });
+
+  // 쿠키에서 로그인 상태 확인하는 함수
+  function checkLoginCookie() {
+    const cookies = document.cookie.split(';');
+
+    // 쿠키 배열을 순회하면서 로그인 관련 쿠키 확인
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+
+      // 예: 'isLoggedIn=true' 쿠키가 있는지 확인
+      if (cookie.startsWith('isLoggedIn=true')) {
+        return true;
+      }
+
+      // 또는 인증 토큰이 있는지 확인 (예: 'authToken=xyz')
+      if (cookie.startsWith('authToken=') && cookie.substring(10) !== '') {
+        return true;
+      }
+
+      // 또는 세션 ID 쿠키가 있는지 확인
+      if (cookie.startsWith('sessionId=') && cookie.substring(10) !== '') {
+        return true;
+      }
+    }
+
+    return false;
+  }
+</script>

@@ -1,67 +1,36 @@
 const express = require('express');
-const path = require('path'); // ★ 경로를 다루기 위한 모듈 추가
+const cors = require('cors');
+const path = require('path');
+const config = require('../config');
+
+// 라우터 불러오기
+const routes = require('./routes');
+const logger = require('./middleware/logger');
+const errorHandler = require('./middleware/errorHandler');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// EJS 템플릿 엔진 설정
-
-// 정적 파일 서비스 (public 폴더 안에 있는 것들은 알아서 열어줌)
+// 미들웨어 설정
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
+app.use(logger);
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-    // views/index.ejs 파일을 렌더링
-});
+// 라우터 설정
+app.use('/', routes);
 
-// 다른 페이지 라우트 설정
-app.get('/community', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'community.html'));
-});
-
-app.get('/community-detail', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'community-detail.html'));
-});
-
-app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'login.html'));
-});
-
-app.get('/register', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'register.html'));
-});
-
-app.get('/mypage', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'mypage.html'));
-});
-
-app.get('/mypage-mentee', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'mypage-mentee.html'));
-});
-
-app.get('/write-review', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'write-review.html'));
-});
-
-app.get('/more-details', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'more-details.html'));
-});
-
-app.get('/matching-type-selection', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'matching-type-selection.html'));
-});
-
-app.get('/user-type-selection', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'user-type-selection.html'));
-});
-
-app.get('/match', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'match.html'));
-});
-
-app.get('/newPost', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'newPost.html'));
-});
+// 오류 처리 미들웨어는 항상 마지막에 추가
+app.use(errorHandler);
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
+    console.log(`Proxying requests from /api/* to ${config.apiProxy.target}`);
+
+    if (config.serviceProxies) {
+        Object.entries(config.serviceProxies).forEach(([name, proxyConfig]) => {
+            console.log(`Registered proxy for ${proxyConfig.path} -> ${proxyConfig.target}`);
+        });
+    }
 });
