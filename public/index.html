@@ -169,4 +169,29 @@
     <div id="footer-placeholder" class="mt-10"></div>
 
   </body>
+  <script>
+    try {
+      const res = await fetch('/auth/session-info', {
+        credentials: 'include',
+      });
+
+      if (!res.ok) {
+        throw new Error('세션 확인 실패');
+      }
+
+      const data = await res.json();
+
+      if (data.loggedIn) {
+        // ✅ 로그인 상태: 회원가입 단계로 리디렉트
+        window.location.href = `/user-type-selection.html?socialType=${data.socialType}`;
+      } else {
+        // ❌ 비로그인 상태: 로그인 페이지로
+        window.location.href = `/login.html`;
+      }
+    } catch (err) {
+      console.error('세션 체크 실패:', err);
+      window.location.href = `/login.html`;
+    }
+  </script>
+
 </html>

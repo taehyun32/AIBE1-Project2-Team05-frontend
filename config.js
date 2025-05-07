@@ -4,7 +4,7 @@
 module.exports = {
     // Main API proxy settings
     apiProxy: {
-        target: 'https://dev-linkup.duckdns.org/',
+        target: 'http://localhost:8080',
         changeOrigin: true,
         pathRewrite: {
             '^/api': '/v1', // Rewrite /api to /v1 on the target server
@@ -20,7 +20,7 @@ module.exports = {
     serviceProxies: {
         auth: {
             path: '/auth',
-            target: 'https://dev-linkup.duckdns.org/',
+            target: 'http://localhost:8080',
             changeOrigin: true,
             pathRewrite: {
                 '^/auth': '',
@@ -28,7 +28,7 @@ module.exports = {
         },
         uploads: {
             path: '/uploads',
-            target: 'https://dev-linkup.duckdns.org/',
+            target: 'http://localhost:8080',
             changeOrigin: true,
             pathRewrite: {
                 '^/uploads': '/files',
