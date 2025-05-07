@@ -20,8 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // OAuth2 로그인 페이지로 이동
       window.location.href = authUrl;
 
-      // OAuth2 로그인 성공 후에는 자동으로 OAuth2AuthenticationSuccessHandler에서
-      // 리다이렉트 없이 JSON 응답을 반환하고, 그 후 user-type-selection.html로 리다이렉트됨
+      handleOAuthRedirect();
     });
   });
 
