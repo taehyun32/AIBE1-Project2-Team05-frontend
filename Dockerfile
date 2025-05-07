@@ -9,6 +9,9 @@ RUN npm install
 # 소스 코드 복사
 COPY . .
 
+# 디렉토리 구조 확인
+RUN mkdir -p public/css
+
 # CSS 빌드 - build:css 명령 사용
 RUN npm run build:css
 
