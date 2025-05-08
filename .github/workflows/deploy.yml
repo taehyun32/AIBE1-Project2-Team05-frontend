@@ -26,6 +26,12 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: |
+            image=moby/buildkit:v0.12.4
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
@@ -44,6 +50,7 @@ jobs:
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
             sudo usermod -aG docker ${{ secrets.SERVER_SSH_USERNAME }}
+            sudo chown ${{ secrets.SERVER_SSH_USERNAME }}:${{ secrets.SERVER_SSH_USERNAME }} /var/run/docker.sock
 
             docker stop app-container || true
             echo "기존 컨테이너 중지 완료"
@@ -64,5 +71,5 @@ jobs:
 
             echo "새 컨테이너 실행 완료"
 
-            docker image prune -f
-            echo "사용하지 않는 이미지 정리 완료"
+            docker image prune -af
+            echo "사용하지 않는 이미지 전체 정리 완료"
