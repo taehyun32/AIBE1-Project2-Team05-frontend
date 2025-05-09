@@ -251,7 +251,7 @@ async function setupLogoutHandler() {
     if (logoutButton) {
         logoutButton.addEventListener('click', async () => {
             try {
-                const response = await fetch('/api/v1/auth/logout', {
+                const response = await fetch('/api/logout', {
                     method: 'POST',
                     credentials: 'include',
                 });
