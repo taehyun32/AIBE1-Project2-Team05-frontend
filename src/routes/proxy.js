@@ -45,7 +45,6 @@ router.use('/api', createProxyMiddleware({
                 // Nginx가 HTTPS로 프록시하므로 SameSite=None과 Secure 속성 추가
                 let modifiedCookie = cookie
                     .replace(/SameSite=None/gi, 'SameSite=None')
-                    .replace(/Domain=[^;]+/gi, `Domain=${req.headers.host}`);
 
                 // Secure 속성이 없으면 추가
                 if (!modifiedCookie.includes('Secure')) {
@@ -70,7 +69,7 @@ if (config.serviceProxies) {
         router.use(proxyConfig.path, createProxyMiddleware({
             ...proxyConfig,
             changeOrigin: true,
-            cookieDomainRewrite: '',
+            cookieDomainRewrite: false,
             secure: true, // HTTPS 환경 지원
             onProxyReq: (proxyReq, req, res) => {
                 // 요청 본문이 있는 경우 처리
