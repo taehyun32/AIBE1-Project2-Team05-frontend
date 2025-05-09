@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-// const https = require('https');
 const fs = require('fs');
 const cookieParser = require('cookie-parser');
 const path = require('path');
@@ -8,11 +7,7 @@ const routes = require('./routes'); // Import routes
 const config = require('../config'); // Import config
 require('dotenv').config(); // Load environment variables from .env file
 
-// HTTPS 인증서 (로컬용 self-signed cert 예시)
-// const options = {
-//     key: fs.readFileSync(path.join(__dirname, '..', 'key.pem')),
-//     cert: fs.readFileSync(path.join(__dirname, '..', 'cert.pem'))
-// };
+
 
 const app = express();
 
@@ -43,7 +38,7 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 app.use('/', routes);
 
 // 테스트 라우터 (쿠키 읽기용)
-app.get('/check-cookie', (req, res) => {
+app.get('/check-csrf', (req, res) => {
     console.log('Cookies:', req.cookies);
     res.send(req.cookies);
 });
@@ -51,7 +46,3 @@ app.get('/check-cookie', (req, res) => {
 app.listen(3000, () => {
     console.log("port 3000 is open!")
 })
-// ✅ HTTPS 서버 실행
-// https.createServer(options, app).listen(3000, () => {
-//     console.log('✅ HTTPS Express server running at https://localhost:3000');
-// });

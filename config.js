@@ -16,8 +16,8 @@ const config = {
         allowedOrigins: [
             'http://localhost:3000',
             'http://localhost:8080',
-            'https://eastern-rowena-jack6767-df59f302.koyeb.app',
-            'https://dev-linkup.duckdns.org'
+            'http://backend.linkup.o-r.kr/',
+            'http://frontend.linkup.o-r.kr/'
         ],
         allowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         allowedHeaders: [
@@ -34,7 +34,7 @@ const config = {
 
     // OAuth 설정
     oauth: {
-        redirectUri: process.env.OAUTH_REDIRECT_URI || 'http://localhost:3000/auth/oauth2/callback'
+        redirectUri: process.env.OAUTH_REDIRECT_URI || 'http://localhost:8080/auth/oauth2/callback'
     }
 };
 
