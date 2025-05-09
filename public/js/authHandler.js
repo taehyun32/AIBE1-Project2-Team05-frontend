@@ -202,8 +202,10 @@ async function checkWithServer() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
             credentials: 'include',
+            mode: 'cors'
         });
 
         const data = await response.json();
@@ -234,7 +236,11 @@ async function refreshToken() {
         console.log("Attempting to refresh token...");
         const response = await fetch('/api/v1/auth/refresh', {
             method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            },
             credentials: 'include',
+            mode: 'cors'
         });
 
         const result = await response.json();
@@ -269,10 +275,12 @@ async function setupLogoutHandler() {
             try {
                 const response = await fetch('/api/logout', {
                     method: 'POST',
-                    credentials: 'include',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
+                    credentials: 'include',
+                    mode: 'cors'
                 });
 
                 if (response.ok) {
