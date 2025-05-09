@@ -215,50 +215,53 @@ function highlightActiveNavLink() {
  * 로그아웃 버튼에 이벤트 리스너를 추가하는 함수
  * include.js에 추가해도 됩니다.
  */
-function setupLogoutHandler() {
-  const logoutBtn = document.querySelector('#logged-in-buttons a[href="/logout"]');
+async function setupLogoutHandler() {
+  const logoutButton = document.querySelector('#logged-in-buttons button');
+  if (logoutButton) {
+      logoutButton.addEventListener('click', async () => {
+          try {
+              const response = await fetch('/api/logout', {
+                  method: 'POST',
+                  credentials: 'include',
+              });
 
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', function(e) {
-      e.preventDefault(); // 기본 링크 동작 방지
-
-      // 서버에 로그아웃 요청
-      fetch('/api/logout', {
-        method: 'POST',
-        credentials: 'include',
-      })
-          .then(response => response.json())
-          .then(data => {
-            console.log('Logout response:', data);
-
-            // 로그아웃 처리
-            sessionStorage.removeItem('isLoggedIn');
-
-            // 로그인 버튼 표시
-            const loggedOutButtons = document.getElementById('logged-out-buttons');
-            const loggedInButtons = document.getElementById('logged-in-buttons');
-
-            if (loggedOutButtons && loggedInButtons) {
-              loggedOutButtons.style.display = 'block';
-              loggedInButtons.style.display = 'none';
-              loggedOutButtons.classList.remove('hidden');
-              loggedInButtons.classList.add('hidden');
-            }
-
-            // 홈페이지로 리다이렉트
-            window.location.href = '/';
-          })
-          .catch(error => {
-            console.error('Error during logout:', error);
-            // 오류가 있더라도 로컬에서는 로그아웃 처리
-            sessionStorage.removeItem('isLoggedIn');
-            window.location.href = '/';
-          });
-    });
-
-    console.log('Logout handler attached');
-  } else {
-    console.warn('Logout button not found');
+              if (response.ok) {
+                  sessionStorage.removeItem('isLoggedIn');
+                  showLoggedOutState();
+                  window.location.href = '/';
+              } else {
+                  alert('로그아웃 중 오류가 발생했습니다.', response.status);
+              }
+          } catch (error) {
+              console.error('Logout error:', error);
+              alert('로그아웃 중 오류가 발생했습니다.', error);
+          }
+      });
   }
+}
+
+async function loadHTML(element, url) {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const html = await response.text();
+        element.innerHTML = html;
+
+        // HTML이 로드된 후 authHandler.js의 함수들 호출
+        if (typeof checkLoginStatus === 'function') {
+            checkLoginStatus();
+        }
+        if (typeof highlightActiveNavLink === 'function') {
+            highlightActiveNavLink();
+        }
+        if (typeof setupLogoutHandler === 'function') {
+            setupLogoutHandler();
+        }
+    } catch (error) {
+        console.error('Error loading HTML:', error);
+        element.innerHTML = '<p>Error loading content</p>';
+    }
 }
 

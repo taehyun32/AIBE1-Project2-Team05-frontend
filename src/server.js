@@ -3,11 +3,10 @@ const cors = require('cors');
 const fs = require('fs');
 const cookieParser = require('cookie-parser');
 const path = require('path');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 const routes = require('./routes'); // Import routes
 const config = require('../config'); // Import config
 require('dotenv').config(); // Load environment variables from .env file
-
-
 
 const app = express();
 
@@ -27,6 +26,9 @@ const corsOptions = {
     exposedHeaders: config.cors.exposedHeaders
 };
 app.use(cors(corsOptions));
+
+// ✅ 프록시 설정
+app.use('/api', createProxyMiddleware(config.apiProxy));
 
 app.use(express.json());
 app.use(cookieParser());

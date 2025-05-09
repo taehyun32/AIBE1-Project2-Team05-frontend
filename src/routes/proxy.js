@@ -10,7 +10,8 @@ router.use('/api', createProxyMiddleware({
     cookieDomainRewrite: {
         '*': '' // 모든 도메인을 현재 호스트로 재작성
     },
-    secure: false, // 도커 내부 통신은 HTTP이므로 false
+    secure: process.env.NODE_ENV === 'production', // 개발 환경에서는 false
+
     followRedirects: true,
     pathRewrite: {
         '^/api': '' // '/api' 경로를 제거하고 백엔드로 요청
