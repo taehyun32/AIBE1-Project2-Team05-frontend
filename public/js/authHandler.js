@@ -232,53 +232,31 @@ async function refreshToken() {
 /**
  * 로그아웃 버튼 클릭 이벤트 처리
  */
-function setupLogoutHandler() {
-    const logoutBtn = document.querySelector('#logged-in-buttons a[href="/logout"]');
-
-    if (logoutBtn) {
-        // 이미 이벤트 리스너가 있는지 확인하기 위한 플래그 설정
-        if (!logoutBtn.hasAttribute('data-logout-handler')) {
-            logoutBtn.setAttribute('data-logout-handler', 'true');
-
-            logoutBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-
-                // 서버에 로그아웃 요청
-                fetch('/api/v1/auth/logout', {
+async function setupLogoutHandler() {
+    const logoutButton = document.querySelector('#logged-in-buttons button');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/vi/auth/logout', {
                     method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     credentials: 'include',
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Logout response:', data);
+                });
 
-                        sessionStorage.removeItem('isLoggedIn');
-
-                        // 로그인 버튼 표시
-                        const loggedOutButtons = document.getElementById('logged-out-buttons');
-                        const loggedInButtons = document.getElementById('logged-in-buttons');
-
-                        if (loggedOutButtons && loggedInButtons) {
-                            loggedOutButtons.style.display = 'block';
-                            loggedInButtons.style.display = 'none';
-                            loggedOutButtons.classList.remove('hidden');
-                            loggedInButtons.classList.add('hidden');
-                        }
-
-                        // 홈페이지로 리다이렉트
-                        window.location.href = '/';
-                    })
-                    .catch(error => {
-                        console.error('Error during logout:', error);
-                        sessionStorage.removeItem('isLoggedIn');
-                        window.location.href = '/';
-                    });
-            });
-
-            console.log('Logout handler attached');
-        }
-    } else {
-        console.warn('Logout button not found');
+                if (response.ok) {
+                    sessionStorage.removeItem('isLoggedIn');
+                    showLoggedOutState();
+                    window.location.href = '/';
+                } else {
+                    alert('로그아웃 중 오류가 발생했습니다.');
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('로그아웃 중 오류가 발생했습니다.');
+            }
+        });
     }
 }
 
