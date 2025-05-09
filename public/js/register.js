@@ -19,10 +19,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
       if (provider) {
         // 프론트엔드 서버의 OAuth 요청 라우트로 리다이렉트
-        const authUrl = `/api/oauth2/authorization/${provider}`;
-        console.log(`소셜 로그인 요청: ${authUrl}`);
+        const url = `/oauth2/authorization/${provider}`;
+        const backendUrl = '${API_URL}url';
+        console.log(`소셜 로그인 요청: ${url}`);
         sessionStorage.setItem('isLoggedIn', 'true');
-        window.location.href = authUrl;
+        window.location.href = backendUrl;
       }
     });
   });
