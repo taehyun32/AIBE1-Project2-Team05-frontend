@@ -2,15 +2,21 @@
  * 모든 페이지에서 사용할 수 있는 통합 HTML 삽입 및 로그인 상태 처리 스크립트
  */
 document.addEventListener('DOMContentLoaded', function() {
+    // 초기 로그인 상태 확인
+    const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+    if (isLoggedIn) {
+        showLoggedInState();
+    } else {
+        showLoggedOutState();
+    }
+
     // 방법 1: data-include-path 속성을 사용한 HTML 삽입
     const includeElements = document.querySelectorAll('[data-include-path]');
     if (includeElements.length > 0) {
-        console.log("Using data-include-path method");
         processIncludeElements();
     }
     // 방법 2: header-placeholder, footer-placeholder를 사용한 HTML 삽입
     else {
-        console.log("Using placeholder method");
         processPlaceholders();
     }
 });
@@ -22,7 +28,6 @@ async function processIncludeElements() {
     const includeElements = document.querySelectorAll('[data-include-path]');
     const promises = [];
 
-    // 모든 요소에 대해 비동기 작업 시작
     includeElements.forEach(function(el) {
         const path = el.getAttribute('data-include-path');
         const promise = fetch(path)
@@ -32,10 +37,9 @@ async function processIncludeElements() {
 
                 // 이 요소가 헤더를 포함하는지 확인
                 if (path.includes('header') || html.includes('id="logged-out-buttons"')) {
-                    console.log("Header detected in path:", path);
-                    return true; // 이 요소는 헤더임을 표시
+                    return true;
                 }
-                return false; // 헤더가 아님
+                return false;
             })
             .catch(error => {
                 console.error(`Error loading element from ${path}:`, error);
@@ -50,12 +54,9 @@ async function processIncludeElements() {
 
     // 헤더가 포함된 경우 로그인 상태 확인 및 내비게이션 활성화
     if (results.some(Boolean)) {
-        console.log("Header included, checking login status");
-        setTimeout(() => {
-            checkLoginStatus();
-            highlightActiveNavLink();
-            setupLogoutHandler();
-        }, 100);
+        checkLoginStatus();
+        highlightActiveNavLink();
+        setupLogoutHandler();
     }
 }
 
@@ -70,13 +71,9 @@ function processPlaceholders() {
             .then(response => response.text())
             .then(data => {
                 headerPlaceholder.innerHTML = data;
-
-                // 약간의 지연 후 로그인 상태 등 처리
-                setTimeout(() => {
-                    checkLoginStatus();
-                    highlightActiveNavLink();
-                    setupLogoutHandler();
-                }, 100);
+                checkLoginStatus();
+                highlightActiveNavLink();
+                setupLogoutHandler();
             })
             .catch(error => console.error('Error loading header:', error));
     }
@@ -101,15 +98,8 @@ function showLoggedInState() {
     const loggedInButtons = document.getElementById('logged-in-buttons');
     
     if (loggedOutButtons && loggedInButtons) {
-        // 여러 방식으로 시도
         loggedOutButtons.style.display = 'none';
         loggedInButtons.style.display = 'block';
-
-        // classList도 활용
-        loggedOutButtons.classList.add('hidden');
-        loggedInButtons.classList.remove('hidden');
-
-        console.log("Set to logged in state");
     }
 }
 
@@ -121,15 +111,8 @@ function showLoggedOutState() {
     const loggedInButtons = document.getElementById('logged-in-buttons');
     
     if (loggedOutButtons && loggedInButtons) {
-        // 여러 방식으로 시도
         loggedOutButtons.style.display = 'block';
         loggedInButtons.style.display = 'none';
-
-        // classList도 활용
-        loggedOutButtons.classList.remove('hidden');
-        loggedInButtons.classList.add('hidden');
-
-        console.log("Set to logged out state");
     }
 }
 
@@ -197,68 +180,70 @@ async function checkLoginStatus() {
  */
 async function checkWithServer() {
     try {
-        console.log("Checking with server...");
         const response = await fetch('/status', {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            credentials: 'include',
-            mode: 'cors'
+            credentials: 'include'
         });
 
         const data = await response.json();
-        console.log("Status response:", data);
-
+        
         if (data.status === 200) {
-            // 성공 - 로그인됨
             sessionStorage.setItem('isLoggedIn', 'true');
+            showLoggedInState();
             return true;
-        } else if (data.status === 401) {
-            // 인증 실패 - 토큰 갱신 시도
-            return await refreshToken();
         }
 
+        // 401 또는 다른 에러
+        sessionStorage.removeItem('isLoggedIn');
+        showLoggedOutState();
         return false;
     } catch (error) {
         console.error("Error in checkWithServer:", error);
+        sessionStorage.removeItem('isLoggedIn');
+        showLoggedOutState();
         return false;
     }
 }
 
 /**
- * 인증 토큰 갱신 시도
- * @returns {Promise<boolean>} 갱신 성공하면 true
+ * API 호출 시 401 에러 처리
+ * @returns {Promise<boolean>} 토큰 갱신 성공하면 true
  */
-async function refreshToken() {
+async function handle401Error() {
     try {
-        console.log("Attempting to refresh token...");
-        const response = await fetch('/api/v1/auth/refresh', {
+        const response = await fetch('/status', {
             method: 'GET',
             headers: {
                 'Accept': 'application/json'
             },
-            credentials: 'include',
-            mode: 'cors'
+            credentials: 'include'
         });
 
-        const result = await response.json();
-        console.log("Refresh response:", result);
-
-        if (result.status === 200) {
+        const data = await response.json();
+        
+        if (data.status === 200) {
             sessionStorage.setItem('isLoggedIn', 'true');
+            showLoggedInState();
             return true;
         }
 
+        // 리프레시 토큰도 만료된 경우
         sessionStorage.removeItem('isLoggedIn');
+        showLoggedOutState();
         return false;
     } catch (error) {
-        console.error("Error in refreshToken:", error);
+        console.error("Error handling 401:", error);
         sessionStorage.removeItem('isLoggedIn');
+        showLoggedOutState();
         return false;
     }
 }
+
+// 전역에서 사용할 수 있도록 window 객체에 추가
+window.handle401Error = handle401Error;
 
 /**
  * 로그아웃 버튼 클릭 이벤트 처리
