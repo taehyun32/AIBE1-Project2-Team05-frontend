@@ -7,8 +7,11 @@ const router = express.Router();
 router.use('/api', createProxyMiddleware({
     ...config.apiProxy,
     changeOrigin: true,
-    cookieDomainRewrite: '', // 모든 도메인을 현재 호스트로 재작성
-    secure: true, // HTTPS 환경 지원
+    cookieDomainRewrite: {
+        '*': '' // 모든 도메인을 현재 호스트로 재작성
+    },
+    secure: false, // 도커 내부 통신은 HTTP이므로 false
+    followRedirects: true,
     pathRewrite: {
         '^/api': '' // '/api' 경로를 제거하고 백엔드로 요청
     },
@@ -38,11 +41,16 @@ router.use('/api', createProxyMiddleware({
         // 쿠키 헤더 처리
         if (proxyRes.headers['set-cookie']) {
             const cookies = proxyRes.headers['set-cookie'].map(cookie => {
-                // SameSite=None 및 Secure 속성을 유지 (HTTPS 환경에서 필요)
-                return cookie
+                // Nginx가 HTTPS로 프록시하므로 SameSite=None과 Secure 속성 추가
+                let modifiedCookie = cookie
                     .replace(/SameSite=None/gi, 'SameSite=None')
-                    // Domain 속성이 있는 경우 현재 호스트로 설정
                     .replace(/Domain=[^;]+/gi, `Domain=${req.headers.host}`);
+
+                // Secure 속성이 없으면 추가
+                if (!modifiedCookie.includes('Secure')) {
+                    modifiedCookie += '; Secure';
+                }
+                return modifiedCookie;
             });
             proxyRes.headers['set-cookie'] = cookies;
         }
