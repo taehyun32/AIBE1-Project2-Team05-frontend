@@ -154,27 +154,38 @@ async function checkLoginStatus() {
         loggedInButtons: loggedInButtons
     });
 
-    // 로그인 상태 확인
+    // URL 파라미터 확인
+    const urlParams = new URLSearchParams(window.location.search);
+    const isLoggedInParam = urlParams.get('loggedIn');
+    const socialType = urlParams.get('socialType');
+
+    // 소셜 로그인인 경우
+    if (socialType) {
+        if (isLoggedInParam === 'true') {
+            sessionStorage.setItem('isLoggedIn', 'true');
+            sessionStorage.setItem('socialType', socialType);
+            showLoggedInState();
+            console.log("User logged in via social login:", socialType);
+            return;
+        }
+    }
+
+    // 일반 로그인 상태 확인
     if (sessionStorage.getItem('isLoggedIn') === 'true') {
-        // 로그인됨
         showLoggedInState();
         console.log("User logged in based on sessionStorage");
     } else {
-        // 서버에 확인
         try {
             const isLoggedIn = await checkWithServer();
             if (isLoggedIn) {
-                // 로그인됨
                 showLoggedInState();
                 console.log("User logged in based on server check");
             } else {
-                // 로그인 안됨
                 showLoggedOutState();
                 console.log("User not logged in");
             }
         } catch (error) {
             console.error("Error checking login status:", error);
-            // 오류 시 기본값은 로그인 안됨
             showLoggedOutState();
         }
     }
@@ -247,28 +258,54 @@ async function refreshToken() {
  * 로그아웃 버튼 클릭 이벤트 처리
  */
 async function setupLogoutHandler() {
-    const logoutButton = document.querySelector('#logged-in-buttons button');
+    console.log("Setting up logout handler...");
+    const logoutButton = document.querySelector('#logged-in-buttons button[type="button"]');
+    console.log("Found logout button:", logoutButton);
+
     if (logoutButton) {
+        console.log("Adding click event listener to logout button");
         logoutButton.addEventListener('click', async () => {
+            console.log("Logout button clicked");
             try {
                 const response = await fetch('/api/logout', {
                     method: 'POST',
                     credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                 });
 
                 if (response.ok) {
-                    sessionStorage.removeItem('isLoggedIn');
+                    console.log("Logout successful");
+                    // 로그아웃 성공 시 모든 세션 데이터 제거
+                    sessionStorage.clear();
                     showLoggedOutState();
+                    
+                    // URL에서 로그인 관련 파라미터 제거
+                    const url = new URL(window.location.href);
+                    url.searchParams.delete('loggedIn');
+                    url.searchParams.delete('socialType');
+                    window.history.replaceState({}, '', url);
+                    
+                    // 소셜 로그인인 경우 소셜 로그아웃 처리
+                    const socialType = sessionStorage.getItem('socialType');
+                    if (socialType) {
+                        console.log("Processing social logout for:", socialType);
+                    }
+                    
+                    // 홈페이지로 리다이렉트
                     window.location.href = '/';
                 } else {
+                    console.error('Logout failed:', response.status);
                     alert('로그아웃 중 오류가 발생했습니다.');
-                    console.log(response.status);
                 }
             } catch (error) {
                 console.error('Logout error:', error);
                 alert('로그아웃 중 오류가 발생했습니다.');
             }
         });
+    } else {
+        console.error("Logout button not found in the DOM");
     }
 }
 

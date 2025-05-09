@@ -220,15 +220,28 @@ async function setupLogoutHandler() {
   if (logoutButton) {
       logoutButton.addEventListener('click', async () => {
           try {
+              // 로그아웃 전에 세션 스토리지 초기화
+              sessionStorage.removeItem('isLoggedIn');
+              
               const response = await fetch('/api/logout', {
                   method: 'POST',
-                  credentials: 'include',
+                  withCredentials: true,
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
               });
 
               if (response.ok) {
-                  sessionStorage.removeItem('isLoggedIn');
+                  // 로그아웃 성공 시 모든 세션 데이터 제거
+                  sessionStorage.clear();
                   showLoggedOutState();
-                  window.location.href = '/';
+                  const data = await response.json();
+                  console.log(data);
+                  
+                  // 현재 URL이 홈페이지가 아닌 경우에만 리다이렉트
+                  if (window.location.pathname !== '/') {
+                      window.location.replace('/');
+                  }
               } else {
                   alert('로그아웃 중 오류가 발생했습니다.');
                   console.log(response.status);

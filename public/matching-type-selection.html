@@ -238,6 +238,14 @@
 
     <div id="footer-placeholder" class="mt-auto"></div>
 
+    <script>
+        console.log("Page scripts starting to load");
+        window.addEventListener('load', function() {
+            console.log("Window load event fired");
+        });
+    </script>
+    <script src="js/include.js"></script>
+    <script src="js/authHandler.js"></script>
     <script src="js/matching-type-selection.js"></script>
   </body>
 </html>
