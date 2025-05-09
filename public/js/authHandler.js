@@ -94,6 +94,46 @@ function processPlaceholders() {
 }
 
 /**
+ * 로그인된 상태 UI 표시
+ */
+function showLoggedInState() {
+    const loggedOutButtons = document.getElementById('logged-out-buttons');
+    const loggedInButtons = document.getElementById('logged-in-buttons');
+    
+    if (loggedOutButtons && loggedInButtons) {
+        // 여러 방식으로 시도
+        loggedOutButtons.style.display = 'none';
+        loggedInButtons.style.display = 'block';
+
+        // classList도 활용
+        loggedOutButtons.classList.add('hidden');
+        loggedInButtons.classList.remove('hidden');
+
+        console.log("Set to logged in state");
+    }
+}
+
+/**
+ * 로그아웃된 상태 UI 표시
+ */
+function showLoggedOutState() {
+    const loggedOutButtons = document.getElementById('logged-out-buttons');
+    const loggedInButtons = document.getElementById('logged-in-buttons');
+    
+    if (loggedOutButtons && loggedInButtons) {
+        // 여러 방식으로 시도
+        loggedOutButtons.style.display = 'block';
+        loggedInButtons.style.display = 'none';
+
+        // classList도 활용
+        loggedOutButtons.classList.remove('hidden');
+        loggedInButtons.classList.add('hidden');
+
+        console.log("Set to logged out state");
+    }
+}
+
+/**
  * 로그인 상태를 확인하고 버튼 표시를 업데이트합니다.
  */
 async function checkLoginStatus() {
@@ -137,32 +177,6 @@ async function checkLoginStatus() {
             // 오류 시 기본값은 로그인 안됨
             showLoggedOutState();
         }
-    }
-
-    // 로그인된 상태 UI 표시
-    function showLoggedInState() {
-        // 여러 방식으로 시도
-        loggedOutButtons.style.display = 'none';
-        loggedInButtons.style.display = 'block';
-
-        // classList도 활용
-        loggedOutButtons.classList.add('hidden');
-        loggedInButtons.classList.remove('hidden');
-
-        console.log("Set to logged in state");
-    }
-
-    // 로그아웃된 상태 UI 표시
-    function showLoggedOutState() {
-        // 여러 방식으로 시도
-        loggedOutButtons.style.display = 'block';
-        loggedInButtons.style.display = 'none';
-
-        // classList도 활용
-        loggedOutButtons.classList.remove('hidden');
-        loggedInButtons.classList.add('hidden');
-
-        console.log("Set to logged out state");
     }
 }
 
@@ -237,11 +251,8 @@ async function setupLogoutHandler() {
     if (logoutButton) {
         logoutButton.addEventListener('click', async () => {
             try {
-                const response = await fetch('/api/vi/auth/logout', {
+                const response = await fetch('/api/logout', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
                     credentials: 'include',
                 });
 
@@ -250,11 +261,11 @@ async function setupLogoutHandler() {
                     showLoggedOutState();
                     window.location.href = '/';
                 } else {
-                    alert('로그아웃 중 오류가 발생했습니다.');
+                    alert('로그아웃 중 오류가 발생했습니다.', response.status);
                 }
             } catch (error) {
                 console.error('Logout error:', error);
-                alert('로그아웃 중 오류가 발생했습니다.');
+                alert('로그아웃 중 오류가 발생했습니다.', error);
             }
         });
     }
