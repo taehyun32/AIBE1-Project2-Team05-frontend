@@ -3,7 +3,7 @@ require('dotenv').config();
 const config = {
     // API 프록시 설정
     apiProxy: {
-        target: 'http://backend.linkup.o-r.kr' || process.env.API_URL,
+        target: process.env.API_URL,
         changeOrigin: true,
         secure: process.env.NODE_ENV === 'production',
         pathRewrite: {
@@ -39,10 +39,6 @@ const config = {
         exposedHeaders: ['Authorization']
     },
 
-    // OAuth 설정
-    oauth: {
-        redirectUri: process.env.OAUTH_REDIRECT_URI || 'http://localhost:8080/auth/oauth2/callback'
-    }
 };
 
 module.exports = config;

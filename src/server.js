@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const routes = require('./routes'); // Import routes
+const oauthRouter = require('./routes/oauth'); // Import OAuth routes
 const config = require('../config'); // Import config
 require('dotenv').config(); // Load environment variables from .env file
 
@@ -38,6 +39,7 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // 라우터 설정
 app.use('/', routes);
+app.use('/api/oauth2', oauthRouter); // OAuth 라우트 등록
 
 // 테스트 라우터 (쿠키 읽기용)
 app.get('/check-csrf', (req, res) => {
