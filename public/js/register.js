@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (provider) {
         // 프론트엔드 서버의 OAuth 요청 라우트로 리다이렉트
         const url = `/oauth2/authorization/${provider}`;
-        const backendUrl = '${API_URL}url';
+        const backendUrl = `${process.env.API_URL}${url}`;  // 템플릿 리터럴 사용
         console.log(`소셜 로그인 요청: ${url}`);
         sessionStorage.setItem('isLoggedIn', 'true');
         window.location.href = backendUrl;
