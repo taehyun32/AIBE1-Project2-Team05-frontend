@@ -307,7 +307,7 @@
    * @throws {Error} -  가져오기가 실패하거나 API가 오류를 반환하는 경우
    */
   async function fetchApi(endpoint, params = {}) {
-    const url = new URL(API_BASE_URL + endpoint);
+    const url = new URL(API_BASE_URL + endpoint, window.location.origin);
     Object.keys(params).forEach((key) => {
       if (params[key] !== null && params[key] !== undefined) {
         url.searchParams.append(key, params[key]);
