@@ -220,7 +220,7 @@ async function setupLogoutHandler() {
   if (logoutButton) {
       logoutButton.addEventListener('click', async () => {
           try {
-              const response = await fetch('/api/logout', {
+              const response = await fetch('/api/v1/auth/logout', {
                   method: 'POST',
                   credentials: 'include',
               });
@@ -230,11 +230,12 @@ async function setupLogoutHandler() {
                   showLoggedOutState();
                   window.location.href = '/';
               } else {
-                  alert('로그아웃 중 오류가 발생했습니다.', response.status);
+                  alert('로그아웃 중 오류가 발생했습니다.');
+                  console.log(response.status);
               }
           } catch (error) {
               console.error('Logout error:', error);
-              alert('로그아웃 중 오류가 발생했습니다.', error);
+              alert('로그아웃 중 오류가 발생했습니다.');
           }
       });
   }
