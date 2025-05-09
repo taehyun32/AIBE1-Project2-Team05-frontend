@@ -186,9 +186,10 @@ async function handle401Error() {
         const data = await response.json();
         
         if (data.status === 200) {
-            // 리프레시 토큰이 유효한 경우
+            // 쿠키가 있는 경우
             sessionStorage.setItem('isLoggedIn', 'true');
             showLoggedInState();
+            refreshAccessToken();
             return true;
         }
 
@@ -206,6 +207,41 @@ async function handle401Error() {
 
 // 전역에서 사용할 수 있도록 window 객체에 추가
 window.handle401Error = handle401Error;
+
+
+/**
+ * 리프레시 토큰으로 새로운 액세스 토큰을 발급받는 함수
+ * @returns {Promise<boolean>} 성공 시 true, 실패 시 false
+ */
+async function refreshAccessToken() {
+    try {
+        const response = await fetch('/api/v1/auth/refresh', {
+            method: 'POST',
+            credentials: 'include', // 쿠키 기반 인증
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            // 서버가 새로운 액세스 토큰을 쿠키나 헤더로 내려줄 수 있음
+            // 필요하다면 추가로 세션스토리지 등에 상태 저장 가능
+            sessionStorage.setItem('isLoggedIn', 'true');
+            showLoggedInState();
+            return true;
+        } else {
+            // 리프레시 토큰 만료 등으로 실패
+            sessionStorage.removeItem('isLoggedIn');
+            showLoggedOutState();
+            return false;
+        }
+    } catch (error) {
+        console.error('refreshAccessToken error:', error);
+        sessionStorage.removeItem('isLoggedIn');
+        showLoggedOutState();
+        return false;
+    }
+}
 
 /**
  * 로그아웃 버튼 클릭 이벤트 처리

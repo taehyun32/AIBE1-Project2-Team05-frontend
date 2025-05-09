@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (provider) {
         
-        const url = `https://backend.linkup.o-r.kr/oauth2/authorization/${provider}`; 
+        const url = `http://localhost:8080/oauth2/authorization/${provider}`; 
         console.log(`소셜 로그인 요청: ${url}`);
         sessionStorage.setItem('isLoggedIn', 'true');
         window.location.href = url;
