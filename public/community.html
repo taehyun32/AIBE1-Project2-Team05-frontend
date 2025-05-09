@@ -68,9 +68,11 @@
 
     <!-- 분리된 커스텀 CSS 파일 링크 -->
     <link rel="stylesheet" href="./css/community.css" />
+    <script src="js/include.js"></script>
+    <script src="/js/authHandler.js"></script>
   </head>
-  <body>
-    <div data-include-path="./includes/header.html"></div>
+  <body class="bg-gray-50">
+    <div id="header-placeholder"></div>
 
     <main class="container mx-auto px-4 py-6">
       <div class="flex justify-between items-center mb-6">
@@ -662,6 +664,8 @@
       </div>
     </main>
 
+    <div id="footer-placeholder" class="mt-auto"></div>
+
     <!-- 전체 게시물 템플릿 -->
     <template id="postItemTemplate">
       <div
@@ -743,8 +747,5 @@
     </template>
 
     <script src="js/community.js"></script>
-    <script src="js/authHandler.js"></script>
-    <script src="js/include.js"></script>
-    <div data-include-path="./includes/footer.html"></div>
   </body>
 </html>

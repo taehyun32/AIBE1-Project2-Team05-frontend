@@ -198,7 +198,7 @@ async function checkLoginStatus() {
 async function checkWithServer() {
     try {
         console.log("Checking with server...");
-        const response = await fetch('/api/v1/auth/status', {
+        const response = await fetch('/status', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -264,56 +264,21 @@ async function refreshToken() {
  * 로그아웃 버튼 클릭 이벤트 처리
  */
 async function setupLogoutHandler() {
-    console.log("Setting up logout handler...");
-    const logoutButton = document.querySelector('#logged-in-buttons button[type="button"]');
-    console.log("Found logout button:", logoutButton);
-
+    const logoutButton = document.querySelector('#logged-in-buttons button');
     if (logoutButton) {
-        console.log("Adding click event listener to logout button");
-        logoutButton.addEventListener('click', async () => {
-            console.log("Logout button clicked");
+        logoutButton.addEventListener('click', async (e) => {
+            e.preventDefault();
             try {
-                const response = await fetch('/api/logout', {
+                await fetch('/api/logout', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    credentials: 'include',
-                    mode: 'cors'
+                    credentials: 'include'
                 });
-
-                if (response.ok) {
-                    console.log("Logout successful");
-                    // 로그아웃 성공 시 모든 세션 데이터 제거
-                    sessionStorage.clear();
-                    showLoggedOutState();
-                    
-                    // URL에서 로그인 관련 파라미터 제거
-                    const url = new URL(window.location.href);
-                    url.searchParams.delete('loggedIn');
-                    url.searchParams.delete('socialType');
-                    window.history.replaceState({}, '', url);
-                    
-                    // 소셜 로그인인 경우 소셜 로그아웃 처리
-                    const socialType = sessionStorage.getItem('socialType');
-                    if (socialType) {
-                        console.log("Processing social logout for:", socialType);
-                    }
-                    
-                    // 홈페이지로 리다이렉트
-                    window.location.href = '/';
-                } else {
-                    console.error('Logout failed:', response.status);
-                    alert('로그아웃 중 오류가 발생했습니다.');
-                }
+                sessionStorage.clear();
+                window.location.href = '/';
             } catch (error) {
                 console.error('Logout error:', error);
-                alert('로그아웃 중 오류가 발생했습니다.');
             }
         });
-    } else {
-        console.error("Logout button not found in the DOM");
     }
 }
 
@@ -349,3 +314,6 @@ function highlightActiveNavLink() {
         if (mypageLink) mypageLink.className = activeClass;
     }
 }
+
+// 페이지 로드 시 로그아웃 핸들러 설정
+document.addEventListener('DOMContentLoaded', setupLogoutHandler);
