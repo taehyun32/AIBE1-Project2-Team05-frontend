@@ -10,20 +10,39 @@ require('dotenv').config(); // Load environment variables from .env file
 
 const app = express();
 
-// ✅ CORS 설정
+// ✅ CORS 설정 - 수정된 보다 관대한 CORS 정책
 const corsOptions = {
     origin: function (origin, callback) {
-        // origin이 없는 경우 (같은 출처 요청) 허용
-        if (!origin || config.cors.allowedOrigins.includes(origin)) {
+        // 개발 환경에서는 모든 출처 허용 또는 명시된 출처만 허용
+        const allowedOrigins = config.cors && config.cors.allowedOrigins
+            ? config.cors.allowedOrigins
+            : [
+                'http://localhost:3000',
+                'http://localhost:8080',
+                'https://backend.linkup.o-r.kr',
+                'https://frontend.linkup.o-r.kr'
+            ];
+            
+        // origin이 없는 경우 (같은 출처 요청) 또는 허용된 출처에서 온 요청 허용
+        // 개발환경에서는 모든 출처 허용 옵션도 고려
+        if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV === 'development') {
             callback(null, true);
         } else {
-            callback(new Error('CORS policy violation'));
+            console.warn(`CORS 정책 위반 시도: ${origin}`);
+            callback(null, true); // 일시적으로 모든 출처 허용 (프로덕션 전에 제한 필요)
         }
     },
-    methods: config.cors.allowedMethods,
-    allowedHeaders: config.cors.allowedHeaders,
-    credentials: config.cors.allowCredentials,
-    exposedHeaders: config.cors.exposedHeaders
+    methods: config.cors && config.cors.allowedMethods
+        ? config.cors.allowedMethods
+        : ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: config.cors && config.cors.allowedHeaders
+        ? config.cors.allowedHeaders
+        : ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'X-CSRF-Token'],
+    credentials: true, // 항상 credentials 허용
+    exposedHeaders: config.cors && config.cors.exposedHeaders
+        ? config.cors.exposedHeaders
+        : ['Content-Length', 'X-Foo', 'X-Bar'],
+    maxAge: 86400 // 24시간
 };
 app.use(cors(corsOptions));
 
@@ -45,6 +64,7 @@ app.get('/check-csrf', (req, res) => {
     res.send(req.cookies);
 });
 
-app.listen(3000, () => {
-    console.log("port 3000 is open!")
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 })
