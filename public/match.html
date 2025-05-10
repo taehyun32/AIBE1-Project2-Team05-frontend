@@ -1,440 +1,252 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>재능 기부 플랫폼</title>
-    <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png">
-    <link rel="manifest" href="./assets/favicon/site.webmanifest">
-
-    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: { primary: "#4F46E5", secondary: "#10B981" },
-                    borderRadius: {
-                        none: "0px",
-                        sm: "4px",
-                        DEFAULT: "8px",
-                        md: "12px",
-                        lg: "16px",
-                        xl: "20px",
-                        "2xl": "24px",
-                        "3xl": "32px",
-                        full: "9999px",
-                        button: "8px",
-                    },
-                },
-            },
-        };
-    </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicon/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png" />
+    <link rel="manifest" href="./assets/favicon/site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="stylesheet" href="css/main.compiled.css" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
-    <link href="css/match.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js">
-    </script>
-</head>
-<body>
-<div data-include-path="./includes/header.html"></div>
-<main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-6">
-    <!-- 매칭 시스템 영역 (좌측) -->
-    <section class="w-full md:w-2/5 bg-white rounded-lg shadow-sm p-4">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
+    <link href="css/match.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <script src="js/match.js"></script>
+    <script src="js/authHandler.js"></script>
+    <script src="js/include.js"></script>
+  </head>
+  <body>
+    <div id="header-placeholder"></div>
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-6">
+      <!-- 매칭 시스템 영역 (좌측) -->
+      <section class="w-full md:w-2/5 bg-white rounded-lg shadow-sm p-4">
         <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-4">재능 매칭</h2>
-            <!-- 필터 섹션 -->
-            <div class="space-y-4 mb-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">카테고리</label>
-                    <div class="relative">
-                        <button class="w-full bg-white border border-gray-300 rounded px-4 py-2 text-left flex items-center justify-between" id="categoryButton">
-                            <span>카테고리 선택</span>
-                            <div class="w-5 h-5 flex items-center justify-center">
-                                <i class="ri-arrow-down-s-line"></i>
-                            </div>
-                        </button>
-                        <div class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden" id="categoryDropdown">
-                            <div class="py-1 max-h-60 overflow-y-auto custom-scrollbar">
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">교육</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">IT/프로그래밍</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">디자인</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">음악</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">언어</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">요리</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">운동/스포츠</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">심리/상담</button>
-                            </div>
-                        </div>
-                    </div>
+          <h2 class="text-xl font-semibold mb-4">재능 매칭</h2>
+          <!-- 필터 섹션 -->
+          <div class="space-y-4 mb-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">카테고리</label>
+              <div class="relative">
+                <button
+                  class="w-full bg-white border border-gray-300 rounded px-4 py-2 text-left flex items-center justify-between"
+                  id="categoryButton">
+                  <span>카테고리</span>
+                  <div class="w-5 h-5 flex items-center justify-center">
+                    <i class="ri-arrow-down-s-line"></i>
+                  </div>
+                </button>
+                <div
+                  class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden"
+                  id="categoryDropdown">
+                  <div class="py-1 max-h-60 overflow-y-auto custom-scrollbar">
+                    <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-category="WEB_DEV">
+                      프로그래밍/웹개발
+                    </button>
+                    <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-category="APP_DEV">
+                      프로그래밍/앱개발
+                    </button>
+                    <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-category="DESIGN_UX_UI">
+                      디자인/UX/UI
+                    </button>
+                    <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-category="DESIGN_GRAPHIC">
+                      디자인/그래픽
+                    </button>
+                    <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-category="EDUCATION_MATH">
+                      교육/수학
+                    </button>
+                    <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-category="EDUCATION_ENGLISH">
+                      교육/영어
+                    </button>
+                    <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-category="MUSIC_PIANO">
+                      음악/피아노
+                    </button>
+                    <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-category="FITNESS_YOGA">
+                      운동/요가
+                    </button>
+                  </div>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">지역</label>
-                    <div class="relative">
-                        <button class="w-full bg-white border border-gray-300 rounded px-4 py-2 text-left flex items-center justify-between" id="regionButton">
-                            <span>지역 선택</span>
-                            <div class="w-5 h-5 flex items-center justify-center">
-                                <i class="ri-arrow-down-s-line"></i>
-                            </div>
-                        </button>
-                        <div class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden" id="regionDropdown">
-                            <div class="py-1 max-h-60 overflow-y-auto custom-scrollbar">
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">서울</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">경기</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">인천</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">부산</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">대구</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">대전</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">광주</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">울산</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">세종</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">강원</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">충북</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">충남</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">전북</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">전남</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">경북</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">경남</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">제주</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">활동 가능 시간대</label>
-                    <div class="flex flex-wrap gap-2">
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" class="custom-checkbox">
-                            <span class="ml-2 text-sm">오전 (9-12시)</span>
-                        </label>
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" class="custom-checkbox">
-                            <span class="ml-2 text-sm">오후 (12-18시)</span>
-                        </label>
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" class="custom-checkbox">
-                            <span class="ml-2 text-sm">저녁 (18-22시)</span>
-                        </label>
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" class="custom-checkbox">
-                            <span class="ml-2 text-sm">주말만</span>
-                        </label>
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">활동 유형</label>
-                    <div class="flex gap-4">
-                        <label class="inline-flex items-center">
-                            <input type="radio" name="activityType" class="custom-radio">
-                            <span class="ml-2 text-sm">오프라인</span>
-                        </label>
-                        <label class="inline-flex items-center">
-                            <input type="radio" name="activityType" class="custom-radio">
-                            <span class="ml-2 text-sm">온라인</span>
-                        </label>
-                        <label class="inline-flex items-center">
-                            <input type="radio" name="activityType" class="custom-radio" checked>
-                            <span class="ml-2 text-sm">모두</span>
-                        </label>
-                    </div>
-                </div>
-                <button class="w-full bg-primary text-white py-2 rounded-button whitespace-nowrap hover:bg-indigo-600 transition">검색하기</button>
+              </div>
             </div>
-            <!-- 매칭 결과 목록 -->
-            <div class="space-y-4 overflow-y-auto custom-scrollbar max-h-[600px] pr-1">
-                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition cursor-pointer profile-card" data-profile-id="1">
-                    <div class="flex items-start gap-3">
-                        <div class="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
-                            <img src="https://readdy.ai/api/search-image?query=professional%20asian%20male%20portrait%2C%20neutral%20background%2C%20professional%20looking%2C%20high%20quality&width=100&height=100&seq=1&orientation=squarish" alt="프로필" class="w-full h-full object-cover">
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start">
-                                <h3 class="font-medium">김민준</h3>
-                                <div class="flex items-center text-sm text-gray-500">
-                                    <div class="w-4 h-4 flex items-center justify-center mr-1">
-                                        <i class="ri-map-pin-line"></i>
-                                    </div>
-                                    <span>서울 강남구</span>
-                                </div>
-                            </div>
-                            <p class="text-primary text-sm font-medium mt-1">프로그래밍 / 웹개발</p>
-                            <p class="text-sm text-gray-600 mt-2">5년차 웹 개발자입니다. 기초부터 실무까지 웹 개발 지식을 나누고 싶습니다. React, Node.js 전문.</p>
-                            <div class="flex items-center justify-between mt-3">
-                                <div class="flex items-center text-sm text-gray-500">
-                                    <div class="w-4 h-4 flex items-center justify-center mr-1">
-                                        <i class="ri-time-line"></i>
-                                    </div>
-                                    <span>주말, 평일 저녁</span>
-                                </div>
-                                <button class="text-primary text-sm font-medium hover:underline contact-btn" onclick="event.stopPropagation()">연락하기</button>
-                            </div>
-                        </div>
+            <div class="w-full">
+              <label class="block text-sm font-medium text-gray-700 mb-1">지역</label>
+              <div class="flex gap-2 w-full">
+                <!-- 지역 선택 -->
+                <div class="relative flex-1">
+                  <button
+                    class="w-full bg-white border border-gray-300 rounded px-4 py-2 text-left flex items-center justify-between"
+                    id="regionButton">
+                    <span>지역</span>
+                    <div class="w-5 h-5 flex items-center justify-center">
+                      <i class="ri-arrow-down-s-line"></i>
                     </div>
-                </div>
-                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
-                    <div class="flex items-start gap-3">
-                        <div class="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
-                            <img src="https://readdy.ai/api/search-image?query=professional%20asian%20female%20portrait%2C%20neutral%20background%2C%20friendly%20smile%2C%20high%20quality&width=100&height=100&seq=2&orientation=squarish" alt="프로필" class="w-full h-full object-cover">
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start">
-                                <h3 class="font-medium">이지은</h3>
-                                <div class="flex items-center text-sm text-gray-500">
-                                    <div class="w-4 h-4 flex items-center justify-center mr-1">
-                                        <i class="ri-map-pin-line"></i>
-                                    </div>
-                                    <span>서울 마포구</span>
-                                </div>
-                            </div>
-                            <p class="text-primary text-sm font-medium mt-1">디자인 / UI/UX</p>
-                            <p class="text-sm text-gray-600 mt-2">현직 UI/UX 디자이너로 활동 중입니다. 기초 디자인 원칙부터 실무에서 사용하는 피그마, 스케치 등 툴 사용법까지 알려드립니다.</p>
-                            <div class="flex items-center justify-between mt-3">
-                                <div class="flex items-center text-sm text-gray-500">
-                                    <div class="w-4 h-4 flex items-center justify-center mr-1">
-                                        <i class="ri-time-line"></i>
-                                    </div>
-                                    <span>평일 오후</span>
-                                </div>
-                                <button class="text-primary text-sm font-medium hover:underline">연락하기</button>
-                            </div>
-                        </div>
+                  </button>
+                  <div
+                    class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden"
+                    id="regionDropdown">
+                    <div class="py-1 max-h-60 overflow-y-auto custom-scrollbar">
+                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="1">서울</button>
+                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="2">인천</button>
+                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="3">대전</button>
+                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="4">대구</button>
+                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="5">광주</button>
+                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="6">부산</button>
+                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="7">울산</button>
+                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="8">세종</button>
+                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="31">경기</button>
+                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="32">강원</button>
+                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="33">충북</button>
+                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="34">충남</button>
+                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="35">경북</button>
+                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="36">경남</button>
+                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="37">전북</button>
+                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="38">전남</button>
+                      <button class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="39">제주</button>
                     </div>
+                  </div>
                 </div>
-                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
-                    <div class="flex items-start gap-3">
-                        <div class="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
-                            <img src="https://readdy.ai/api/search-image?query=professional%20asian%20male%20portrait%2C%20neutral%20background%2C%20glasses%2C%20friendly%20look%2C%20high%20quality&width=100&height=100&seq=3&orientation=squarish" alt="프로필" class="w-full h-full object-cover">
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start">
-                                <h3 class="font-medium">박준호</h3>
-                                <div class="flex items-center text-sm text-gray-500">
-                                    <div class="w-4 h-4 flex items-center justify-center mr-1">
-                                        <i class="ri-map-pin-line"></i>
-                                    </div>
-                                    <span>경기 성남시</span>
-                                </div>
-                            </div>
-                            <p class="text-primary text-sm font-medium mt-1">교육 / 수학</p>
-                            <p class="text-sm text-gray-600 mt-2">10년차 수학 강사입니다. 중고등학생 대상 수학 기초부터 수능 대비까지 맞춤형 교육을 제공합니다.</p>
-                            <div class="flex items-center justify-between mt-3">
-                                <div class="flex items-center text-sm text-gray-500">
-                                    <div class="w-4 h-4 flex items-center justify-center mr-1">
-                                        <i class="ri-time-line"></i>
-                                    </div>
-                                    <span>주말, 평일 저녁</span>
-                                </div>
-                                <button class="text-primary text-sm font-medium hover:underline">연락하기</button>
-                            </div>
-                        </div>
+                <!-- 시군구 선택 -->
+                <div class="relative flex-1">
+                  <button
+                    class="w-full bg-white border border-gray-300 rounded px-4 py-2 text-left flex items-center justify-between"
+                    id="sigunguButton">
+                    <span>시군구</span>
+                    <div class="w-5 h-5 flex items-center justify-center">
+                      <i class="ri-arrow-down-s-line"></i>
                     </div>
-                </div>
-                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
-                    <div class="flex items-start gap-3">
-                        <div class="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
-                            <img src="https://readdy.ai/api/search-image?query=professional%20asian%20female%20portrait%2C%20neutral%20background%2C%20casual%20style%2C%20high%20quality&width=100&height=100&seq=4&orientation=squarish" alt="프로필" class="w-full h-full object-cover">
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start">
-                                <h3 class="font-medium">최서연</h3>
-                                <div class="flex items-center text-sm text-gray-500">
-                                    <div class="w-4 h-4 flex items-center justify-center mr-1">
-                                        <i class="ri-map-pin-line"></i>
-                                    </div>
-                                    <span>서울 송파구</span>
-                                </div>
-                            </div>
-                            <p class="text-primary text-sm font-medium mt-1">음악 / 피아노</p>
-                            <p class="text-sm text-gray-600 mt-2">클래식 피아노 전공자로, 어린이부터 성인까지 맞춤형 피아노 레슨을 제공합니다. 취미와 전공 모두 가능합니다.</p>
-                            <div class="flex items-center justify-between mt-3">
-                                <div class="flex items-center text-sm text-gray-500">
-                                    <div class="w-4 h-4 flex items-center justify-center mr-1">
-                                        <i class="ri-time-line"></i>
-                                    </div>
-                                    <span>평일 오전, 오후</span>
-                                </div>
-                                <button class="text-primary text-sm font-medium hover:underline">연락하기</button>
-                            </div>
-                        </div>
+                  </button>
+                  <div
+                    class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden"
+                    id="sigunguDropdown">
+                    <div class="py-1 max-h-60 overflow-y-auto custom-scrollbar" id="sigunguOptions">
+                      <!-- 시군구 옵션은 지역에 따라 동적으로 생성 -->
                     </div>
+                  </div>
                 </div>
-                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
-                    <div class="flex items-start gap-3">
-                        <div class="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
-                            <img src="https://readdy.ai/api/search-image?query=professional%20asian%20male%20portrait%2C%20neutral%20background%2C%20athletic%20build%2C%20high%20quality&width=100&height=100&seq=5&orientation=squarish" alt="프로필" class="w-full h-full object-cover">
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start">
-                                <h3 class="font-medium">정우진</h3>
-                                <div class="flex items-center text-sm text-gray-500">
-                                    <div class="w-4 h-4 flex items-center justify-center mr-1">
-                                        <i class="ri-map-pin-line"></i>
-                                    </div>
-                                    <span>인천 연수구</span>
-                                </div>
-                            </div>
-                            <p class="text-primary text-sm font-medium mt-1">운동 / 요가</p>
-                            <p class="text-sm text-gray-600 mt-2">요가 강사 자격증을 보유한 전문 강사입니다. 초보자를 위한 기초 요가부터 고급 동작까지 맞춤형 지도를 해드립니다.</p>
-                            <div class="flex items-center justify-between mt-3">
-                                <div class="flex items-center text-sm text-gray-500">
-                                    <div class="w-4 h-4 flex items-center justify-center mr-1">
-                                        <i class="ri-time-line"></i>
-                                    </div>
-                                    <span>주말, 평일 저녁</span>
-                                </div>
-                                <button class="text-primary text-sm font-medium hover:underline">연락하기</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              </div>
             </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">활동 가능 시간대</label>
+              <div class="flex flex-wrap gap-2">
+                <label class="inline-flex items-center">
+                  <input type="checkbox" class="custom-checkbox" data-time="WEEKDAY_MORNING" />
+                  <span class="ml-2 text-sm">평일 오전</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input type="checkbox" class="custom-checkbox" data-time="WEEKDAY_AFTERNOON" />
+                  <span class="ml-2 text-sm">평일 오후</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input type="checkbox" class="custom-checkbox" data-time="WEEKDAY_EVENING" />
+                  <span class="ml-2 text-sm">평일 저녁</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input type="checkbox" class="custom-checkbox" data-time="WEEKEND_MORNING" />
+                  <span class="ml-2 text-sm">주말 오전</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input type="checkbox" class="custom-checkbox" data-time="WEEKEND_AFTERNOON" />
+                  <span class="ml-2 text-sm">주말 오후</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input type="checkbox" class="custom-checkbox" data-time="WEEKEND_EVENING" />
+                  <span class="ml-2 text-sm">주말 저녁</span>
+                </label>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">활동 유형</label>
+              <div class="flex gap-4">
+                <label class="inline-flex items-center">
+                  <input type="radio" name="activityType" class="custom-radio" data-type="ALL" checked />
+                  <span class="ml-2 text-sm">모두</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input type="radio" name="activityType" class="custom-radio" data-type="ONLINE" />
+                  <span class="ml-2 text-sm">온라인</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input type="radio" name="activityType" class="custom-radio" data-type="OFFLINE" />
+                  <span class="ml-2 text-sm">오프라인</span>
+                </label>
+              </div>
+            </div>
+            <button
+              id="searchButton"
+              class="w-full bg-primary text-white py-2 rounded-button whitespace-nowrap hover:bg-indigo-600 transition">
+              검색하기
+            </button>
+          </div>
+          <!-- 매칭 결과 목록은 동적으로 생성 -->
+          <div class="space-y-4 overflow-y-auto custom-scrollbar max-h-[600px] pr-1">
+            <div
+              class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition cursor-pointer profile-card"
+              data-profile-id="1"
+              hidden></div>
+          </div>
         </div>
-    </section>
-    <!-- 재능 기부자 상세 정보 영역 (우측) -->
-    <section class="w-full md:w-3/5 bg-white rounded-lg shadow-sm p-4">
+      </section>
+      <!-- 멘토 상세 정보 영역 (우측) -->
+      <section class="w-full md:w-3/5 bg-white rounded-lg shadow-sm p-4">
         <div id="profileDetail" class="hidden">
-            <div class="mb-6">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-4">
-                        <div class="w-20 h-20 rounded-full bg-gray-200 overflow-hidden">
-                            <img src="" alt="프로필" class="w-full h-full object-cover" id="profileDetailImg">
-                        </div>
-                        <div>
-                            <h2 class="text-2xl font-semibold" id="profileDetailName"></h2>
-                            <p class="text-primary font-medium" id="profileDetailCategory"></p>
-                        </div>
-                    </div>
-                    <button class="bg-primary text-white px-6 py-2 rounded-button whitespace-nowrap hover:bg-indigo-600">연락하기</button>
+          <div class="mb-6">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <div class="w-20 h-20 rounded-full bg-gray-200 overflow-hidden">
+                  <img src="" alt="프로필" class="w-full h-full object-cover" id="profileDetailImg" />
                 </div>
-                <div class="grid grid-cols-2 gap-4 mt-6">
-                    <div class="border border-gray-200 rounded-lg p-4">
-                        <div class="flex items-center gap-2 text-gray-600">
-                            <div class="w-5 h-5 flex items-center justify-center">
-                                <i class="ri-map-pin-line"></i>
-                            </div>
-                            <span>활동 지역</span>
-                        </div>
-                        <p class="mt-1 font-medium" id="profileDetailLocation"></p>
-                    </div>
-                    <div class="border border-gray-200 rounded-lg p-4">
-                        <div class="flex items-center gap-2 text-gray-600">
-                            <div class="w-5 h-5 flex items-center justify-center">
-                                <i class="ri-time-line"></i>
-                            </div>
-                            <span>활동 가능 시간</span>
-                        </div>
-                        <p class="mt-1 font-medium" id="profileDetailTime"></p>
-                    </div>
+                <div>
+                  <h2 class="text-2xl font-semibold" id="profileDetailName"></h2>
+                  <p class="text-primary font-medium" id="profileDetailCategory"></p>
                 </div>
-                <div class="mt-6">
-                    <h3 class="text-lg font-semibold mb-3">소개</h3>
-                    <p class="text-gray-700" id="profileDetailIntro"></p>
-                </div>
-                <div class="mt-6">
-                    <h3 class="text-lg font-semibold mb-3">재능 기부 게시글</h3>
-                    <div class="space-y-4" id="profileDetailPosts">
-                        <!-- 게시글은 JavaScript로 동적 생성됩니다 -->
-                    </div>
-                </div>
+              </div>
+              <button class="bg-primary text-white px-6 py-2 rounded-button whitespace-nowrap hover:bg-indigo-600">
+                연락하기
+              </button>
             </div>
+            <div class="grid grid-cols-2 gap-4 mt-6">
+              <div class="border border-gray-200 rounded-lg p-4">
+                <div class="flex items-center gap-2 text-gray-600">
+                  <div class="w-5 h-5 flex items-center justify-center">
+                    <i class="ri-map-pin-line"></i>
+                  </div>
+                  <span>활동 지역</span>
+                </div>
+                <p class="mt-1 font-medium" id="profileDetailLocation"></p>
+              </div>
+              <div class="border border-gray-200 rounded-lg p-4">
+                <div class="flex items-center gap-2 text-gray-600">
+                  <div class="w-5 h-5 flex items-center justify-center">
+                    <i class="ri-time-line"></i>
+                  </div>
+                  <span>활동 가능 시간</span>
+                </div>
+                <p class="mt-1 font-medium" id="profileDetailTime"></p>
+              </div>
+            </div>
+            <div class="mt-6">
+              <h3 class="text-lg font-semibold mb-3">소개</h3>
+              <p class="text-gray-700" id="profileDetailIntro"></p>
+            </div>
+            <div class="mt-6">
+              <h3 class="text-lg font-semibold mb-3">재능 기부 게시글</h3>
+              <div class="space-y-4" id="profileDetailPosts">
+                <!-- 게시글은 JavaScript로 동적 생성됩니다 -->
+              </div>
+            </div>
+          </div>
         </div>
         <div id="defaultMessage" class="flex flex-col items-center justify-center py-20 text-gray-500">
-            <div class="w-16 h-16 flex items-center justify-center mb-4">
-                <i class="ri-user-search-line ri-3x"></i>
-            </div>
-            <p class="text-lg">왼쪽의 프로필을 클릭하여 상세 정보를 확인하세요</p>
+          <div class="w-16 h-16 flex items-center justify-center mb-4">
+            <i class="ri-user-search-line ri-3x"></i>
+          </div>
+          <p class="text-lg">왼쪽의 프로필을 클릭하여 상세 정보를 확인하세요</p>
         </div>
-        <!-- 게시글 작성 폼 (기본적으로 숨겨져 있음) -->
-        <div class="mb-6 border border-gray-200 rounded-lg p-4 hidden" id="postForm">
-            <h3 class="text-lg font-medium mb-4">새 글 작성</h3>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">제목</label>
-                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="제목을 입력하세요">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">카테고리</label>
-                    <div class="relative">
-                        <button class="w-full bg-white border border-gray-300 rounded px-4 py-2 text-left flex items-center justify-between" id="postCategoryButton">
-                            <span>카테고리 선택</span>
-                            <div class="w-5 h-5 flex items-center justify-center">
-                                <i class="ri-arrow-down-s-line"></i>
-                            </div>
-                        </button>
-                        <div class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden" id="postCategoryDropdown">
-                            <div class="py-1">
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">질문/답변</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">정보공유</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">후기</button>
-                                <button class="w-full text-left px-4 py-2 hover:bg-gray-100">자유게시판</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">내용</label>
-                    <div class="border border-gray-300 rounded overflow-hidden">
-                        <div class="bg-gray-50 border-b border-gray-300 px-3 py-2 flex items-center space-x-2">
-                            <button class="editor-button">
-                                <div class="w-4 h-4 flex items-center justify-center">
-                                    <i class="ri-bold"></i>
-                                </div>
-                            </button>
-                            <button class="editor-button">
-                                <div class="w-4 h-4 flex items-center justify-center">
-                                    <i class="ri-italic"></i>
-                                </div>
-                            </button>
-                            <button class="editor-button">
-                                <div class="w-4 h-4 flex items-center justify-center">
-                                    <i class="ri-underline"></i>
-                                </div>
-                            </button>
-                            <button class="editor-button">
-                                <div class="w-4 h-4 flex items-center justify-center">
-                                    <i class="ri-list-unordered"></i>
-                                </div>
-                            </button>
-                            <button class="editor-button">
-                                <div class="w-4 h-4 flex items-center justify-center">
-                                    <i class="ri-list-ordered"></i>
-                                </div>
-                            </button>
-                            <button class="editor-button">
-                                <div class="w-4 h-4 flex items-center justify-center">
-                                    <i class="ri-link"></i>
-                                </div>
-                            </button>
-                            <button class="editor-button">
-                                <div class="w-4 h-4 flex items-center justify-center">
-                                    <i class="ri-image-add-line"></i>
-                                </div>
-                            </button>
-                        </div>
-                        <div class="editor-content" contenteditable="true" placeholder="내용을 입력하세요"></div>
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">태그</label>
-                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="태그를 입력하세요 (쉼표로 구분)">
-                </div>
-                <div class="flex justify-end space-x-2">
-                    <button class="px-4 py-2 border border-gray-300 rounded-button whitespace-nowrap hover:bg-gray-50" id="cancelPostBtn">취소</button>
-                    <button class="bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap hover:bg-indigo-600">등록하기</button>
-                </div>
-            </div>
-        </div>
-        <div class="space-y-6" id="postsList">
-        </div>
-    </section>
-</main>
-<div data-include-path="./includes/footer.html"></div>
-<script src="./js/authHandler.js"></script>
-<script src="./js/include.js"></script>
-<script src="js/match.js"></script>
-</body>
+      </section>
+    </main>
+    <div id="footer-placeholder" class="mt-auto"></div>
+  </body>
 </html>
