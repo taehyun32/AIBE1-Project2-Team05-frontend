@@ -1,0 +1,222 @@
+/* community.css */
+
+/* Remix Icon 기본 콘텐츠 설정 (필요시 확인 및 수정) */
+/* :where([class^="ri-"])::before { content: "\f3c2"; } */
+/* Note: If you are using RemixIcon from a CDN link in HTML, this rule might need adjustment */
+
+/* 기본 body 스타일 */
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  background-color: #f9fafb;
+}
+
+/* 커스텀 스크롤바 스타일 */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* 커스텀 스위치 스타일 */
+.custom-switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+.custom-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.switch-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e5e7eb;
+  transition: 0.4s;
+  border-radius: 20px;
+}
+.switch-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+input:checked + .switch-slider {
+  background-color: #4f46e5;
+}
+input:checked + .switch-slider:before {
+  transform: translateX(20px);
+}
+
+/* 커스텀 체크박스 스타일 */
+.custom-checkbox {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #d1d5db;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+  position: relative;
+}
+.custom-checkbox:checked {
+  background-color: #4f46e5;
+  border-color: #4f46e5;
+}
+.custom-checkbox:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* ====== 페이징 스타일 ====== */
+/* 페이징 컨테이너에 더 구체적인 선택자 사용 */
+.flex.justify-center.mt-6 > nav.inline-flex.rounded-md.shadow-sm {
+  /* 전체 테두리 적용 */
+  border: 1px solid #e5e7eb; /* border-gray-200 색상 */
+  /* 둥근 모서리 및 그림자는 이미 HTML 클래스(rounded-md, shadow-sm)에 있음 */
+  /* 내부 요소가 컨테이너의 둥근 모서리를 벗어나지 않도록 처리 */
+  overflow: hidden;
+}
+
+/* 페이징 링크에 더 구체적인 선택자 사용 */
+.flex.justify-center.mt-6 > nav.inline-flex.rounded-md.shadow-sm > a {
+  /* HTML에 적용된 개별 테두리 관련 Tailwind 클래스들을 오버라이드 */
+  border: none !important;
+
+  /* 이미지에 따른 비활성 상태의 배경 및 글씨색 */
+  /* HTML에 bg-white text-gray-500 또는 bg-gray-100 text-gray-700 있음. 이미지 색상으로 통일 */
+  background-color: #f3f4f6; /* 이미지 상의 연한 회색 배경 */
+  color: #4b5563; /* 이미지 상의 진한 회색 글씨 */
+
+  /* flexbox 속성들은 HTML 클래스(inline-flex)에 의해 적용됨. 필요시 추가 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* 패딩은 HTML 클래스(px-3 py-2)에 의해 적용됨 */
+  /* 폰트 크기는 HTML 클래스(text-sm)에 의해 적용됨 */
+  /* 호버 스타일은 HTML 클래스(hover:bg-gray-50)에 의해 적용됨. 아래에서 이미지에 맞게 재정의 */
+
+  text-decoration: none; /* 링크 밑줄 제거 */
+  cursor: pointer; /* 마우스 오버 시 포인터 모양 */
+  flex-shrink: 0; /* 내용이 줄어들지 않도록 */
+}
+
+/* 첫 번째 자식 (이전 버튼)을 제외한 모든 자식 요소에 좌측 테두리 추가 (구분선) */
+.flex.justify-center.mt-6
+  > nav.inline-flex.rounded-md.shadow-sm
+  > a:not(:first-child) {
+  border-left: 1px solid #e5e7eb !important; /* 세로 구분선, border-gray-200 색상 */
+}
+
+/* 활성 페이지 스타일 (HTML 클래스: bg-primary text-white) */
+.flex.justify-center.mt-6
+  > nav.inline-flex.rounded-md.shadow-sm
+  > a.bg-primary {
+  /* HTML 클래스의 배경/글씨색을 사용하지만, !important로 우선순위 보장 */
+  background-color: #4f46e5 !important; /* primary 색상 */
+  color: #fff !important; /* 흰색 글씨 */
+  /* font-weight: 500; /* 필요시 추가 (medium) */
+}
+
+/* 비활성 항목 호버 스타일 (HTML 클래스: hover:bg-gray-50) */
+.flex.justify-center.mt-6
+  > nav.inline-flex.rounded-md.shadow-sm
+  > a:hover:not(.bg-primary) {
+  /* 이미지 상의 호버 배경색으로 재정의 */
+  background-color: #e5e7eb !important; /* 이미지 상 호버 배경색, gray-200 색상 */
+  /* 글씨색은 비활성 기본색 유지 */
+}
+
+/* ====== 페이징 스타일 끝 ====== */
+/* ====== 카테고리 버튼 스타일 시작 ====== */
+
+/* 모든 카테고리 버튼의 기본 스타일 */
+.category-button {
+  padding-left: 1rem; /* 16px, Tailwind: px-4 */
+  padding-right: 1rem; /* 16px, Tailwind: px-4 */
+  padding-top: 0.5rem; /* 8px, Tailwind: py-2 */
+  padding-bottom: 0.5rem; /* 8px, Tailwind: py-2 */
+  border-radius: 9999px; /* Tailwind: rounded-full */
+  white-space: nowrap; /* Tailwind: whitespace-nowrap */
+  cursor: pointer; /* 버튼임을 나타냄 */
+  transition-property: background-color, border-color, color, fill, stroke,
+    opacity, box-shadow, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+  font-size: 1rem; /* 14px, Tailwind: text-sm (필요시 조절) */
+  line-height: 1.5rem; /* 20px */
+}
+
+/* 비활성 상태의 카테고리 버튼 스타일 */
+/* JavaScript에서 .category-button-inactive 클래스를 토글합니다. */
+.category-button.category-button-inactive {
+  background-color: #f3f4f6; /* Tailwind: bg-gray-100 */
+  color: #374151; /* Tailwind: text-gray-700 */
+}
+
+.category-button.category-button-inactive:hover {
+  background-color: #e5e7eb; /* Tailwind: hover:bg-gray-200 */
+}
+
+/* 활성 상태의 카테고리 버튼 스타일 */
+/* JavaScript에서 .category-button-active 클래스를 토글합니다. */
+.category-button.category-button-active {
+  background-color: #4f46e5; /* Tailwind primary color (tailwind.config.js에서 정의된 값) */
+  color: #ffffff; /* Tailwind: text-white */
+}
+
+/* ====== 카테고리 버튼 스타일 끝 ====== */
+
+/* ====== 태그 버튼 스타일 시작 ====== */
+.tag-button {
+  /* 기본 스타일은 renderPopularTags에서 Tailwind 클래스로 직접 부여 */
+  /* padding: 0.25rem 0.75rem; py-1 px-3 */
+  /* border-radius: 9999px; rounded-full */
+  /* font-size: 0.875rem; text-sm */
+  /* transition ... */
+  cursor: pointer;
+}
+
+.tag-button.tag-button-inactive {
+  background-color: #f3f4f6; /* bg-gray-100 */
+  color: #374151; /* text-gray-700 */
+}
+.tag-button.tag-button-inactive:hover {
+  background-color: #e5e7eb; /* hover:bg-gray-200 */
+}
+
+.tag-button.tag-button-active {
+  background-color: #4f46e5; /* primary color (bg-primary) */
+  color: #ffffff; /* text-white */
+  font-weight: 500; /* font-medium */
+}
+/* ====== 태그 버튼 스타일 끝 ====== */
