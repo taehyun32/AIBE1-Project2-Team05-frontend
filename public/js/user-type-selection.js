@@ -102,6 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const data = await response;
     if (data.status === 200) {
       console.log("권한 부여");
+      return response;
     } else if (data.status === 401) {
       const retry = await handle401Error();
       if (!retry) {

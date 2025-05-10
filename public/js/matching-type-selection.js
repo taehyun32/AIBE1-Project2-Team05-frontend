@@ -110,8 +110,12 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
 
             // 클릭 이벤트 추가
-            matchCard.addEventListener('click', () => {
-              window.location.href = match.contactLink;
+            matchCard.addEventListener('click', async (e) => {
+              e.preventDefault();
+              if (confirm("맨토와 연락하시겠습니까?")) {
+                await selectedMatchingUser(match.nickname);
+                window.location.href = match.contactLink;
+              } 
             });
 
             resultContainer.appendChild(matchCard);
@@ -144,3 +148,27 @@ document.addEventListener('DOMContentLoaded', function() {
     window.location.href = 'match.html';
   });
 });
+
+async function selectedMatchingUser(nickname  ) {
+  const response = await fetch(`/api/v1/matching/recommendations/${nickname}`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    }
+  });
+  if (response.status === 200) {
+    console.log(response.json());
+    return response;
+  }
+  if (response.status === 401) {
+    const retry = await handle401Error();
+    if (!retry) {
+      return;
+    }
+    await selectedMatchingUser(nickname);
+  } else {
+    console.log("매칭 추천 실패");
+  }
+}
