@@ -25,8 +25,11 @@
   const WEEKLY_POPULAR_POSTS_LIMIT = 5;
   const WEEKLY_POPULAR_POSTS_DAYS = 7;
 
-  const POPULAR_TAGS_LIMIT = 10;
-  const POPULAR_TAGS_DAYS = 30;
+  const POPULAR_TAGS_LIMIT = 7;
+  const POPULAR_TAGS_DAYS = 14;
+
+  const ACTIVE_USERS_LIMIT = 5;
+  const ACTIVE_USERS_DAYS = 14;
 
   // Category enum(백엔드)을 디스플레이 이름(프론트엔드)으로 매핑
   const CATEGORY_DISPLAY_NAMES = {
@@ -178,6 +181,34 @@
   }
 
   /**
+   * 활발한 사용자 항목에 대한 DOM 요소 생성
+   * @param {HTMLTemplateElement} templateElement - 활발한 사용자의 템플릿
+   * @param {object} userData - 활발한 사용자 데이터 ({  }).
+   * @returns {Node|null} 채워진 사용자 항목 또는 null을 반환
+   */
+  function createActiveUserItemFromTemplate(templateElement, userData) {
+    if (!templateElement || !userData) return null;
+    const clone = templateElement.content.cloneNode(true);
+    const profileImgEl = clone.querySelector(".active-user-profile-img");
+    const nicknameEl = clone.querySelector(".active-user-nickname");
+    const activityEl = clone.querySelector(".active-user-activity");
+
+    if (profileImgEl)
+      profileImgEl.src =
+        userData.profileImageUrl ||
+        `https://i.pravatar.cc/32?u=${encodeURIComponent(
+          userData.nickname || "default"
+        )}`;
+    if (nicknameEl) nicknameEl.textContent = userData.nickname || "익명";
+    if (activityEl)
+      activityEl.textContent = `게시글 ${userData.postCount || 0} | 댓글 ${
+        userData.commentCount || 0
+      }`;
+
+    return clone;
+  }
+
+  /**
    * 페이지네이션 컨트롤을 지정된 컨테이너로 렌더링
    * @param {HTMLElement} container - 페이지네이션을 위한 컨테이너 요소
    * @param {object} pageInfo - API 응답의 '페이지' 객체({크기, 숫자, totalElements, totalPages, first, last })
@@ -186,11 +217,6 @@
   function renderPagination(container, pageInfo, onPageClick) {
     if (!container) {
       console.warn("Pagination container not found.");
-      return;
-    }
-    // pageInfo가 null이거나 totalPages가 1 이하이면 숨김
-    if (!pageInfo || pageInfo.totalPages == null || pageInfo.totalPages <= 1) {
-      container.innerHTML = "";
       return;
     }
     container.innerHTML = "";
@@ -447,6 +473,16 @@
     return popularTags || [];
   }
 
+  /** 활발한 사용자 목록을 가져옵니다.
+   * @param {number} limit - 가져올 사용자의 최대 개수
+   * @returns {Promise<Array<object>>} - 유저 객체 배열 ({  })
+   */
+  async function fetchActiveUsers(limit = 5, days = 14) {
+    // 백엔드 로직 미구현 상태
+    const activeUsers = await fetchApi("/active-users", { limit, days });
+    return activeUsers || [];
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     // ---------------- State --------------------
     const state = {
@@ -461,6 +497,7 @@
         mainPopular: false,
         weeklyPopular: false,
         popularTags: false,
+        activeUsers: false,
       },
       totalPages: 0,
     };
@@ -541,9 +578,9 @@
     const weeklyPopularPostItemTemplate = document.getElementById(
       "weeklyPopularPostItemTemplate"
     );
-    // const activeUserItemTemplate = document.getElementById(
-    //   "activeUserItemTemplate"
-    // );
+    const activeUserItemTemplate = document.getElementById(
+      "activeUserItemTemplate"
+    );
 
     // -------------- Helper & State Update --------------
     function updateLoadingState(section, isLoading) {
@@ -578,6 +615,9 @@
       } else if (section === "popularTags") {
         indicator = popularTagsLoadingIndicator;
         emptyIndicatorAssociated = popularTagsEmptyIndicator;
+      } else if (section === "activeUsers") {
+        indicator = loadingActiveUsersIndicator;
+        emptyIndicatorAssociated = emptyActiveUsersIndicator;
       }
 
       if (indicator) indicator.classList.toggle("hidden", !isLoading);
@@ -594,6 +634,8 @@
         emptyIndicator = weeklyPopularEmptyIndicator;
       else if (section === "popularTags")
         emptyIndicator = popularTagsEmptyIndicator;
+      else if (section === "activeUsers")
+        emptyIndicator = emptyActiveUsersIndicator;
 
       if (emptyIndicator) emptyIndicator.classList.toggle("hidden", !show);
     }
@@ -748,6 +790,7 @@
         mainListLoadingIndicator.before(fragment);
       else communityListContainer.appendChild(fragment);
     }
+
     function renderPopularTags(tags) {
       if (!popularTagsContainer) return;
       popularTagsContainer.innerHTML = ""; // Clear previous
@@ -772,6 +815,27 @@
       });
       popularTagsContainer.appendChild(fragment);
       updatePopularTagsUI(); // 초기 활성 상태 반영
+    }
+
+    function renderActiveUsers(users) {
+      if (!activeUsersContainer || !activeUserItemTemplate) return;
+      activeUsersContainer.innerHTML = ""; // Clear previous
+
+      if (!users || users.length === 0) {
+        showEmptyMessage("activeUsers", true); // showEmptyMessage에 "activeUsers" 케이스 추가 필요
+        return;
+      }
+      showEmptyMessage("activeUsers", false);
+
+      const fragment = document.createDocumentFragment();
+      users.forEach((user) => {
+        const userElement = createActiveUserItemFromTemplate(
+          activeUserItemTemplate,
+          user
+        );
+        if (userElement) fragment.appendChild(userElement);
+      });
+      activeUsersContainer.appendChild(fragment);
     }
 
     // ------------------------ Core Logic -----------------------------------
@@ -806,6 +870,7 @@
         updateLoadingState("weeklyPopular", false);
       }
     }
+
     async function loadPopularTags() {
       updateLoadingState("popularTags", true);
       try {
@@ -869,6 +934,22 @@
         showEmptyMessage("mainList", true); // Show empty on error
       } finally {
         updateLoadingState("mainList", false);
+      }
+    }
+
+    async function loadActiveUsers() {
+      updateLoadingState("activeUsers", true);
+      try {
+        const users = await fetchActiveUsers(
+          ACTIVE_USERS_LIMIT,
+          ACTIVE_USERS_DAYS
+        );
+        renderActiveUsers(users);
+      } catch (error) {
+        displayError(`활발한 사용자 로딩 실패: ${error.message}`, false);
+        showEmptyMessage("activeUsers", true);
+      } finally {
+        updateLoadingState("activeUsers", false);
       }
     }
 
@@ -1045,6 +1126,7 @@
         loadMainPopular(),
         loadWeeklyPopular(),
         loadPopularTags(),
+        loadActiveUsers(),
         loadCommunityList(), // Main list depends on initial state, so fine here
       ]).then((results) => {
         results.forEach((result) => {
