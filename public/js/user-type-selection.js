@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // 선택 완료 버튼 클릭 시
-  confirmUserTypeBtn.addEventListener('click', function() {
+  confirmUserTypeBtn.addEventListener('click', async function() {
     // 선택된 사용자 유형 가져오기
     const selectedType = document.querySelector('input[name="userType"]:checked').value;
 
@@ -61,8 +61,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 실제 구현에서는 이 부분을 주석 해제하고 소셜 로그인 처리 후 리디렉션
     if (selectedType === 'mentee') {
+      const req = {
+        "role": "ROLE_MENTEE"
+      }
+      await getRole(req);
       window.location.href = 'mypage-mentee.html';
     } else {
+      const req = {
+        "role": "ROLE_MENTOR"
+      }
+      await getRole(req);
       window.location.href = 'mypage.html';
     }
   });
@@ -78,6 +86,31 @@ document.addEventListener('DOMContentLoaded', function() {
         return '구글로';
       default:
         return '';
+    }
+  }
+
+  async function getRole(req) {
+    const response = await fetch('/api/v1/auth/role', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(req)
+    });
+
+    const data = await response;
+    if (data.status === 200) {
+      console.log("권한 부여");
+    } else if (data.status === 401) {
+      const retry = await handle401Error();
+      if (!retry) {
+        window.location.href = '/login';
+        return;
+      }
+      await getRole(req);
+    } else {
+      console.log("권한 부여 실패1");
     }
   }
 });
