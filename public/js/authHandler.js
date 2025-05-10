@@ -189,7 +189,10 @@ async function handle401Error() {
             // 쿠키가 있는 경우
             sessionStorage.setItem('isLoggedIn', 'true');
             showLoggedInState();
-            refreshAccessToken();
+            const retry = await refreshAccessToken();
+            if (!retry) {
+                return false;
+            }
             return true;
         }
 
@@ -216,7 +219,7 @@ window.handle401Error = handle401Error;
 async function refreshAccessToken() {
     try {
         const response = await fetch('/api/v1/auth/refresh', {
-            method: 'POST',
+            method: 'GET',
             credentials: 'include', // 쿠키 기반 인증
             headers: {
                 'Accept': 'application/json'
