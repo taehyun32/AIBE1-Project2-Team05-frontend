@@ -9,7 +9,6 @@
     <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png" />
     <link rel="manifest" href="./assets/favicon/site.webmanifest" />
 
-<<<<<<< HEAD
     <link rel="stylesheet" href="css/main.compiled.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -19,6 +18,8 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
     <link rel="stylesheet" href="./css/mypage.css" />
     <link rel="stylesheet" href="./css/match.css" />
+    <script src="js/authHandler.js"></script>
+    <script src="js/include.js"></script>
     <script src="js/mypage-mentee.js"></script>
   </head>
   <body class="bg-gray-50">
@@ -34,120 +35,6 @@
                 src="https://readdy.ai/api/search-image?query=professional%20asian%20male%20portrait%2C%20neutral%20background%2C%20glasses%2C%20friendly%20look%2C%20high%20quality&width=100&height=100&seq=3&orientation=squarish"
                 alt="프로필 이미지"
                 class="w-full h-full object-cover" />
-=======
-  <link rel="stylesheet" href="css/main.compiled.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-          href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+KR:wght@400;500;700&display=swap"
-          rel="stylesheet"
-  />
-  <link
-          href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
-          rel="stylesheet"
-  />
-  <link rel="stylesheet" href="./css/mypage.css" />
-</head>
-<body class="bg-gray-50">
-<div id="header-placeholder"></div>
-
-<main class="container mx-auto px-4 py-8">
-  <!-- 사용자 프로필 헤더 -->
-  <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-    <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
-      <div class="relative">
-        <div class="w-32 h-32 rounded-full bg-gray-200 overflow-hidden">
-          <img
-                  id="profile-image"
-                  src="https://readdy.ai/api/search-image?query=professional%20asian%20male%20portrait%2C%20neutral%20background%2C%20glasses%2C%20friendly%20look%2C%20high%20quality&width=100&height=100&seq=3&orientation=squarish"
-                  alt="프로필 이미지"
-                  class="w-full h-full object-cover"
-          />
-        </div>
-      </div>
-      <div class="flex-1 text-center md:text-left">
-        <div class="flex flex-col md:flex-row md:items-center gap-2 mb-2">
-          <h1 class="text-2xl font-bold">열정멘티</h1>
-          <span class="bg-primary text-white text-xs px-2 py-1 rounded-full">멘티</span>
-        </div>
-        <p class="text-gray-600 mb-4">웹 개발 학습자 | 서울 마포구</p>
-        <p class="text-gray-700 mb-4">
-          웹 개발에 관심이 많은 초보 개발자입니다. React와 Node.js를 배우고 있으며, 실무 경험이 있는 멘토님의 도움을 구하고 있습니다.
-        </p>
-        <div class="flex flex-wrap gap-2">
-          <span class="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full">#프로그래밍</span>
-          <span class="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full">#웹개발</span>
-          <span class="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full">#React</span>
-          <span class="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full">#초보자</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 탭 메뉴 -->
-  <div class="bg-white rounded-lg shadow-sm mb-6">
-    <div class="border-b border-gray-200">
-      <nav class="flex overflow-x-auto">
-        <button class="tab-button active" data-tab="activity">나의 활동 내역</button>
-        <!--            <button class="tab-button" data-tab="posts">내 게시글/Q&A</button>-->
-        <!--            <button class="tab-button" data-tab="matching">매칭 현황</button>-->
-        <button class="tab-button" data-tab="reviews">작성 리뷰</button>
-        <button class="tab-button" data-tab="settings">프로필 설정</button>
-      </nav>
-    </div>
-  </div>
-
-  <!-- 탭 컨텐츠 - 나의 활동 내역 -->
-  <div class="tab-content" id="activity-content">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- 내가 신청한 매칭 -->
-      <div class="bg-white rounded-lg shadow-sm p-6">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-lg font-semibold">내가 신청한 매칭</h2>
-          <a href="more-details.html?type=matching-requests" class="text-primary text-sm font-medium hover:underline flex items-center">
-            <i class="ri-add-line mr-1"></i> 더보기
-          </a>
-        </div>
-        <div class="space-y-4">
-          <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
-            <div class="flex items-start gap-3">
-              <div class="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
-                <img
-                        src="https://readdy.ai/api/search-image?query=professional%20asian%20male%20portrait%2C%20neutral%20background%2C%20athletic%20build%2C%20high%20quality&width=100&height=100&seq=5&orientation=squarish"
-                        alt="프로필"
-                        class="w-full h-full object-cover"
-                />
-              </div>
-              <div class="flex-1">
-                <div class="flex justify-between items-start">
-                  <div>
-                    <h3 class="font-medium">정우진</h3>
-                    <p class="text-xs text-gray-500">2025-04-15 매칭</p>
-                  </div>
-                  <span class="bg-yellow-100 text-yellow-700 text-xs px-2 py-1 rounded-full">대기중</span>
-                </div>
-                <p class="text-primary text-sm font-medium mt-1">프로그래밍 / 웹개발</p>
-                <p class="text-sm text-gray-600 mt-2">
-                  React와 Node.js로 풀스택 개발 배우기 재능 매칭 중입니다.
-                </p>
-                <div class="flex items-center justify-between mt-3">
-                  <div class="flex items-center text-sm text-gray-500">
-                    <div class="w-4 h-4 flex items-center justify-center mr-1">
-                      <i class="ri-time-line"></i>
-                    </div>
-                    <span>매주 토요일 오후 2시</span>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <button class="text-primary text-sm font-medium hover:underline">
-                      연락하기
-                    </button>
-                    <button class="text-gray-500 hover:text-red-500 text-sm">
-                      종료하기
-                    </button>
-                  </div>
-                </div>
-              </div>
->>>>>>> b1281af (refactor: include와 authHandler js 통합)
             </div>
           </div>
           <div class="flex-1 text-center md:text-left">
@@ -194,187 +81,6 @@
                 <i class="ri-add-line mr-1"></i> 더보기
               </a>
             </div>
-<<<<<<< HEAD
-=======
-          </div>
-        </div>
-      </div>
-
-      <!-- 관심 목록 -->
-      <div class="bg-white rounded-lg shadow-sm p-6">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-lg font-semibold">관심 목록</h2>
-          <a href="/more-details.html?filter=all" class="text-primary text-sm font-medium hover:underline flex items-center">
-            <i class="ri-add-line mr-1"></i> 더보기
-          </a>
-        </div>
-
-        <!-- 북마크한 게시글 -->
-        <div class="mb-6">
-          <h3 class="text-base font-semibold mb-2 text-gray-800">📌 북마크한 게시글</h3>
-          <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
-            <div class="flex items-center text-xs text-gray-500 mb-1">
-              <span>2025-04-20</span>
-              <span class="mx-1">•</span>
-              <span>정보공유</span>
-            </div>
-            <h4 class="font-medium mb-1">비전공자를 위한 프로그래밍 학습 로드맵</h4>
-            <p class="text-sm text-gray-600">
-              비전공자가 프로그래밍을 시작할 때 어떤 순서로 공부하면 좋을지 정리한 글입니다.
-            </p>
-          </div>
-        </div>
-
-        <!-- 좋아요한 게시글 -->
-        <div>
-          <h3 class="text-base font-semibold mb-2 text-gray-800">❤️ 좋아요한 게시글</h3>
-          <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
-            <div class="flex items-center text-xs text-gray-500 mb-1">
-              <span>2025-04-18</span>
-              <span class="mx-1">•</span>
-              <span>질문/답변</span>
-            </div>
-            <h4 class="font-medium mb-1">초보자를 위한 프로젝트 추천</h4>
-            <p class="text-sm text-gray-600">
-              첫 사이드 프로젝트를 어떤 방향으로 잡을지 고민일 때 참고하기 좋은 글입니다.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 탭 컨텐츠 - 첨삭 리뷰 -->
-  <div class="tab-content hidden" id="reviews-content">
-    <div class="bg-white rounded-lg shadow-sm p-6">
-      <div class="flex justify-between items-center mb-6">
-        <h2 class="text-xl font-semibold">작성 리뷰</h2>
-        <a href="/write-review.html" class="bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap hover:bg-indigo-600 flex items-center">
-          <div class="w-5 h-5 flex items-center justify-center mr-1">
-            <i class="ri-add-line"></i>
-          </div>
-          새 리뷰 작성
-        </a>
-      </div>
-
-      <!-- 리뷰 목록 -->
-      <div class="space-y-6">
-        <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition">
-          <div class="flex justify-between items-start mb-4">
-            <div class="flex items-center gap-3">
-              <div class="w-12 h-12 rounded-full bg-gray-200 overflow-hidden">
-                <img
-                        src="https://readdy.ai/api/search-image?query=professional%20asian%20male%20portrait%2C%20neutral%20background%2C%20professional%20looking%2C%20high%20quality&width=100&height=100&seq=1&orientation=squarish"
-                        alt="프로필"
-                        class="w-full h-full object-cover"
-                />
-              </div>
-              <div>
-                <h3 class="font-medium">김민준 멘토님</h3>
-                <p class="text-xs text-gray-500">2025-04-20 작성</p>
-              </div>
-            </div>
-            <div class="flex items-center">
-              <i class="ri-star-fill text-yellow-400"></i>
-              <i class="ri-star-fill text-yellow-400"></i>
-              <i class="ri-star-fill text-yellow-400"></i>
-              <i class="ri-star-fill text-yellow-400"></i>
-              <i class="ri-star-line text-yellow-400"></i>
-              <span class="ml-1 text-sm font-medium text-yellow-400">4.0</span>
-            </div>
-          </div>
-          <div class="mb-4">
-            <h4 class="font-medium mb-2">React 컴포넌트 구조 첨삭 리뷰</h4>
-            <p class="text-gray-700">
-              React 컴포넌트 구조에 대한 첨삭 리뷰를 받았습니다. 멘토님께서 코드의 재사용성과 유지보수성을 높이는 방법에 대해 상세히 설명해주셨고, 실제 프로젝트에 적용할 수 있는 구체적인 예시도 제공해주셨습니다. 특히 상태 관리와 관련된 조언이 매우 유용했습니다.
-            </p>
-          </div>
-          <div class="flex justify-end">
-            <div class="flex items-center gap-2">
-              <button class="text-gray-500 hover:text-primary">
-                <i class="ri-edit-line"></i>
-              </button>
-              <button class="text-gray-500 hover:text-red-500">
-                <i class="ri-delete-bin-line"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- 페이지네이션 -->
-      <div class="flex justify-center mt-6">
-        <nav class="inline-flex rounded-md shadow-sm">
-          <a
-                  href="#"
-                  class="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 rounded-l-md"
-          >이전</a
-          >
-          <a
-                  href="#"
-                  class="px-3 py-2 border-t border-b border-gray-300 bg-primary text-white"
-          >1</a
-          >
-          <a
-                  href="#"
-                  class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
-          >2</a
-          >
-          <a
-                  href="#"
-                  class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
-          >3</a
-          >
-          <a
-                  href="#"
-                  class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
-          >4</a
-          >
-          <a
-                  href="#"
-                  class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
-          >5</a
-          >
-          <a
-                  href="#"
-                  class="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 rounded-r-md"
-          >다음</a
-          >
-        </nav>
-      </div>
-    </div>
-  </div>
-
-  <!-- 탭 컨텐츠 - 프로필 설정 -->
-  <div class="tab-content hidden" id="settings-content">
-    <div class="bg-white rounded-lg shadow-sm p-6">
-      <h2 class="text-xl font-semibold mb-6">프로필 설정</h2>
-
-      <form class="space-y-6">
-        <!-- 기본 정보 섹션 -->
-        <div>
-          <h3 class="text-lg font-medium mb-4">기본 정보</h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- 프로필 이미지 -->
-            <div class="flex flex-col items-center md:items-start">
-              <label class="block text-sm font-medium text-gray-700 mb-2">프로필 이미지</label>
-              <div class="relative">
-                <div class="w-32 h-32 rounded-full bg-gray-200 overflow-hidden">
-                  <img
-                          id="profile-image-preview"
-                          src="https://readdy.ai/api/search-image?query=professional%20asian%20male%20portrait%2C%20neutral%20background%2C%20glasses%2C%20friendly%20look%2C%20high%20quality&width=100&height=100&seq=3&orientation=squarish"
-                          alt="프로필 이미지"
-                          class="w-full h-full object-cover"
-                  />
-                </div>
-                <button type="button" class="absolute bottom-0 right-0 bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-indigo-600">
-                  <i class="ri-camera-line"></i>
-                </button>
-              </div>
-              <p class="text-xs text-gray-500 mt-2">권장 크기: 500x500 픽셀</p>
-            </div>
-
-            <!-- 닉네임 및 사용자 유형 -->
->>>>>>> b1281af (refactor: include와 authHandler js 통합)
             <div class="space-y-4">
               <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
                 <div class="flex items-start gap-3">
@@ -865,11 +571,6 @@ React와 Node.js를 활용한 풀스택 개발을 배우고 싶습니다. 특히
       </div>
     </main>
     <div id="footer-placeholder" class="mt-auto"></div>
-<<<<<<< HEAD
     <script src="/js/include-and-authHandler.js"></script>
-=======
->>>>>>> b1281af (refactor: include와 authHandler js 통합)
   </body>
-  <script src="/js/include-and-authHandler.js"></script>
-  <script src="js/mypage.js"></script>
 </html>
