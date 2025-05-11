@@ -219,7 +219,7 @@ window.handle401Error = handle401Error;
 async function refreshAccessToken() {
     try {
         const response = await fetch('/api/v1/auth/refresh', {
-            method: 'GET',
+            method: 'POST',
             credentials: 'include', // 쿠키 기반 인증
             headers: {
                 'Accept': 'application/json'
