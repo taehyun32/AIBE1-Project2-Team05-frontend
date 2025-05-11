@@ -257,7 +257,10 @@ async function setupLogoutHandler() {
             try {
                 await fetch('/api/logout', {
                     method: 'POST',
-                    credentials: 'include'
+                    credentials: 'include',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
                 });
                 sessionStorage.clear();
                 window.location.href = '/';
