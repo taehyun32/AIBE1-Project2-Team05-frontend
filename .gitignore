@@ -4,3 +4,5 @@ package-lock.json
 key.pem
 cert.pem
 .env
+auth.js
+register.js

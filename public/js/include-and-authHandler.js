@@ -1,8 +1,3 @@
-/**
- * include_and_auth.js
- * 통합 HTML 삽입 및 인증 상태 처리 스크립트
- */
-
 // 페이지 이동 함수
 function navigateTo(path) {
     window.location.href = path;
@@ -106,11 +101,11 @@ function navigateTo(path) {
   async function ensureAuthenticated() {
     const isLogged = sessionStorage.getItem('isLoggedIn') === 'true';
     if (isLogged) return true;
-    const refreshed = await handle401Error();
+    const refreshed = await handle401();
     return refreshed;
   }
   
-  async function handle401Error() {
+  async function handle401() {
     try {
       const res = await fetch('/status', { credentials: 'include' });
       if (res.ok) {
@@ -123,8 +118,6 @@ function navigateTo(path) {
     updateAuthUI();
     return false;
   }
-
-  window.handle401Error = handle401Error;
   
   async function refreshToken() {
     try {
@@ -144,7 +137,13 @@ function navigateTo(path) {
     const path = location.pathname;
     const activeCls = 'text-primary font-medium border-b-2 border-primary pb-1';
     const inactiveCls = 'text-gray-800 hover:text-primary font-medium';
-    document.querySelectorAll('nav a, nav button').forEach(el => el.className = inactiveCls);
+  
+    // 헤더 내 네비게이션 링크만 대상으로 제한
+    const headerNav = document.querySelector('#header-placeholder nav');
+    if (!headerNav) return;
+  
+    headerNav.querySelectorAll('a, button').forEach(el => el.className = inactiveCls);
+  
     if (path === '/' || path.includes('index.html')) selectNav('nav-home', activeCls);
     else if (path.includes('match') || path.includes('matching')) selectNav('nav-match', activeCls);
     else if (path.includes('community')) selectNav('nav-community', activeCls);
