@@ -244,6 +244,38 @@ function renderPostDetail(post) {
   setElementText('commentCount', post.commentCount || 0);
   setElementText('totalComments', post.commentCount || 0);
 
+  
+  // 초기 좋아요 상태 설정
+  const likeIcon = document.getElementById('likeIcon');
+  if (likeIcon) {
+    if (post.liked) {
+      // API 응답에 'liked' 필드가 있고, true이면
+      likeIcon.classList.remove('ri-heart-line');
+      likeIcon.classList.add('ri-heart-fill');
+      likeIcon.style.color = '#ef4444'; // 좋아요 활성 색상 (빨간색 계열)
+    } else {
+      likeIcon.classList.remove('ri-heart-fill');
+      likeIcon.classList.add('ri-heart-line');
+      likeIcon.style.color = ''; // 기본 아이콘 색상
+    }
+  }
+
+  // 초기 북마크 상태 설정
+  const bookmarkIcon = document.getElementById('bookmarkIcon');
+  if (bookmarkIcon) {
+    if (post.bookmarked) {
+      // API 응답에 'bookmarked' 필드가 있고, true이면
+      bookmarkIcon.classList.remove('ri-bookmark-line');
+      bookmarkIcon.classList.add('ri-bookmark-fill');
+      bookmarkIcon.style.color = '#3b82f6'; // 북마크 활성 색상
+    } else {
+      bookmarkIcon.classList.remove('ri-bookmark-fill');
+      bookmarkIcon.classList.add('ri-bookmark-line');
+      bookmarkIcon.style.color = ''; // 기본 아이콘 색상
+    }
+  }
+
+
   // 프로필 이미지 설정
   const defaultProfileImage = 'https://i.pravatar.cc/100?u=' + encodeURIComponent(post.userId || 'default');
   const profileImage = post.profileImageUrl || defaultProfileImage;
@@ -862,91 +894,133 @@ async function handleShare() {
 // 북마크 처리 핸들러
 async function handleBookmark() {
   const bookmarkIcon = document.getElementById('bookmarkIcon');
+  if (!bookmarkIcon) return;
 
+  // (실제 서비스용) 로그인 상태 확인
+  // if (currentUser && currentUser.isGuest) {
+  //   showToast("북마크하려면 로그인이 필요합니다.", "warning");
+  //   return;
+  // }
+
+  const isCurrentlyBookmarked =
+    bookmarkIcon.classList.contains('ri-bookmark-fill');
+  const newBookmarkedState = !isCurrentlyBookmarked;
+
+  // --- (실제 서비스용) API 호출 로직 (현재는 개발 모드로 주석 처리) ---
   try {
-    // 현재 북마크 상태 확인
-    const isCurrentlyBookmarked = bookmarkIcon.classList.contains('ri-bookmark-fill');
-
-    // 북마크 상태 토글 (개발 모드)
-    if (isCurrentlyBookmarked) {
-      bookmarkIcon.classList.remove('ri-bookmark-fill');
-      bookmarkIcon.classList.add('ri-bookmark-line');
-      bookmarkIcon.style.color = '';
-      showToast('북마크가 해제되었습니다 (개발 모드)', 'info');
-    } else {
-      bookmarkIcon.classList.remove('ri-bookmark-line');
-      bookmarkIcon.classList.add('ri-bookmark-fill');
-      bookmarkIcon.style.color = '#3b82f6';
-      showToast('북마크에 추가되었습니다 (개발 모드)', 'success');
+    const response = await fetch(
+      `/api/v1/community/details/${postId}/bookmark`,
+      {
+        method: 'POST', // 북마크 상태에 따라 추가 또는 삭제
+        credentials: 'include'
+      }
+    );
+    if (response.status === 401) {
+      showToast('로그인이 필요합니다.', 'error');
+      return;
     }
+    if (!response.ok) {
+      throw new Error(`북마크 ${newBookmarkedState ? '추가' : '해제'} 실패`);
+    }
+    // API 성공 시 아래 UI 업데이트 로직 실행
   } catch (error) {
-    console.error('북마크 처리 오류:', error);
+    console.error('북마크 처리 API 오류:', error);
     showToast('북마크 처리 중 오류가 발생했습니다', 'error');
+    return; // 오류 발생 시 UI 변경하지 않음
+  }
+  // --- API 호출 로직 끝 ---
+
+  // UI 업데이트 (개발 모드 및 API 성공 시)
+  if (newBookmarkedState) {
+    // 북마크 추가
+    bookmarkIcon.classList.remove('ri-bookmark-line');
+    bookmarkIcon.classList.add('ri-bookmark-fill');
+    bookmarkIcon.style.color = '#3b82f6'; // 지정된 파란색 (활성 상태)
+    showToast(
+      currentUser.isGuest || !postId
+        ? '북마크에 추가되었습니다 (개발 모드)'
+        : '북마크에 추가되었습니다.',
+      'success'
+    );
+  } else {
+    // 북마크 해제
+    bookmarkIcon.classList.remove('ri-bookmark-fill');
+    bookmarkIcon.classList.add('ri-bookmark-line');
+    bookmarkIcon.style.color = ''; // 기본 아이콘 색상
+    showToast(
+      currentUser.isGuest || !postId
+        ? '북마크가 해제되었습니다 (개발 모드)'
+        : '북마크가 해제되었습니다.',
+      'info'
+    );
   }
 }
 
 // 좋아요 처리 핸들러
 async function handleLike() {
   const likeIcon = document.getElementById('likeIcon');
-  const likeCount = document.getElementById('likeCount');
+  const likeCountElement = document.getElementById('likeCount'); // Element로 가져오기
+  if (!likeIcon || !likeCountElement) return;
 
+  // // (실제 서비스용) 로그인 상태 확인
+  // if (currentUser && currentUser.isGuest) {
+  //   showToast("좋아요를 누르려면 로그인이 필요합니다.", "warning");
+  //   return;
+  // }
+
+  // --- API 호출 ---
   try {
-    // 현재 좋아요 상태 확인
-    const isCurrentlyLiked = likeIcon.classList.contains('ri-heart-fill');
-
-    // 좋아요 수 가져오기
-    let currentLikes = parseInt(likeCount.textContent) || 0;
-
-    // 좋아요 상태 토글 (개발 모드)
-    if (isCurrentlyLiked) {
-      likeIcon.classList.remove('ri-heart-fill');
-      likeIcon.classList.add('ri-heart-line');
-      likeIcon.style.color = '';
-      likeCount.textContent = Math.max(0, currentLikes - 1);
-      showToast('좋아요가 취소되었습니다 (개발 모드)', 'info');
-    } else {
-      likeIcon.classList.remove('ri-heart-line');
-      likeIcon.classList.add('ri-heart-fill');
-      likeIcon.style.color = '#ef4444';
-      likeCount.textContent = currentLikes + 1;
-      showToast('좋아요를 눌렀습니다 (개발 모드)', 'success');
-    }
-  } catch (error) {
-    console.error('좋아요 처리 오류:', error);
-    showToast('좋아요 처리 중 오류가 발생했습니다', 'error');
-  }
-}
-
-// 북마크 상태 확인
-async function checkBookmarkStatus(postId) {
-  try {
-    const bookmarkIcon = document.getElementById('bookmarkIcon');
-    if (!bookmarkIcon) return;
-
-    // 기본적으로 북마크 안 된 상태로 설정
-    bookmarkIcon.classList.remove('ri-bookmark-fill');
-    bookmarkIcon.classList.add('ri-bookmark-line');
-    bookmarkIcon.style.color = '';
-
-    const response = await fetch(`/api/v1/community/${postId}/bookmark/status`, {
+    const response = await fetch(`/api/v1/community/details/${postId}/like`, {
+      method: 'POST',
       credentials: 'include'
     });
 
-    // 401, 404 같은 오류는 무시 (북마크 안 함 상태로 표시)
-    if (!response.ok) return;
+    if (response.status === 401) {
+      showToast('로그인이 필요합니다.', 'error');
+      return;
+    }
 
+    if (!response.ok) {
+      const errorBody = await response.text();
+      console.error('좋아요 API 오류 응답:', errorBody);
+      throw new Error(`좋아요 처리 실패 (Status: ${response.status})`);
+    }
+
+    // API 호출 성공: 서버로부터 받은 최신 정보로 UI 업데이트
     const result = await response.json();
-    const isBookmarked = result.data?.bookmarked;
+    const data = result.data; // 응답 형식이 { data: { likeCount: N, liked: B } } 라고 가정
 
-    // 북마크 된 상태이면 아이콘 변경
-    if (isBookmarked) {
-      bookmarkIcon.classList.remove('ri-bookmark-line');
-      bookmarkIcon.classList.add('ri-bookmark-fill');
-      bookmarkIcon.style.color = '#3b82f6';
+    // 서버 응답 데이터 유효성 검증 (간단하게)
+    if (
+      !data ||
+      typeof data.likeCount !== 'number' ||
+      typeof data.liked !== 'boolean'
+    ) {
+      console.error('좋아요 API 응답 데이터 형식이 예상과 다릅니다:', result);
+      showToast('좋아요 상태 업데이트 중 오류가 발생했습니다.', 'error');
+      return;
+    }
+
+    // 1. 좋아요 수 업데이트 (서버에서 받은 값 사용)
+    likeCountElement.textContent = data.likeCount;
+
+    // 2. 아이콘 상태 및 토스트 메시지 업데이트 (서버에서 받은 'data.liked' 상태 기준)
+    if (data.liked === true) {
+      // 서버가 '좋아요' 상태라고 응답
+      likeIcon.classList.remove('ri-heart-line');
+      likeIcon.classList.add('ri-heart-fill');
+      likeIcon.style.color = '#ef4444'; // 좋아요 활성 색상
+      showToast('좋아요를 눌렀습니다.', 'success');
+    } else {
+      // 서버가 '좋아요 취소' 상태라고 응답
+      likeIcon.classList.remove('ri-heart-fill');
+      likeIcon.classList.add('ri-heart-line');
+      likeIcon.style.color = ''; // 기본 아이콘 색상
+      showToast('좋아요가 취소되었습니다.', 'info');
     }
   } catch (error) {
-    console.error('북마크 상태 확인 오류:', error);
-    // 오류 발생 시 기본 상태 유지
+    console.error('좋아요 처리 중 오류:', error);
+    showToast(error.message || '좋아요 처리 중 오류가 발생했습니다', 'error');
   }
 }
 
