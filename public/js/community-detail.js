@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // 사용자 정보 로드 함수
 async function loadCurrentUser() {
   try {
-    const response = await fetch('/api/v1/users/current', {
+    const response = await fetch('/api/v1/authUser/me', {
       credentials: 'include'
     });
 
@@ -33,7 +33,6 @@ async function loadCurrentUser() {
       // 게스트 사용자로 설정
       currentUser = {
         isGuest: true,
-        id: 'guest',
         nickname: '게스트',
         profileImage: 'https://i.pravatar.cc/40?u=guest'
       };
@@ -41,32 +40,32 @@ async function loadCurrentUser() {
     }
 
     // API 경로가 변경되었거나 아직 구현되지 않은 경우 (404)
-    if (response.status === 404) {
-      console.warn('사용자 정보 API를 찾을 수 없습니다. 대체 API를 시도합니다.');
+    // if (response.status === 404) {
+    //   console.warn('사용자 정보 API를 찾을 수 없습니다. 대체 API를 시도합니다.');
 
-      // 대체 API 경로 시도
-      const alternativeResponse = await fetch('/api/v1/members/me', {
-        credentials: 'include'
-      });
+    //   // 대체 API 경로 시도
+    //   const alternativeResponse = await fetch('/api/v1/members/me', {
+    //     credentials: 'include'
+    //   });
 
-      if (!alternativeResponse.ok) {
-        throw new Error('현재 사용자 정보를 가져올 수 없습니다.');
-      }
+    //   if (!alternativeResponse.ok) {
+    //     throw new Error('현재 사용자 정보를 가져올 수 없습니다.');
+    //   }
 
-      const userData = await alternativeResponse.json();
+    //   const userData = await alternativeResponse.json();
 
-      currentUser = {
-        isGuest: false,
-        id: userData.data.id || userData.data.userId || userData.data.memberId,
-        nickname: userData.data.nickname || userData.data.name || '사용자',
-        profileImage: userData.data.profileImageUrl || userData.data.profileImage || `https://i.pravatar.cc/40?u=${userData.data.id}`,
-        email: userData.data.email || '',
-        // 필요한 경우 추가 사용자 정보
-      };
+    //   currentUser = {
+    //     isGuest: false,
+    //     id: userData.data.id || userData.data.userId || userData.data.memberId,
+    //     nickname: userData.data.nickname || userData.data.name || '사용자',
+    //     profileImage: userData.data.profileImageUrl || userData.data.profileImage || `https://i.pravatar.cc/40?u=${userData.data.id}`,
+    //     email: userData.data.email || '',
+    //     // 필요한 경우 추가 사용자 정보
+    //   };
 
-      console.log('사용자 정보 로드 성공 (대체 API):', currentUser);
-      return;
-    }
+    //   console.log('사용자 정보 로드 성공 (대체 API):', currentUser);
+    //   return;
+    // }
 
     if (!response.ok) {
       throw new Error('사용자 정보를 가져오는 중 오류 발생: ' + response.status);
@@ -76,10 +75,8 @@ async function loadCurrentUser() {
 
     currentUser = {
       isGuest: false,
-      id: userData.data.id || userData.data.userId,
-      nickname: userData.data.nickname || userData.data.name || '사용자',
-      profileImage: userData.data.profileImageUrl || userData.data.profileImage || `https://i.pravatar.cc/40?u=${userData.data.id}`,
-      email: userData.data.email || '',
+      nickname: userData.data.nickname || '사용자',
+      profileImage: userData.data.profileImageUrl || `https://i.pravatar.cc/40?u=${userData.data.nickname}`,
       // 필요한 경우 추가 사용자 정보
     };
 
@@ -93,7 +90,6 @@ async function loadCurrentUser() {
     // 오류 발생 시 게스트 사용자로 설정
     currentUser = {
       isGuest: true,
-      id: 'guest',
       nickname: '게스트',
       profileImage: 'https://i.pravatar.cc/40?u=guest'
     };
@@ -370,7 +366,7 @@ function setupEditDeleteButtons(post) {
   if (!postActions) return;
 
   // 현재 사용자가 게시글 작성자인지 확인
-  if (currentUser && post.userId === currentUser.id) {
+  if (currentUser && post.nickname === currentUser.nickname) {
     postActions.classList.remove('hidden');
 
     // 수정 버튼 클릭 이벤트
@@ -511,7 +507,7 @@ function renderComments(comments) {
 
 // 댓글 HTML 생성
 function createCommentHtml(comment) {
-  const isMyComment = currentUser && comment.userId === currentUser.id;
+  const isMyComment = currentUser && comment.nickname === currentUser.nickname;
   const profileImage = comment.profileImageUrl || `https://i.pravatar.cc/40?u=${comment.userId}`;
 
   return `
@@ -562,7 +558,7 @@ function createCommentHtml(comment) {
 
 // 자식 댓글 HTML 생성
 function createChildCommentHtml(comment) {
-  const isMyComment = currentUser && comment.userId === currentUser.id;
+  const isMyComment = currentUser && comment.nickname === currentUser.nickname;
   const profileImage = comment.profileImageUrl || `https://i.pravatar.cc/40?u=${comment.userId}`;
 
   return `
@@ -716,7 +712,6 @@ function addTempReply(commentElement, replyText) {
   // 임시 답글 데이터 생성
   const tempReply = {
     id: 'temp-reply-' + Date.now(),
-    userId: currentUser.id,
     nickname: currentUser.nickname,
     profileImageUrl: currentUser.profileImage,
     commentContent: replyText,
@@ -800,7 +795,6 @@ function handleCommentSubmit() {
           // 새 댓글 생성
           const tempComment = {
             id: 'temp-comment-' + Date.now(),
-            userId: currentUser.id,
             nickname: currentUser.nickname,
             profileImageUrl: currentUser.profileImage,
             commentContent: commentText,
