@@ -386,7 +386,8 @@ async function saveProfileChanges() {
   const matchToggle = document.querySelector('input[name="accept-matching"]');
   const openToMatching = matchToggle ? matchToggle.checked : false;
 
-  const nickname = nicknameInput?.value.trim();
+  const nickname = sessionStorage.getItem('nickname');
+  const nick = nicknameInput?.value.trim();
   const introduction = introInput?.value.trim();
   const activityTime = timeSelect?.value;
   const areaCode = regionButton?.getAttribute("data-area");
@@ -404,7 +405,7 @@ async function saveProfileChanges() {
     alert('닉네임을 입력해주세요.');
     return;
   }
-  if (!activityType) {
+  if (!activityType || activityType === '선택') {
     alert('활동 유형을 선택해주세요.');
     return;
   }
@@ -430,7 +431,7 @@ async function saveProfileChanges() {
       },
       credentials: 'include',
       body: JSON.stringify({
-        nickname: nickname,
+        nickname: nick,
         introduction: introduction,
         interest: interest,
         activityTime: activityTime,
@@ -443,18 +444,12 @@ async function saveProfileChanges() {
       }),
     });
 
-    if (response.ok) {
-      const result = await response.json();
-      if (result.code === 'SUCCESS') { // 수정: result.data 대신 result.code 사용
-        alert('프로필이 성공적으로 업데이트되었습니다.');
-      } else {
-        alert(result.message || '프로필 업데이트 실패');
-      }
+    if (response.status === 200) {
+      console.log("성공")
     } else {
-      alert(`프로필 업데이트 실패: ${response.status}`);
+      console.log(`프로필 업데이트 실패: ${response.status}`);
     }
   } catch (error) {
     console.error('프로필 업데이트 중 오류 발생:', error);
-    alert('프로필 업데이트 중 오류가 발생했습니다.');
   }
 }
