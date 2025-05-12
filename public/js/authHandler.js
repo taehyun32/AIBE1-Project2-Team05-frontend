@@ -88,6 +88,15 @@ function processPlaceholders() {
                 headerPlaceholder.innerHTML = data;
                 highlightActiveNavLink();
                 setupLogoutHandler();
+
+                // 마이페이지 버튼 클릭 이벤트 설정
+                const myPageButton = document.querySelector('#nav-mypage');
+                if (myPageButton) {
+                    myPageButton.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        await handleMyPageClick();
+                    });
+                }
                 
                 // 헤더 로드 후 로그인 상태에 따라 UI 업데이트
                 const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
@@ -304,5 +313,66 @@ function highlightActiveNavLink() {
     }
 }
 
-// 페이지 로드 시 로그아웃 핸들러 설정
-document.addEventListener('DOMContentLoaded', setupLogoutHandler);
+/**
+ * 페이지 이동 처리 함수
+ */
+async function navigateTo(path) {
+    try {
+        if (path === '/community' || path === '/matching-type-selection') {
+            const isRefreshed = await handle401Error();
+            if (isRefreshed) {
+                window.location.href = path;
+                return;
+            }
+            window.location.href = '/login';
+            return;
+        }
+
+        // 기본 페이지 이동
+        window.location.href = path;
+    } catch (error) {
+        console.error('Navigation error:', error);
+        window.location.href = path;
+    }
+}
+
+/**
+ * 마이페이지 이동 처리 함수
+ */
+async function handleMyPageClick() {
+    try {
+        const role = await fetch('/api/v1/users/me', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        console.log('Role response:', role);
+        
+        if (role.status === 200) {
+            const data = await role.json();
+            console.log('Role data:', data);
+            if (data.role === 'ROLE_MENTOR') {
+                window.location.href = '/mypage';
+                return;
+            }
+            window.location.href = '/mypage-mentee';
+            return;
+        } else if (role.status === 401) {
+            console.log('401 error, trying to refresh token');
+            const isRefreshed = await handle401Error();
+            console.log('Token refresh result:', isRefreshed);
+            if (isRefreshed) {
+                await handleMyPageClick();
+                return;
+            }
+            window.location.href = '/login';
+            return;
+        }
+    } catch (error) {
+        console.error('Error fetching role:', error);
+        window.location.href = '/login';
+        return;
+    }
+}

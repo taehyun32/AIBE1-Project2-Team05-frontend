@@ -9,13 +9,13 @@
             <a href="/" id="nav-home" class="text-gray-800 hover:text-primary font-medium">홈</a>
           </li>
           <li>
-            <a href="/matching-type-selection" id="nav-match" class="text-gray-800 hover:text-primary font-medium">매칭</a>
+            <button onclick="navigateTo('/matching-type-selection')" id="nav-match" class="text-gray-800 hover:text-primary font-medium">매칭</button>
           </li>
           <li>
-            <a href="/community" id="nav-community" class="text-gray-800 hover:text-primary font-medium">커뮤니티</a>
+            <button onclick="navigateTo('/community')" id="nav-community" class="text-gray-800 hover:text-primary font-medium">커뮤니티</button>
           </li>
           <li>
-            <a href="/mypage" id="nav-mypage" class="text-gray-800 hover:text-primary font-medium">마이페이지</a>
+            <button id="nav-mypage" class="text-gray-800 hover:text-primary font-medium">마이페이지</button>
           </li>
         </ul>
       </nav>
@@ -41,3 +41,4 @@
     </div>
   </div>
 </header>
+<script src="/js/authHandler.js"></script>
