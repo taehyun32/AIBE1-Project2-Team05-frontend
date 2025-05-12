@@ -40,6 +40,10 @@ function setupPage(type, id) {
     case "my-matches":
       pageTitle.textContent = "신청한 매칭";
       setupFilters(["전체", "진행중", "완료"]);
+      const searchBox = document.getElementById("search-section");
+      if (searchBox) {
+        searchBox.style.display = "none";
+      }
       loadMyMatching(id);
       break;
     case "my-posts":
