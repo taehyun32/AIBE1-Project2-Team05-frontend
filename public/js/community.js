@@ -10,8 +10,8 @@
    */
 
   // API Configuration
-  const API_BASE_URL = "http://localhost:8080/v1/community";
-  // const API_BASE_URL = "/api/v1/community";
+  // const API_BASE_URL = "http://localhost:8080/v1/community";
+  const API_BASE_URL = "/api/v1/community";
 
   // Community Page Specifics
   const POSTS_PER_PAGE = 5;
