@@ -182,7 +182,6 @@ async function loadPageData() {
   try {
     await loadPostDetail(postId);
     await loadComments(postId);
-    await checkBookmarkStatus(postId);
   } catch (error) {
     console.error('페이지 데이터 로드 오류:', error);
     showToast('데이터를 불러오는 중 오류가 발생했습니다', 'error');
