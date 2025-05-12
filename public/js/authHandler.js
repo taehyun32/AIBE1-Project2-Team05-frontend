@@ -321,6 +321,11 @@ async function navigateTo(path) {
         if (path === '/community' || path === '/matching-type-selection') {
             const isRefreshed = await handle401Error();
             if (isRefreshed) {
+                const role = await findUserType();
+                if (role === 'ROLE_TEMP') {
+                    window.location.href = '/user-type-selection';
+                    return;
+                } 
                 window.location.href = path;
                 return;
             }
@@ -341,38 +346,57 @@ async function navigateTo(path) {
  */
 async function handleMyPageClick() {
     try {
-        const role = await fetch('/api/v1/users/me', {
+        const response = await findUserType();
+        if (response) {
+            console.log('User data:', response);
+            if (response.data.role === 'ROLE_MENTOR') {
+                window.location.href = '/mypage';
+                return;
+            } else if (response.data.role === 'ROLE_MENTEE') {
+                window.location.href = '/mypage-mentee';
+                return;
+            } else if (response.data.role === 'ROLE_TEMP') {
+                window.location.href = '/user-type-selection';
+                return;
+            }
+        }
+        
+        // 401 에러 처리
+        console.log('401 error, trying to refresh token');
+        const isRefreshed = await handle401Error();
+        console.log('Token refresh result:', isRefreshed);
+        if (isRefreshed) {
+            await handleMyPageClick();
+            return;
+        }
+        window.location.href = '/login';
+    } catch (error) {
+        console.error('Error in handleMyPageClick:', error);
+        window.location.href = '/login';
+    }
+}
+
+/**
+ * 사용자 타입 조회 함수
+ */
+async function findUserType() {
+    try {
+        const response = await fetch('/api/v1/authUser/me', {
             method: 'GET',
             credentials: 'include',
             headers: {
                 'Accept': 'application/json'
             }
         });
-        console.log('Role response:', role);
         
-        if (role.status === 200) {
-            const data = await role.json();
-            console.log('Role data:', data);
-            if (data.role === 'ROLE_MENTOR') {
-                window.location.href = '/mypage';
-                return;
-            }
-            window.location.href = '/mypage-mentee';
-            return;
-        } else if (role.status === 401) {
-            console.log('401 error, trying to refresh token');
-            const isRefreshed = await handle401Error();
-            console.log('Token refresh result:', isRefreshed);
-            if (isRefreshed) {
-                await handleMyPageClick();
-                return;
-            }
-            window.location.href = '/login';
-            return;
+        if (response.status === 200) {
+            const data = await response.json();
+            console.log('User type response:', data);
+            return data;
         }
+        return null;
     } catch (error) {
-        console.error('Error fetching role:', error);
-        window.location.href = '/login';
-        return;
+        console.error('Error in findUserType:', error);
+        return null;
     }
 }
