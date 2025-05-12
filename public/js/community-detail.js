@@ -82,8 +82,6 @@ async function loadCurrentUser() {
 
     console.log('사용자 정보 로드 성공:', currentUser);
 
-    // 현재 사용자의 프로필 이미지를 댓글 입력 폼에 설정
-    updateCurrentUserProfileUI();
   } catch (error) {
     console.error('사용자 정보 로드 실패:', error);
 
@@ -96,16 +94,6 @@ async function loadCurrentUser() {
 
     // 로그인 필요한 기능들 비활성화 처리
     handleGuestUser();
-  }
-}
-
-// 현재 사용자 UI 업데이트
-function updateCurrentUserProfileUI() {
-  // 댓글 입력 폼의 프로필 이미지 업데이트
-  const currentUserProfile = document.getElementById('currentUserProfile');
-  if (currentUserProfile && currentUser) {
-    currentUserProfile.src = currentUser.profileImage;
-    currentUserProfile.alt = currentUser.nickname;
   }
 }
 
