@@ -249,6 +249,33 @@ document.addEventListener("DOMContentLoaded", function () {
         </div>
       </div>`;
 
+      // 현재 사용자 정보 가져오기 API 함수
+      async function getCurrentUserInfo() {
+        const response = await fetch("/api/v1/authUser/me", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+
+        if (response.status === 401) {
+          const retry = await handle401Error();
+          if (!retry) {
+            window.location.href = "/login";
+            return null;
+          }
+          // 토큰 갱신 성공, 요청 재시도
+          return await getCurrentUserInfo();
+        }
+
+        if (!response.ok) {
+          throw new Error("API 요청 실패: " + response.status);
+        }
+
+        return response.json();
+      }
+
       // 프로필 카드 클릭 이벤트
       profileCard.addEventListener("click", async function () {
         try {
@@ -289,6 +316,18 @@ document.addEventListener("DOMContentLoaded", function () {
                   if (matchingResult.status === 201 && matchingResult.code === "CREATED") {
                     // 성공적으로 멘토링 요청이 전송된 경우
                     alert("매칭 신청이 성공적으로 완료되었습니다.");
+
+                    // 현재 사용자 정보 가져오기
+                    const userResult = await getCurrentUserInfo();
+
+                    if (userResult.status === 200 && userResult.code === "SUCCESS" && userResult.data) {
+                      // 세션 스토리지에 닉네임 저장
+                      sessionStorage.setItem("nickname", userResult.data.nickname);
+                    } else {
+                      console.error("사용자 정보를 가져오는데 실패했습니다:", userResult);
+                      sessionStorage.removeItem("nickname");
+                    }
+
                     matchingButton.textContent = "매칭완료";
                     window.location.href = `/more-details?type=my-matches`;
                   }
