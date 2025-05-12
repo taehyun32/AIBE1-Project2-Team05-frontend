@@ -58,21 +58,33 @@
               <span id="postCategory" class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">정보공유</span>
             </div>
             <h1 id="postTitle" class="text-2xl font-bold mb-4">게시글 제목</h1>
-            <div class="flex items-start gap-3">
-              <div class="w-10 h-10 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
-                <img id="authorProfileImage" src="" alt="프로필" class="w-full h-full object-cover object-top" />
-              </div>
-              <div>
-                <h3 id="authorNickname" class="font-medium">작성자</h3>
-                <div class="flex items-center text-xs text-gray-500">
-                  <span>작성일: <span id="createdAt"></span></span>
-                  <span class="mx-1">•</span>
-                  <span>조회수: <span id="viewCount">0</span></span>
+            <!-- 작성자 정보와 수정/삭제 버튼을 하나의 섹션으로 통합 -->
+            <div class="flex justify-between items-start">
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
+                  <img id="authorProfileImage" src="" alt="프로필" class="w-full h-full object-cover object-top" />
                 </div>
+                <div>
+                  <h3 id="authorNickname" class="font-medium">작성자</h3>
+                  <div class="flex items-center text-xs text-gray-500">
+                    <span>작성일: <span id="createdAt"></span></span>
+                    <span class="mx-1">•</span>
+                    <span>조회수: <span id="viewCount">0</span></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 작성자인 경우에만 표시할 수정/삭제 버튼 -->
+              <div id="postActions" class="hidden">
+                <button id="editPostBtn" class="text-sm text-gray-600 hover:text-primary px-2 py-1 rounded">
+                  <i class="ri-edit-line mr-1"></i> 수정
+                </button>
+                <button id="deletePostBtn" class="text-sm text-gray-600 hover:text-red-500 px-2 py-1 rounded">
+                  <i class="ri-delete-bin-line mr-1"></i> 삭제
+                </button>
               </div>
             </div>
           </div>
-
           <!-- 게시글 본문 -->
           <div id="postContentBody" class="prose max-w-none mb-6">
             <!-- 본문 내용 -->
@@ -99,17 +111,24 @@
                   <span id="commentCount">0</span>
                 </div>
               </div>
-              <div class="flex items-center gap-2">
-                <button class="text-gray-500 hover:text-primary">
+              <div class="flex items-center gap-3">
+                <button id="shareButton" class="flex items-center gap-1 text-gray-600 hover:text-primary">
                   <i class="ri-share-line text-xl"></i>
+                  <span>공유</span>
                 </button>
-                <button class="text-gray-500 hover:text-primary">
-                  <i class="ri-bookmark-line text-xl"></i>
+                <button id="bookmarkButton" class="flex items-center gap-1 text-gray-600 hover:text-primary">
+                  <i id="bookmarkIcon" class="ri-bookmark-line text-xl"></i>
+                  <span>북마크</span>
                 </button>
               </div>
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- URL 복사 성공 알림 토스트 -->
+      <div id="shareToast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-2 rounded shadow-lg opacity-0 transition-opacity duration-300 hidden">
+        URL이 클립보드에 복사되었습니다.
       </div>
 
       <!-- AI 답변 섹션 (처음에는 숨김) -->
