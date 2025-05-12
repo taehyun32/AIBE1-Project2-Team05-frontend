@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (provider) {
         const url = `https://frontend.linkup.o-r.kr/oauth2/authorization/${provider}`;
-        
+
         sessionStorage.setItem('isLoggedIn', 'true');
         window.location.href = url;
       }
