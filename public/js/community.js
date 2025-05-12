@@ -10,8 +10,8 @@
    */
 
   // API Configuration
-  // const API_BASE_URL = "http://localhost:8080/v1/community";
-  const API_BASE_URL = "/api/v1/community";
+  const API_BASE_URL = "http://localhost:8080/v1/community";
+  // const API_BASE_URL = "/api/v1/community";
 
   // Community Page Specifics
   const POSTS_PER_PAGE = 5;
@@ -211,7 +211,7 @@
   /**
    * 페이지네이션 컨트롤을 지정된 컨테이너로 렌더링
    * @param {HTMLElement} container - 페이지네이션을 위한 컨테이너 요소
-   * @param {object} pageInfo - API 응답의 '페이지' 객체({크기, 숫자, totalElements, totalPages, first, last })
+   * @param {object} pageInfo - API 응답의 '페이지' 객체({size}, number, totalElements, totalPages})
    * @param {Function} onPageClick - 페이지 링크를 클릭하면 콜백 기능이 페이지 번호를 수신
    */
   function renderPagination(container, pageInfo, onPageClick) {
@@ -225,23 +225,26 @@
       return; //페이지 또는 1페이지에 대한 페이지 표시 필요 없음
     }
 
-    const { totalPages, number: currentPageNum, first, last } = pageInfo; // pageInfo에서 직접 구조 분해 할당
+    const { totalPages, number: currentPageNum } = pageInfo; // pageInfo에서 직접 구조 분해 할당
+    const isFirstPage = currentPageNum === 0;
+    const isLastPage = currentPageNum >= totalPages - 1;
+
     let paginationHtml =
       '<nav class="inline-flex rounded-md shadow-sm" aria-label="Pagination">';
 
     // 이전 버튼
     paginationHtml += `
-        <a href="#" class="pagination-link relative inline-flex items-center rounded-l-md px-3 py-2 text-sm font-medium border border-gray-300 bg-white ${
-          first
-            ? "text-gray-300 cursor-not-allowed"
-            : "text-gray-700 hover:bg-gray-50"
-        }" data-page="${currentPageNum - 1}" ${
-      first ? 'aria-disabled="true" tabindex="-1"' : ""
+      <a href="#" class="pagination-link relative inline-flex items-center rounded-l-md px-3 py-2 text-sm font-medium border border-gray-300 bg-white ${
+        isFirstPage // 계산된 isFirstPage 사용
+          ? "text-gray-300 cursor-not-allowed"
+          : "text-gray-700 hover:bg-gray-50"
+      }" data-page="${currentPageNum - 1}" ${
+      isFirstPage ? 'aria-disabled="true" tabindex="-1"' : "" // 계산된 isFirstPage 사용
     }>
-        이전
-        </a>`;
+      이전
+      </a>`;
 
-    // 페이지 번호 로직 (동일)
+    // 페이지 번호 로직
     const MAX_VISIBLE_PAGES = 5;
     let startPage, endPage;
 
@@ -293,15 +296,15 @@
 
     // 다음 버튼
     paginationHtml += `
-        <a href="#" class="pagination-link relative inline-flex items-center rounded-r-md px-3 py-2 text-sm font-medium border border-gray-300 bg-white ${
-          last
-            ? "text-gray-300 cursor-not-allowed"
-            : "text-gray-700 hover:bg-gray-50"
-        }" data-page="${currentPageNum + 1}" ${
-      last ? 'aria-disabled="true" tabindex="-1"' : ""
+      <a href="#" class="pagination-link relative inline-flex items-center rounded-r-md px-3 py-2 text-sm font-medium border border-gray-300 bg-white ${
+        isLastPage
+          ? "text-gray-300 cursor-not-allowed"
+          : "text-gray-700 hover:bg-gray-50"
+      }" data-page="${currentPageNum + 1}" ${
+      isLastPage ? 'aria-disabled="true" tabindex="-1"' : ""
     }>
-        다음
-        </a>`;
+      다음
+      </a>`;
 
     paginationHtml += "</nav>";
     container.innerHTML = paginationHtml;
@@ -478,7 +481,6 @@
    * @returns {Promise<Array<object>>} - 유저 객체 배열 ({  })
    */
   async function fetchActiveUsers(limit = 5, days = 14) {
-    // 백엔드 로직 미구현 상태
     const activeUsers = await fetchApi("/active-users", { limit, days });
     return activeUsers || [];
   }
@@ -503,15 +505,6 @@
     };
 
     // ------------ DOM Elements -----------------
-
-    const includeElements = document.querySelectorAll("[data-include-path]");
-
-    includeElements.forEach(async function (el) {
-      const path = el.getAttribute("data-include-path");
-      const response = await fetch(path);
-      const html = await response.text();
-      el.innerHTML = html;
-    });
 
     const mainPopularPostsContainer = document.getElementById(
       "mainPopularPostsContainer"
