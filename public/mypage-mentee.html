@@ -353,6 +353,7 @@
 
       <form class="space-y-6">
         <!-- 기본 정보 섹션 -->
+        <!-- 프로필 설정 탭 - 기본 정보 섹션 -->
         <div>
           <h3 class="text-lg font-medium mb-4">기본 정보</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -363,12 +364,15 @@
                 <div class="w-32 h-32 rounded-full bg-gray-200 overflow-hidden">
                   <img
                           id="profile-image-preview"
-                          src="https://readdy.ai/api/search-image?query=professional%20asian%20male%20portrait%2C%20neutral%20background%2C%20glasses%2C%20friendly%20look%2C%20high%20quality&width=100&height=100&seq=3&orientation=squarish"
+                          src=""
                           alt="프로필 이미지"
                           class="w-full h-full object-cover"
                   />
                 </div>
-                <button type="button" class="absolute bottom-0 right-0 bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-indigo-600">
+                <button
+                        type="button"
+                        class="absolute bottom-0 right-0 bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-indigo-600"
+                >
                   <i class="ri-camera-line"></i>
                 </button>
               </div>
@@ -377,38 +381,107 @@
 
             <!-- 닉네임 및 사용자 유형 -->
             <div class="space-y-4">
-              <div>
-                <label for="nickname" class="block text-sm font-medium text-gray-700 mb-1">닉네임</label>
-                <input type="text" id="nickname" name="nickname" value="열정멘티" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+              <div class="flex items-center gap-2">
+                <div>
+                  <label for="nickname" class="block text-sm font-medium text-gray-700 mb-1">닉네임</label>
+                  <input
+                          type="text"
+                          id="nickname"
+                          name="nickname"
+                          value=""
+                          class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  />
+                </div>
+                <button type="button"
+                        class="bg-primary text-white text-xs px-2 py-2 rounded mb-1 ml-2 mt-6">
+                  <span> 중복 확인</span>
+                </button>
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">사용자 유형</label>
-                <div class="flex flex-col md:flex-row md:items-center gap-2 mb-2">
-                  <span class="bg-primary text-white text-xs px-2 py-1 rounded-full">멘티</span>
+                <div class="flex items-center gap-2">
+                  <span class="bg-primary text-white text-xs px-2 py-1 rounded-full">멘토</span>
+                  <span class="text-xs text-gray-500">(회원가입 시 선택한 유형은 변경할 수 없습니다)</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
+
         <!-- 지역 및 소개 -->
-        <div class="border-t border-gray-200 pt-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label for="location" class="block text-sm font-medium text-gray-700 mb-1">지역</label>
-              <select id="location" name="location" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                <option value="서울 강남구">서울 강남구</option>
-                <option value="서울 서초구">서울 서초구</option>
-                <option value="서울 마포구" selected>서울 마포구</option>
-                <option value="서울 송파구">서울 송파구</option>
-                <option value="경기 성남시">경기 성남시</option>
-                <option value="경기 수원시">경기 수원시</option>
-                <option value="인천 연수구">인천 연수구</option>
-              </select>
+        <div class="w-full">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="flex-1">
+              <label class="block text-sm font-medium text-gray-700 mb-1">지역</label>
+              <div class="flex gap-2">
+                <!-- 지역 선택 -->
+                <div class="relative w-full">
+                  <button
+                          type="button"
+                          class="w-full bg-white border border-gray-300 rounded px-6 py-2 text-left flex items-center justify-between"
+                          id="regionButton"
+                  >
+                    <span>지역</span>
+                    <div class="w-5 h-5 flex items-center justify-center">
+                      <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                  </button>
+                  <div
+                          class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden"
+                          id="regionDropdown"
+                  >
+                    <div class="py-1 max-h-60 overflow-y-auto custom-scrollbar">
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="1">서울</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="2">인천</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="3">대전</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="4">대구</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="5">광주</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="6">부산</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="7">울산</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="8">세종</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="31">경기</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="32">강원</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="33">충북</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="34">충남</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="35">경북</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="36">경남</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="37">전북</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="38">전남</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="39">제주</button>
+                    </div>
+                  </div>
+                </div>
+                <!-- 시군구 선택 -->
+                <div class="relative w-full">
+                  <button
+                          type="button"
+                          class="w-full bg-white border border-gray-300 rounded px-4 py-2 text-left flex items-center justify-between"
+                          id="sigunguButton"
+                  >
+                    <span>시군구</span>
+                    <div class="w-5 h-5 flex items-center justify-center">
+                      <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                  </button>
+                  <div
+                          class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden"
+                          id="sigunguDropdown"
+                  >
+                    <div class="py-1 max-h-60 overflow-y-auto custom-scrollbar" id="sigunguOptions">
+                      <!-- 시군구 옵션은 지역에 따라 동적으로 생성 -->
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div>
+            <div class="flex-1">
               <label for="available_time" class="block text-sm font-medium text-gray-700 mb-1">활동 가능 시간대</label>
-              <select id="available_time" name="available_time" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+              <select
+                      id="available_time"
+                      name="available_time"
+                      class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              >
                 <option value="평일 오전">평일 오전</option>
                 <option value="평일 오후">평일 오후</option>
                 <option value="평일 저녁" selected>평일 저녁</option>
@@ -421,7 +494,13 @@
           </div>
           <div class="mt-4">
             <label for="introduction" class="block text-sm font-medium text-gray-700 mb-1">소개글</label>
-            <textarea id="introduction" name="introduction" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">웹 개발에 관심이 많은 초보 개발자입니다. React와 Node.js를 배우고 있으며, 실무 경험이 있는 멘토님의 도움을 구하고 있습니다.</textarea>
+            <textarea
+                    id="introduction"
+                    name="introduction"
+                    rows="4"
+                    class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            >
+    </textarea>
           </div>
         </div>
 
@@ -446,10 +525,6 @@
               <label for="interests" class="block text-sm font-medium text-gray-700 mb-1">태그 (쉼표로 구분)</label>
               <input type="text" id="interests" name="interests" value="프로그래밍,웹개발" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
             </div>
-          </div>
-          <div class="mt-4">
-            <label for="learning-goals" class="block text-sm font-medium text-gray-700 mb-1">학습 목표</label>
-            <textarea id="learning-goals" name="learning-goals" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">React와 Node.js를 활용한 풀스택 개발을 배우고 싶습니다. 특히 실무에서 사용되는 코드 구조와 패턴에 대해 알고 싶습니다.</textarea>
           </div>
         </div>
 
