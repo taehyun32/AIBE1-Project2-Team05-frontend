@@ -106,11 +106,11 @@ function navigateTo(path) {
   async function ensureAuthenticated() {
     const isLogged = sessionStorage.getItem('isLoggedIn') === 'true';
     if (isLogged) return true;
-    const refreshed = await handle401();
+    const refreshed = await handle401Error();
     return refreshed;
   }
   
-  async function handle401() {
+  async function handle401Error() {
     try {
       const res = await fetch('/status', { credentials: 'include' });
       if (res.ok) {
@@ -123,6 +123,8 @@ function navigateTo(path) {
     updateAuthUI();
     return false;
   }
+
+  window.handle401Error = handle401Error;
   
   async function refreshToken() {
     try {
