@@ -97,16 +97,6 @@ async function loadCurrentUser() {
   }
 }
 
-// 현재 사용자 UI 업데이트
-function updateCurrentUserProfileUI() {
-  // 댓글 입력 폼의 프로필 이미지 업데이트
-  const currentUserProfile = document.getElementById('currentUserProfile');
-  if (currentUserProfile && currentUser) {
-    currentUserProfile.src = currentUser.profileImageUrl;
-    currentUserProfile.alt = currentUser.nickname;
-  }
-}
-
 // 게스트 사용자 처리
 function handleGuestUser() {
   // 댓글 입력창 비활성화 및 안내 메시지 추가
