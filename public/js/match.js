@@ -1,3 +1,9 @@
+// 이미지 오류 처리 함수
+function handleImageError(image) {
+  image.onerror = null; // 무한 루프 방지
+  image.src = "../assets/images/default-profile.png"; // 기본 이미지로 대체
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   const profileDetail = document.getElementById("profileDetail");
   const defaultMessage = document.getElementById("defaultMessage");
@@ -46,7 +52,8 @@ document.addEventListener("DOMContentLoaded", function () {
       activityType: activityType === "ALL" ? null : activityType,
     };
 
-    try {
+    // 매칭 목록 API 호출 함수
+    async function searchMatchingList() {
       const response = await fetch("/api/v1/matching/list", {
         method: "POST",
         headers: {
@@ -58,12 +65,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // console.log("응답 상태:", response.status);
 
+      if (response.status === 401) {
+        const retry = await handle401Error();
+        if (!retry) {
+          window.location.href = "/login";
+          return;
+        }
+        // 토큰 갱신 성공, 요청 재시도
+        return await searchMatchingList();
+      }
+
       if (!response.ok) {
         throw new Error("API 요청 실패: " + response.status);
       }
 
-      const result = await response.json();
-      // console.log("Response:", result);
+      return response.json();
+    }
+
+    try {
+      const result = await searchMatchingList();
 
       if (result.status === 200 && result.code === "SUCCESS" && Array.isArray(result.data)) {
         // 데이터가 배열이면서 결과가 있는 경우
@@ -88,6 +108,60 @@ document.addEventListener("DOMContentLoaded", function () {
         searchButton.textContent = "검색하기";
       }
     }
+  }
+
+  // 멘토 상세 정보 API 호출 함수
+  async function fetchMentorDetail(nickname) {
+    const response = await fetch(`/api/v1/matching/${nickname}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (response.status === 401) {
+      const retry = await handle401Error();
+      if (!retry) {
+        window.location.href = "/login";
+        return;
+      }
+      // 토큰 갱신 성공, 요청 재시도
+      return await fetchMentorDetail(nickname);
+    }
+
+    if (!response.ok) {
+      throw new Error("API 요청 실패: " + response.status);
+    }
+
+    return response.json();
+  }
+
+  // 매칭하기 API 호출 함수
+  async function requestMatching(nickname) {
+    const matchingResponse = await fetch(`/api/v1/matching/${nickname}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (matchingResponse.status === 401) {
+      const retry = await handle401Error();
+      if (!retry) {
+        window.location.href = "/login";
+        return;
+      }
+      // 토큰 갱신 성공, 요청 재시도
+      return await requestMatching(nickname);
+    }
+
+    if (!matchingResponse.ok) {
+      throw new Error("API 요청 실패: " + matchingResponse.status);
+    }
+
+    return matchingResponse.json();
   }
 
   // 검색 결과 표시 함수
@@ -141,11 +215,11 @@ document.addEventListener("DOMContentLoaded", function () {
       profileCard.innerHTML = `
       <div class="flex items-start gap-3">
         <div class="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
-          <img
-            src="${mentor.profileImageUrl || "/assets/images/default-profile.png"}"
+         <img
+            src="${mentor.profileImageUrl || "../assets/images/default-profile.png"}"
             alt="프로필"
-            onerror="this.src='/assets/images/default-profile.png'"
-            class="w-full h-full object-cover" />
+            class="w-full h-full object-cover"
+            onerror="handleImageError(this)" />
         </div>
         <div class="flex-1">
           <div class="flex justify-between items-start">
@@ -173,38 +247,62 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
           </div>
         </div>
-      </div>
-    `;
+      </div>`;
 
       // 프로필 카드 클릭 이벤트
       profileCard.addEventListener("click", async function () {
         try {
-          // 멘토 상세 정보 API 호출
-          const response = await fetch(`/api/v1/matching/${mentor.nickname}`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-          });
-
-          if (!response.ok) {
-            throw new Error("API 요청 실패: " + response.status);
-          }
-
-          const result = await response.json();
+          // 멘토 상세 정보 API 호출 함수
+          const result = await fetchMentorDetail(mentor.nickname);
 
           if (result.status === 200 && result.code === "SUCCESS" && result.data) {
             const mentorData = result.data;
 
             // 프로필 상세 정보 업데이트
             document.getElementById("profileDetailImg").src =
-              mentorData.profileImageUrl || "/assets/images/default-profile.png";
+              mentorData.profileImageUrl || "../assets/images/default-profile.png";
+            document.getElementById("profileDetailImg").onerror = function () {
+              handleImageError(this);
+            };
             document.getElementById("profileDetailName").textContent = mentorData.nickname;
             document.getElementById("profileDetailCategory").textContent = mentorData.interest;
             document.getElementById("profileDetailLocation").textContent = `${mentorData.area} ${mentorData.sigungu}`;
             document.getElementById("profileDetailTime").textContent = mentorData.activityTime;
             document.getElementById("profileDetailIntro").textContent = mentorData.introduction || "소개가 없습니다.";
+
+            // 매칭하기 버튼 이벤트 리스너 추가
+            const matchingButton = document.getElementById("matchingButton");
+            if (matchingButton) {
+              matchingButton.onclick = async function (event) {
+                // 이벤트 버블링 방지
+                event.stopPropagation();
+
+                const originalText = matchingButton.textContent;
+                matchingButton.disabled = true;
+                matchingButton.textContent = "매칭 중";
+                matchingButton.classList.add("opacity-70", "cursor-not-allowed");
+
+                try {
+                  // 매칭하기 API 호출 함수
+                  const matchingResult = await requestMatching(mentorData.nickname);
+
+                  if (matchingResult.status === 201 && matchingResult.code === "CREATED") {
+                    // 성공적으로 멘토링 요청이 전송된 경우
+                    alert("매칭 신청이 성공적으로 완료되었습니다.");
+                    matchingButton.textContent = "매칭완료";
+                    window.location.href = `/more-details?type=my-matches`;
+                  }
+                } catch (error) {
+                  console.error("멘토 매칭 요청 중 오류 발생:", error);
+                  alert("매칭 요청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+
+                  // 버튼 상태 복원
+                  matchingButton.disabled = false;
+                  matchingButton.textContent = originalText;
+                  matchingButton.classList.remove("opacity-70", "cursor-not-allowed");
+                }
+              };
+            }
 
             // 게시글 목록 업데이트
             const postsContainer = document.getElementById("profileDetailPosts");
@@ -253,7 +351,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   }
 
                   const postId = this.dataset.postId;
-                  window.location.href = `/community-detail.html?postId=${postId}`;
+                  window.location.href = `/community-detail?postId=${postId}`;
                 });
 
                 postsContainer.appendChild(postElement);
@@ -368,11 +466,13 @@ document.addEventListener("DOMContentLoaded", function () {
     regionButton.addEventListener("click", function () {
       regionDropdown.classList.toggle("hidden");
     });
+
     document.addEventListener("click", function (event) {
       if (!regionButton.contains(event.target) && !regionDropdown.contains(event.target)) {
         regionDropdown.classList.add("hidden");
       }
     });
+
     const regionOptions = regionDropdown.querySelectorAll("button");
     regionOptions.forEach((option) => {
       option.addEventListener("click", function () {
@@ -384,6 +484,34 @@ document.addEventListener("DOMContentLoaded", function () {
         const areaCode = this.getAttribute("data-area");
         fetchSigunguData(areaCode);
       });
+    });
+  }
+
+  // 시군구 드롭다운 기능 추가
+  const sigunguDropdown = document.getElementById("sigunguDropdown");
+  const sigunguOptions = document.getElementById("sigunguOptions");
+  if (sigunguButton && sigunguDropdown) {
+    // 시군구 버튼 클릭 시 드롭다운 표시
+    sigunguButton.addEventListener("click", function () {
+      // 지역이 선택되어 있는지 확인
+      const selectedArea = regionButton.getAttribute("data-area");
+
+      if (selectedArea) {
+        // 이미 지역이 선택되어 있으면 시군구 드롭다운 토글
+        sigunguDropdown.classList.toggle("hidden");
+
+        // 시군구 옵션이 비어있다면 데이터 다시 불러오기
+        if (sigunguOptions.children.length === 0) {
+          fetchSigunguData(selectedArea);
+        }
+      }
+    });
+
+    // 시군구 드롭다운 닫기
+    document.addEventListener("click", function (event) {
+      if (!sigunguButton.contains(event.target) && !sigunguDropdown.contains(event.target)) {
+        sigunguDropdown.classList.add("hidden");
+      }
     });
   }
 });
@@ -401,6 +529,12 @@ async function fetchSigunguData(areaCode) {
     // 해당 지역에 맞는 시군구 목록
     const sigunguList = data[areaCode] || [];
 
+    const sigunguOptions = document.getElementById("sigunguOptions");
+    if (!sigunguOptions) {
+      console.error("시군구 옵션 컨테이너를 찾을 수 없습니다.");
+      return;
+    }
+
     sigunguOptions.innerHTML = "";
 
     // 시군구 목록을 드롭다운에 추가
@@ -409,16 +543,31 @@ async function fetchSigunguData(areaCode) {
       button.classList.add("w-full", "text-left", "px-4", "py-2", "hover:bg-gray-100");
       button.textContent = sigungu.sigunguname;
       button.setAttribute("data-sigungu", sigungu.sigungucode);
+
+      const sigunguButton = document.getElementById("sigunguButton");
+      if (!sigunguButton) {
+        console.error("시군구 버튼을 찾을 수 없습니다.");
+        return;
+      }
+
       button.addEventListener("click", function () {
         sigunguButton.querySelector("span").textContent = sigungu.sigunguname;
         sigunguButton.setAttribute("data-sigungu", sigungu.sigungucode);
-        sigunguDropdown.classList.add("hidden");
+
+        const sigunguDropdown = document.getElementById("sigunguDropdown");
+        if (sigunguDropdown) {
+          sigunguDropdown.classList.add("hidden");
+        }
       });
+
       sigunguOptions.appendChild(button);
     });
 
     // 시군구 드롭다운을 표시
-    sigunguDropdown.classList.remove("hidden");
+    const sigunguDropdown = document.getElementById("sigunguDropdown");
+    if (sigunguDropdown) {
+      sigunguDropdown.classList.remove("hidden");
+    }
   } catch (error) {
     console.error("시군구 데이터를 가져오는 중 오류 발생:", error);
   }
