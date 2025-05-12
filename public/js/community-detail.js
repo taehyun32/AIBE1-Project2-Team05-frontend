@@ -104,7 +104,7 @@ function updateCurrentUserProfileUI() {
   // 댓글 입력 폼의 프로필 이미지 업데이트
   const currentUserProfile = document.getElementById('currentUserProfile');
   if (currentUserProfile && currentUser) {
-    currentUserProfile.src = currentUser.profileImage;
+    currentUserProfile.src = currentUser.profileImageUrl;
     currentUserProfile.alt = currentUser.nickname;
   }
 }
