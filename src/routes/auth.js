@@ -13,7 +13,7 @@ router.get('/status', (req, res) => {
 
 router.get('/oauth2/authorization/:provider', (req, res) => {
     const provider = req.params.provider;
-    const redirectUri = `https://backend.linkup.o-r.kr/oauth2/authorization/${provider}`;
+    const redirectUri = `http://localhost:8080/oauth2/authorization/${provider}`;
     res.redirect(redirectUri);
 });
 
