@@ -350,12 +350,15 @@ async function handleMyPageClick() {
         if (response) {
             console.log('User data:', response);
             if (response.data.role === 'ROLE_MENTOR') {
+                sessionStorage.setItem('nickname', response.data.nickname);
                 window.location.href = '/mypage';
                 return;
             } else if (response.data.role === 'ROLE_MENTEE') {
+                sessionStorage.setItem('nickname', response.data.nickname);
                 window.location.href = '/mypage-mentee';
                 return;
             } else if (response.data.role === 'ROLE_TEMP') {
+                sessionStorage.setItem('nickname', response.data.nickname);
                 window.location.href = '/user-type-selection';
                 return;
             }

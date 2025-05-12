@@ -141,46 +141,52 @@ function setupLogoutHandler() {
 /**
  * 마이페이지 버튼 클릭 핸들러 설정
  */
-function setupMyPageHandler() {
-  const myPageButton = document.getElementById('nav-mypage');
-  if (myPageButton) {
-    myPageButton.addEventListener('click', async (e) => {
-      e.preventDefault();
-      try {
-        const role = await fetch('/api/v1/users/me', {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Accept': 'application/json'
-          }
-        });
+  function setupMyPageHandler() {
+    const myPageButton = document.getElementById('nav-mypage');
+    if (myPageButton) {
+      myPageButton.addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+          const role = await fetch('/api/v1/authUser/me', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+              'Accept': 'application/json'
+            }
+          });
 
-        if (role.status === 200) {
-          const data = await role.json();
-          if (data.role === 'ROLE_MENTOR') {
-            window.location.href = '/mypage';
+          if (role.status === 200) {
+            const res = await role.json();
+            if (res.data.role === 'ROLE_MENTOR') {
+              sessionStorage.setItem('nickname', res.data.nickname);
+              window.location.href = '/mypage';
+              return;
+            } else if (res.data.role === 'ROLE_MENTEE') {
+              sessionStorage.setItem('nickname', res.data.nickname);
+              window.location.href = '/mypage-mentee';
+              return;
+            }
+            sessionStorage.setItem('nickname', res.data.nickname);
+            window.location.href = '/user-type-selection';
+            return;
+          } else if (role.status === 401) {
+            // 가능한 경우 토큰 갱신 시도
+            const isRefreshed = await window.handle401Error();
+            if (isRefreshed) {
+              // 토큰 갱신 후 다시 시도
+              await setupMyPageHandler();
+              return;
+            }
+            window.location.href = '/login';
             return;
           }
-          window.location.href = '/mypage-mentee';
-          return;
-        } else if (role.status === 401) {
-          // 가능한 경우 토큰 갱신 시도
-          const isRefreshed = await window.handle401Error();
-          if (isRefreshed) {
-            // 토큰 갱신 후 다시 시도
-            await setupMyPageHandler();
-            return;
-          }
+        } catch (error) {
+          console.error('역할 정보 가져오기 오류:', error);
           window.location.href = '/login';
-          return;
         }
-      } catch (error) {
-        console.error('역할 정보 가져오기 오류:', error);
-        window.location.href = '/login';
-      }
-    });
+      });
+    }
   }
-}
 
 /**
  * 인증 상태에 따라 UI 업데이트
