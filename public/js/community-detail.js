@@ -1351,20 +1351,25 @@ function showToast(message, type = 'info') {
       icon = '<i class="ri-information-line mr-2"></i>';
   }
 
-  toast.className = `fixed top-4 right-4 z-50 ${bgColor} ${textColor} px-4 py-3 rounded-md shadow-md flex items-center transition-all duration-300 opacity-0 transform translate-y-[-20px]`;
+  toast.className =
+      `fixed top-4 left-1/2 -translate-x-1/2 z-50
+     ${bgColor} ${textColor}
+     px-4 py-3 rounded-md shadow-md flex items-center
+     transition-all duration-300
+     opacity-0 -translate-y-5`;
+
   toast.innerHTML = `${icon}${message}`;
+  document.body.prepend(toast);
 
-  document.body.appendChild(toast);
+  // 등장 애니메이션
+  requestAnimationFrame(() => {
+    toast.classList.remove('opacity-0', '-translate-y-5');
+  });
 
-  // 애니메이션 적용
+  // 3초 뒤 사라지기
   setTimeout(() => {
-    toast.classList.remove('opacity-0', 'translate-y-[-20px]');
-  }, 10);
-
-  // 일정 시간 후 제거
-  setTimeout(() => {
-    toast.classList.add('opacity-0', 'translate-y-[-20px]');
-    setTimeout(() => toast.remove(), 300);
+    toast.classList.add('opacity-0', '-translate-y-5');
+    setTimeout(() => toast.remove(), 300);   // transition 끝난 뒤 제거
   }, 3000);
 }
 // 좋아요 토글 함수
