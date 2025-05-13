@@ -11,7 +11,7 @@ async function loadCurrentUser() {
   try {
     console.log('사용자 정보 로드 시작');
     const response = await fetch('/api/v1/authUser/me', {
-      credentials: 'include' // 쿠키 전송을 위해 필요
+      credentials: 'include'
     });
 
     console.log('사용자 정보 응답 상태:', response.status);
@@ -19,13 +19,11 @@ async function loadCurrentUser() {
     if (!response.ok) {
       if (response.status === 401) {
         console.log('로그인되지 않음 - 게스트 모드 설정');
-        // 게스트 사용자로 설정
         currentUser = {
           isGuest: true,
           nickname: '게스트',
           profileImage: 'https://i.pravatar.cc/40?u=guest'
         };
-
         handleGuestUser();
         return;
       }
@@ -37,42 +35,47 @@ async function loadCurrentUser() {
 
     // 로그인 성공 - 사용자 정보 설정
     if (userData && userData.data) {
-      // API 응답 구조에 따라 적절히 조정
       const data = userData.data;
+
+      // 원본 응답 데이터 로깅
+      console.log('원본 사용자 데이터:', data);
+
+      // ID 필드 확인 및 매핑
+      // userId 또는 id 필드 중 하나를 사용
+      const userId = data.id || data.userId;
+
+      if (!userId) {
+        console.warn('사용자 ID를 찾을 수 없습니다. 응답 데이터:', data);
+      }
 
       currentUser = {
         isGuest: false,
-        id: data.id || data.userId,
+        id: userId,
         nickname: data.nickname || data.name || '사용자',
-        profileImage: data.profileImageUrl || data.profileImage || `https://i.pravatar.cc/40?u=${data.nickname || 'user'}`,
+        profileImage: data.profileImageUrl || data.profile_image_url || `https://i.pravatar.cc/40?u=${data.nickname || 'user'}`,
         provider: data.provider,
-        providerId: data.providerId
+        providerId: data.providerId || data.provider_id,
+        role: data.role
       };
 
       console.log('사용자 정보 설정 완료:', currentUser);
-
-      // 현재 사용자의 프로필 이미지를 댓글 입력 폼에 설정
       updateCurrentUserProfileUI();
     } else {
       console.warn('API에서 유효한 사용자 데이터를 받지 못함:', userData);
-      // 게스트 사용자로 설정
       currentUser = {
         isGuest: true,
         nickname: '게스트',
         profileImage: 'https://i.pravatar.cc/40?u=guest'
       };
-
       handleGuestUser();
     }
   } catch (error) {
     console.error('사용자 정보 로드 실패:', error);
-    // 오류 발생 시 게스트 사용자로 처리
     currentUser = {
       isGuest: true,
       nickname: '게스트',
       profileImage: 'https://i.pravatar.cc/40?u=guest'
     };
-
     handleGuestUser();
   }
 }
@@ -92,61 +95,126 @@ async function checkCurrentLoginStatus() {
 
     if (response.ok) {
       const userData = await response.json();
+
+      console.log('로그인 확인 응답 데이터:', userData);
+
       if (userData && userData.data) {
-        // 로그인 상태 업데이트
         const data = userData.data;
+
+        // ID 필드 확인
+        const userId = data.id || data.userId;
+
         currentUser = {
           isGuest: false,
-          id: data.id || data.userId,
+          id: userId,
           nickname: data.nickname || data.name || '사용자',
           profileImage: data.profileImageUrl || data.profileImage || `https://i.pravatar.cc/40?u=${data.nickname || 'user'}`,
           provider: data.provider,
           providerId: data.providerId
         };
-        updateCurrentUserProfileUI();
+
+        console.log("로그인 확인 완료:", currentUser);
         return true;
       }
     }
 
-    // 로그인 실패 시 게스트 상태 유지
-    if (currentUser.isGuest) {
-      return false;
-    }
-
-    // 이전에 로그인되었지만 현재 로그인이 실패한 경우
+    // 로그인 실패 시 게스트 상태로 설정
     currentUser = {
       isGuest: true,
       nickname: '게스트',
       profileImage: 'https://i.pravatar.cc/40?u=guest'
     };
-    handleGuestUser();
+    console.log("비로그인 상태 확인:", currentUser);
     return false;
   } catch (error) {
     console.error('로그인 상태 확인 오류:', error);
-    return currentUser.isGuest === false; // 기존 상태 유지
+    // 오류 발생 시 게스트로 간주
+    currentUser = {
+      isGuest: true,
+      nickname: '게스트',
+      profileImage: 'https://i.pravatar.cc/40?u=guest'
+    };
+    return false;
   }
+}
+
+// Interest enum 값을 표시 이름으로 변환
+function getInterestDisplayName(interestValue) {
+  const interestMap = {
+    'WEB_DEV': '프로그래밍/웹개발',
+    'APP_DEV': '프로그래밍/앱개발',
+    'DESIGN_UX_UI': '디자인/UX/UI',
+    'DESIGN_GRAPHIC': '디자인/그래픽',
+    'EDUCATION_MATH': '교육/수학',
+    'EDUCATION_ENGLISH': '교육/영어',
+    'MUSIC_PIANO': '음악/피아노',
+    'FITNESS_YOGA': '운동/요가'
+  };
+
+  return interestMap[interestValue] || interestValue || '분야 미지정';
+}
+
+// 직업 타이틀 생성 함수
+function getJobTitle(interest, role) {
+  if (interest) {
+    // 특정 분야에 따른 직함 매핑
+    switch(interest) {
+      case 'WEB_DEV':
+        return '웹 개발자';
+      case 'APP_DEV':
+        return '앱 개발자';
+      case 'DESIGN_UX_UI':
+        return 'UI/UX 디자이너';
+      case 'DESIGN_GRAPHIC':
+        return '그래픽 디자이너';
+      case 'EDUCATION_MATH':
+      case 'EDUCATION_ENGLISH':
+        return '교육자';
+      case 'MUSIC_PIANO':
+        return '음악가';
+      case 'FITNESS_YOGA':
+        return '요가 강사';
+      default:
+        // 알 수 없는 관심사는 표시 이름으로 전환
+        return getInterestDisplayName(interest);
+    }
+  }
+
+  // interest가 없을 경우 role 기반 기본값
+  if (role) {
+    switch(role) {
+      case 'ROLE_MENTOR':
+        return '멘토';
+      case 'ROLE_MENTEE':
+        return '멘티';
+      case 'ROLE_TEMP':
+        return '임시 사용자';
+      default:
+        return '사용자';
+    }
+  }
+
+  return '사용자';
 }
 
 // 프로필 이미지 업데이트
 function updateCurrentUserProfileUI() {
-  const commentFormProfileImg = document.querySelector('.comment-form .profile-img img');
-  if (commentFormProfileImg) {
-    commentFormProfileImg.src = currentUser.profileImage;
-    commentFormProfileImg.alt = `${currentUser.nickname}의 프로필`;
+  // 댓글 작성 버튼
+  const commentSubmitBtn = document.getElementById('submitComment');
+  if (commentSubmitBtn) {
+    commentSubmitBtn.disabled = false;
+    commentSubmitBtn.textContent = '댓글 작성';
   }
-
-  // 댓글 작성 버튼 활성화
-  document.querySelector('.comment-submit').disabled = false;
+  // 댓글 입력 필드
+  const commentInput = document.getElementById('commentInput');
+  if (commentInput) {
+    commentInput.placeholder = '댓글을 작성해주세요';
+    commentInput.readOnly = false;
+  }
 }
 
 // 게스트 사용자 처리
 function handleGuestUser() {
-  // 댓글 작성 UI 수정
-  const commentFormProfileImg = document.querySelector('.comment-form .profile-img img');
-  if (commentFormProfileImg) {
-    commentFormProfileImg.src = currentUser.profileImage;
-    commentFormProfileImg.alt = '게스트';
-  }
 
   // 댓글 입력 필드에 안내 메시지 추가
   const commentInput = document.getElementById('commentInput');
@@ -165,7 +233,7 @@ function handleGuestUser() {
   }
 
   // 댓글 제출 버튼 비활성화
-  const commentSubmitBtn = document.querySelector('.comment-submit');
+  const commentSubmitBtn = document.getElementById('submitComment');
   if (commentSubmitBtn) {
     commentSubmitBtn.disabled = true;
     commentSubmitBtn.textContent = '로그인 필요';
@@ -175,182 +243,200 @@ function handleGuestUser() {
 // URL에서 postId 가져오기
 function getPostIdFromUrl() {
   const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get('postId');
+  const postId = urlParams.get('postId');
+
+  // URL 쿼리 파라미터에 없는 경우 URL 경로에서 추출 시도
+  if (!postId) {
+    const pathMatch = window.location.pathname.match(/\/community-detail\/([^\/]+)/);
+    if (pathMatch && pathMatch[1]) {
+      return pathMatch[1];
+    }
+
+    // html?postId= 형식 확인
+    const htmlMatch = window.location.pathname.match(/\.html\?postId=([^&]+)/);
+    if (htmlMatch && htmlMatch[1]) {
+      return htmlMatch[1];
+    }
+  }
+
+  return postId;
 }
 
-// 게시글 상세 정보 로드 함수 (추가됨)
-async function loadPostDetail(postId) {
-  try {
-    console.log('게시글 상세 정보 로드 시작:', postId);
+// 오류 화면 표시 함수
+function showErrorView(message) {
+  const postLoadingSkeleton = document.getElementById('postLoadingSkeleton');
+  if (postLoadingSkeleton) {
+    postLoadingSkeleton.style.display = 'none';
+  }
 
-    const url = `/api/v1/community/${postId}`;
-
-    const response = await fetch(url, {
-      credentials: 'include' // 쿠키 전송을 위해 필요
-    });
-
-    // 401 오류는 게스트 사용자로 간주하고 계속 진행
-    if (response.status === 401) {
-      console.log('게스트 사용자로 게시글 접근 시도');
-      // 백엔드에서 게스트 접근을 별도로 허용하는 API가 있다면 해당 API 호출
-      // 예: const guestResponse = await fetch(`/api/v1/public/community/${postId}`);
-
-      // 혹은 특정 경우 mock 데이터로 UI 표시
-      showGuestPostView(postId);
-      return;
-    }
-
-    if (!response.ok) {
-      throw new Error(`게시글 로드 실패: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log('게시글 데이터:', data);
-
-    if (data.status === 200 && data.data) {
-      renderPostDetail(data.data);
-    } else {
-      console.error('게시글 데이터 없음:', data);
-      showToast('게시글을 불러올 수 없습니다', 'error');
-    }
-  } catch (error) {
-    console.error('게시글 로드 오류:', error);
-    showToast('게시글을 불러오는 중 오류가 발생했습니다', 'error');
+  const postContent = document.getElementById('postContent');
+  if (postContent) {
+    postContent.classList.remove('hidden');
+    postContent.innerHTML = `
+      <div class="p-6 text-center">
+        <div class="mb-4">
+          <i class="ri-error-warning-line text-4xl text-gray-400"></i>
+        </div>
+        <h2 class="text-xl font-semibold mb-2">${message}</h2>
+        <p class="text-gray-600 mb-4">잠시 후 다시 시도해주세요.</p>
+        <button onclick="window.location.reload()" 
+           class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark">
+          새로고침
+        </button>
+      </div>
+    `;
   }
 }
-// 게스트 사용자를 위한 게시글 뷰 표시 (백엔드에서 공개 API가 없는 경우)
-function showGuestPostView(postId) {
-  const postDetail = document.getElementById('postDetail');
-  if (!postDetail) return;
 
-  postDetail.innerHTML = `
-    <div class="p-6 text-center">
-      <div class="mb-4">
-        <i class="ri-lock-2-line text-4xl text-gray-400"></i>
-      </div>
-      <h2 class="text-2xl font-semibold mb-2">로그인이 필요합니다</h2>
-      <p class="text-gray-600 mb-4">게시글 내용을 보려면 로그인해주세요.</p>
-      <a href="/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}" 
-         class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark">
-        로그인 하기
-      </a>
-    </div>
-  `;
-}
 
-// 게시글 정보 렌더링 함수 (추가됨)
+// 게시글 렌더링 함수
 function renderPostDetail(post) {
-  const postDetail = document.getElementById('postDetail');
-  // 스켈레톤 UI 제거
-  postDetail.innerHTML = '';
+  console.log('게시글 렌더링 시작:', post);
 
-  const createdDate = new Date(post.createdAt).toLocaleDateString();
-  const categoryLabel = getCategoryLabel(post.category);
-
-  // 이미지 HTML 생성
-  let imagesHTML = '';
-  if (post.imageUrls && post.imageUrls.length > 0) {
-    imagesHTML = `
-      <div class="post-images mt-4 mb-6">
-        ${post.imageUrls.map(url => `
-          <div class="mb-3">
-            <img src="${url}" alt="게시글 이미지" class="rounded-md max-w-full">
-          </div>
-        `).join('')}
-      </div>
-    `;
+  // 스켈레톤 UI 숨기기
+  const postLoadingSkeleton = document.getElementById('postLoadingSkeleton');
+  if (postLoadingSkeleton) {
+    postLoadingSkeleton.style.display = 'none';
   }
 
-  // 태그 HTML 생성
-  let tagsHTML = '';
-  if (post.tags && post.tags.length > 0) {
-    tagsHTML = `
-      <div class="post-tags flex flex-wrap gap-2 my-3">
-        ${post.tags.map(tag => `
-          <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">
-            #${tag}
-          </span>
-        `).join('')}
-      </div>
-    `;
+  // 게시글 컨테이너 찾기
+  const postContent = document.getElementById('postContent');
+  if (!postContent) {
+    console.error('postContent 요소를 찾을 수 없습니다.');
+    return;
   }
 
-  // 게시글 HTML 생성
-  const postHTML = `
-    <div>
-      <div class="flex items-center justify-between mb-4">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
-            <img src="${post.profileImageUrl || `https://i.pravatar.cc/40?u=${post.nickname}`}" 
-                 alt="${post.nickname}의 프로필" 
-                 class="w-full h-full object-cover"
-                 onerror="this.src='https://i.pravatar.cc/40?u=default'">
-          </div>
-          <div>
-            <div class="font-medium">${post.nickname}</div>
-            <div class="text-xs text-gray-500">${createdDate}</div>
-          </div>
-        </div>
-        <div class="post-category flex items-center">
-          <span class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
-            ${categoryLabel}
-          </span>
-        </div>
-      </div>
-      
-      <h1 class="text-2xl font-bold mb-4">${post.title}</h1>
-      
-      ${tagsHTML}
-      
-      <div class="post-content prose max-w-none mb-6">
-        ${post.content}
-      </div>
-      
-      ${imagesHTML}
-      
-      <div class="post-info flex items-center gap-4 text-sm text-gray-500 mt-4">
-        <div class="flex items-center gap-1">
-          <i class="ri-eye-line"></i>
-          <span>${post.viewCount || 0}</span>
-        </div>
-        <div class="flex items-center gap-1">
-          <i class="ri-chat-1-line"></i>
-          <span>${post.commentCount || 0}</span>
-        </div>
-        <div class="flex items-center gap-1">
-          <i class="ri-heart-line"></i>
-          <span>${post.likeCount || 0}</span>
-        </div>
-      </div>
-    </div>
-  `;
+  // 컨테이너 표시
+  postContent.classList.remove('hidden');
 
-  postDetail.innerHTML = postHTML;
+  // DOM 요소 찾기 (null 체크 후 값 업데이트)
+  const elements = {
+    postDate: document.getElementById('postDate'),
+    postCategory: document.getElementById('postCategory'),
+    postTitle: document.getElementById('postTitle'),
+    authorProfileImage: document.getElementById('authorProfileImage'),
+    authorNickname: document.getElementById('authorNickname'),
+    createdAt: document.getElementById('createdAt'),
+    viewCount: document.getElementById('viewCount'),
+    postContentBody: document.getElementById('postContentBody'),
+    postImages: document.getElementById('postImages'),
+    postTags: document.getElementById('postTags'),
+    likeCount: document.getElementById('likeCount'),
+    commentCount: document.getElementById('commentCount')
+  };
+
+  // 안전하게 요소 업데이트 (있을 경우만)
+  if (elements.postDate) elements.postDate.textContent = new Date(post.createdAt).toLocaleDateString();
+  if (elements.postCategory) elements.postCategory.textContent = getCategoryLabel(post.category);
+  if (elements.postTitle) elements.postTitle.textContent = post.title;
+  if (elements.authorProfileImage) elements.authorProfileImage.src = post.profileImageUrl || `https://i.pravatar.cc/40?u=${post.nickname}`;
+  if (elements.authorNickname) elements.authorNickname.textContent = post.nickname;
+  if (elements.createdAt) elements.createdAt.textContent = new Date(post.createdAt).toLocaleDateString();
+  if (elements.viewCount) elements.viewCount.textContent = post.viewCount || 0;
+  if (elements.postContentBody) elements.postContentBody.innerHTML = post.content;
+  if (elements.likeCount) elements.likeCount.textContent = post.likeCount || 0;
+  if (elements.commentCount) elements.commentCount.textContent = post.commentCount || 0;
+
+  // 이미지 표시
+  if (elements.postImages && post.imageUrls && post.imageUrls.length > 0) {
+    elements.postImages.innerHTML = post.imageUrls.map(url => `
+      <div class="mb-3">
+        <img src="${url}" alt="게시글 이미지" class="rounded-md max-w-full">
+      </div>
+    `).join('');
+  } else if (elements.postImages) {
+    elements.postImages.style.display = 'none';
+  }
+
+  // 태그 표시
+  if (elements.postTags && post.tags && post.tags.length > 0) {
+    elements.postTags.innerHTML = post.tags.map(tag => `
+      <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">
+        #${tag}
+      </span>
+    `).join('');
+  } else if (elements.postTags) {
+    elements.postTags.style.display = 'none';
+  }
+
+  // 좋아요 상태 표시
+  if (post.isLiked) {
+    const likeIcon = document.getElementById('likeIcon');
+    if (likeIcon) {
+      likeIcon.classList.remove('ri-heart-line');
+      likeIcon.classList.add('ri-heart-fill', 'text-red-500');
+    }
+  }
+
+  // 북마크 상태 표시
+  if (post.isBookmarked) {
+    const bookmarkIcon = document.getElementById('bookmarkIcon');
+    if (bookmarkIcon) {
+      bookmarkIcon.classList.remove('ri-bookmark-line');
+      bookmarkIcon.classList.add('ri-bookmark-fill', 'text-primary');
+    }
+  }
+
+  // 작성자가 현재 사용자인 경우 수정/삭제 버튼 표시
+  const postActions = document.getElementById('postActions');
+  if (postActions && !currentUser.isGuest && currentUser.id === post.userId) {
+    postActions.classList.remove('hidden');
+  }
+
+  // 작성자 정보 업데이트 - 게시글 정보에서 필요한 데이터 추출하여 사용
+  const authorInfo = {
+    id: post.userId,
+    nickname: post.nickname || '익명 사용자',
+    profileImageUrl: post.profileImageUrl,
+    role: post.role || 'ROLE_MENTEE',
+    interest: post.interest || 'DESIGN_UX_UI', // 기본값 설정
+    introduction: post.introduction || "자기소개가 등록되어 있지 않습니다."
+  };
+
+  console.log('작성자 정보 추출:', authorInfo);
+  updateAuthorInfo(authorInfo);
+
+  console.log('게시글 렌더링 완료');
 }
+
 
 // 카테고리 라벨 생성 함수 (추가됨)
 function getCategoryLabel(category) {
   const categoryMap = {
-    'GENERAL': '일반 게시글',
-    'NOTICE': '공지사항',
-    'QUESTION': '질문',
-    'PROJECT': '프로젝트',
-    'STUDY': '스터디',
-    'FREE': '자유 게시판'
+    'QUESTION': '질문/답변',
+    'INFO': '정보공유',
+    'REVIEW': '후기',
+    'FREE': '자유 게시판',
+    'TALENT': '재능나눔'
   };
 
   return categoryMap[category] || category;
 }
 
-// 댓글 조회 함수 (수정됨)
+// 댓글 조회 함수
 async function loadComments(postId) {
   try {
     console.log('댓글 조회 요청:', `/api/v1/community/${postId}/comments`);
-    const response = await fetch(`/api/v1/community/${postId}/comments`, {
-      credentials: 'include' // 쿠키 포함 (추가)
+
+    // 먼저 일반 API 시도
+    let response = await fetch(`/api/v1/community/${postId}/comments`, {
+      credentials: 'include'
     });
 
-    if (!response.ok) {
+    // 401 오류 시 공개 API로 재시도 (만약 백엔드에서 제공한다면)
+    if (response.status === 401) {
+      console.log('댓글 조회에 인증이 필요합니다. 공개 조회로 전환합니다.');
+
+      // 백엔드에 비로그인용 댓글 조회 API가 있는 경우
+      response = await fetch(`/api/v1/community/public/${postId}/comments`);
+
+      // 공개 API가 없거나 실패한 경우
+      if (!response.ok) {
+        // 비로그인 상태에서는 빈 댓글 목록 표시
+        renderComments([], false, true);
+        return;
+      }
+    } else if (!response.ok) {
       throw new Error(`댓글 조회 실패: ${response.status}`);
     }
 
@@ -358,38 +444,37 @@ async function loadComments(postId) {
     console.log('댓글 데이터:', data);
 
     if (data.status === 200 && data.data) {
-      renderComments(data.data.content, data.data.hasNext);
+      renderComments(data.data.content, data.data.hasNext, currentUser.isGuest);
     } else {
       console.warn('댓글 데이터 없음:', data);
       // 데이터가 없어도 댓글이 없는 UI를 표시해야 함
-      renderComments([], false);
+      renderComments([], false, currentUser.isGuest);
     }
   } catch (error) {
     console.error('댓글 조회 오류:', error);
     showToast('댓글을 불러오는 중 오류가 발생했습니다', 'error');
     // 오류가 발생해도 댓글이 없는 UI를 표시
-    renderComments([], false);
+    renderComments([], false, currentUser.isGuest);
   }
 }
 
-// 댓글 렌더링 함수
-function renderComments(comments, hasNext) {
-  const commentsContainer = document.querySelector('.comments-list');
-  const noCommentsMessage = document.querySelector('.no-comments');
-  const loadMoreContainer = document.querySelector('.load-more-container');
+// 댓글 렌더링 함수에 비로그인 파라미터 추가
+function renderComments(comments, hasNext, isGuest = false) {
+  const commentsContainer = document.getElementById('commentsList');
+  const totalComments = document.getElementById('totalComments');
+  const loadMoreComments = document.getElementById('loadMoreComments');
+  const commentInput = document.getElementById('commentInput');
+  const submitComment = document.getElementById('submitComment');
 
   // DOM 요소가 없으면 일찍 반환
   if (!commentsContainer) {
-    console.error('comments-list 요소를 찾을 수 없습니다.');
+    console.error('commentsList 요소를 찾을 수 없습니다.');
     return;
   }
-  if (!noCommentsMessage) {
-    console.error('no-comments 요소를 찾을 수 없습니다.');
-    // 계속 진행할 수 있음
-  }
-  if (!loadMoreContainer) {
-    console.error('load-more-container 요소를 찾을 수 없습니다.');
-    // 계속 진행할 수 있음
+
+  // 댓글 수 표시
+  if (totalComments) {
+    totalComments.textContent = comments ? comments.length : 0;
   }
 
   // 댓글 컨테이너 비우기
@@ -397,34 +482,73 @@ function renderComments(comments, hasNext) {
 
   // 댓글이 없는 경우
   if (!comments || comments.length === 0) {
-    if (noCommentsMessage) {
-      noCommentsMessage.style.display = 'block';
+    commentsContainer.innerHTML = '<p class="text-center text-gray-500 py-4">아직 댓글이 없습니다. 첫 댓글을 작성해 보세요!</p>';
+    if (loadMoreComments) {
+      loadMoreComments.classList.add('hidden');
     }
-    if (loadMoreContainer) {
-      loadMoreContainer.style.display = 'none';
+  } else {
+    // 댓글 렌더링
+    comments.forEach(comment => {
+      const commentHTML = createCommentHTML(comment);
+      commentsContainer.insertAdjacentHTML('beforeend', commentHTML);
+    });
+
+    // 더 보기 버튼 표시 여부
+    if (loadMoreComments) {
+      if (hasNext) {
+        loadMoreComments.classList.remove('hidden');
+      } else {
+        loadMoreComments.classList.add('hidden');
+      }
     }
-    return;
   }
 
-  // 댓글이 있는 경우
-  if (noCommentsMessage) {
-    noCommentsMessage.style.display = 'none';
-  }
+  // 비로그인 상태일 때 댓글 작성 UI 수정
+  if (isGuest) {
+    if (commentInput) {
+      commentInput.placeholder = '댓글을 작성하려면 로그인이 필요합니다';
+      commentInput.readOnly = true;
+      commentInput.addEventListener('click', function() {
+        showToast('로그인이 필요합니다', 'info');
+        setTimeout(() => {
+          window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
+        }, 1000);
+      });
+    }
 
-  // 댓글 렌더링
-  comments.forEach(comment => {
-    const commentHTML = createCommentHTML(comment);
-    commentsContainer.insertAdjacentHTML('beforeend', commentHTML);
-  });
+    if (submitComment) {
+      submitComment.disabled = true;
+      submitComment.textContent = '로그인 필요';
+    }
+  } else {
+    // 로그인 상태일 때는 정상 작성 가능
+    if (commentInput) {
+      commentInput.placeholder = '댓글을 작성해주세요';
+      commentInput.readOnly = false;
+    }
 
-  // 더 보기 버튼 표시 여부
-  if (loadMoreContainer) {
-    loadMoreContainer.style.display = hasNext ? 'block' : 'none';
+    if (submitComment) {
+      submitComment.disabled = false;
+      submitComment.textContent = '댓글 작성';
+    }
   }
 }
 
 // 댓글 HTML 생성 함수
 function createCommentHTML(comment) {
+
+  // 날짜 처리 - null이거나 유효하지 않은 경우 현재 날짜 사용
+  let commentDate;
+  try {
+    commentDate = comment.createdAt ? new Date(comment.createdAt) : new Date();
+    // 유효한 날짜인지 확인
+    if (isNaN(commentDate.getTime())) {
+      commentDate = new Date();
+    }
+  } catch (e) {
+    commentDate = new Date();
+  }
+
   const formattedDate = new Date(comment.createdAt).toISOString().split('T')[0];
   const isMyComment = !currentUser.isGuest && comment.userId === currentUser.id;
 
@@ -482,7 +606,18 @@ function createCommentHTML(comment) {
 
 // 답글 HTML 생성 함수
 function createReplyHTML(reply, isTemporary) {
-  const formattedDate = new Date(reply.createdAt).toISOString().split('T')[0];
+  let replyDate;
+  try {
+    replyDate = reply.createdAt ? new Date(reply.createdAt) : new Date();
+    // 유효한 날짜인지 확인 (Invalid Date 체크)
+    if (isNaN(replyDate.getTime())) {
+      replyDate = new Date();
+    }
+  } catch (e) {
+    replyDate = new Date();
+  }
+
+  const formattedDate = replyDate.toISOString().split('T')[0];
   const tempClass = isTemporary ? 'opacity-70 animate-pulse' : '';
   const tempLabel = isTemporary ? '<span class="text-xs text-blue-500">(전송 중...)</span>' : '';
   const isMyReply = !currentUser.isGuest && reply.userId === currentUser.id;
@@ -524,17 +659,27 @@ function createReplyHTML(reply, isTemporary) {
 
 // 댓글 제출 핸들러
 async function handleCommentSubmit(event) {
-  event.preventDefault();
+  if (event) event.preventDefault();
+
+// 로깅을 통한 디버깅 강화
+  console.log('댓글 제출 함수 시작');
 
   const commentInput = document.getElementById('commentInput');
+  if (!commentInput) {
+    console.error('댓글 입력 요소를 찾을 수 없습니다.');
+    return;
+  }
   const commentText = commentInput.value.trim();
   // 댓글 제출 핸들러 (계속)
   if (!commentText) {
     showToast('댓글 내용을 입력해주세요', 'warning');
     return;
   }
+  console.log('댓글 내용 확인:', commentText);
+
   // 액션 전 로그인 상태 재확인
   const isLoggedIn = await checkCurrentLoginStatus();
+  console.log('현재 로그인 상태:', isLoggedIn);
 
   if (!isLoggedIn) {
     showToast('로그인 후 이용해주세요', 'warning');
@@ -550,79 +695,100 @@ async function handleCommentSubmit(event) {
     return;
   }
 
-  const commentSubmitBtn = document.querySelector('.comment-submit');
-  commentSubmitBtn.disabled = true;
-  commentSubmitBtn.textContent = '작성 중...';
+  console.log('게시글 ID 확인:', postId);
+
+  const commentSubmitBtn = document.getElementById('submitComment');
+  if (commentSubmitBtn) {
+    commentSubmitBtn.disabled = true;
+    commentSubmitBtn.textContent = '작성 중...';
+  }
 
   // 임시 댓글 UI를 먼저 추가하여 사용자 경험 개선
   const tempCommentId = `temp-comment-${Date.now()}`;
   addTemporaryComment(tempCommentId, commentText);
 
-  // 실제 API 호출
-  console.log('댓글 작성 요청 데이터:', {
-    commentContent: commentText,
-    parentCommentId: null
-  });
-
-  fetch(`/api/v1/community/${postId}/comments`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include', // 쿠키 포함
-    body: JSON.stringify({
+  try {
+    console.log('API 요청 준비:');
+    console.log({
       commentContent: commentText,
       parentCommentId: null
-    })
-  })
-      .then(response => {
-        console.log('댓글 작성 응답 상태:', response.status);
-        return response.json();
+    });
+
+
+    const response = await fetch(`/api/v1/community/${postId}/comments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include', // 쿠키 포함
+      body: JSON.stringify({
+        commentContent: commentText,
+        parentCommentId: null
       })
-      .then(result => {
-        console.log('댓글 작성 응답 데이터:', result);
+    });
 
-        if (result.status === 201 || result.status === 200) {
-          // 성공
-          showToast('댓글이 작성되었습니다', 'success');
-          commentInput.value = '';
+    // 401 오류 특별 처리
+    if (response.status === 401) {
+      // 현재 사용자 정보를 게스트로 재설정
+      currentUser.isGuest = true;
+      showToast('로그인 세션이 만료되었습니다. 다시 로그인해주세요.', 'info');
+      setTimeout(() => {
+        window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
+      }, 1500);
+      return;
+    }
 
-          // 임시 댓글 제거 후 실제 댓글로 교체
-          removeTemporaryComment(tempCommentId);
+    if (!response.ok) {
+      throw new Error(`댓글 작성 실패: ${response.status}`);
+    }
 
-          // 댓글 목록 새로고침
-          loadComments(postId);
+    const result = await response.json();
+    console.log('댓글 작성 응답 데이터:', result);
 
-          // 게시글에 댓글 수 업데이트 (게시글 새로고침)
-          loadPostDetail(postId);
-        } else if (result.status === 401) {
-          // 인증 오류
-          showToast('로그인이 필요합니다', 'error');
-          setTimeout(() => {
-            window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
-          }, 1500);
-        } else {
-          // 기타 오류
-          showToast(result.message || '댓글 작성 중 오류가 발생했습니다', 'error');
-          // 임시 댓글 제거
-          removeTemporaryComment(tempCommentId);
+    if (result.status === 201 || result.status === 200) {
+      // 성공
+      showToast('댓글이 작성되었습니다', 'success');
+      commentInput.value = '';
+
+      // 임시 댓글 제거 후 실제 댓글로 교체
+      removeTemporaryComment(tempCommentId);
+
+      // 댓글 목록 새로고침
+      await loadComments(postId);
+
+      // 게시글 댓글 수 업데이트 (선택적)
+      try {
+        const commentCount = document.getElementById('commentCount');
+        if (commentCount) {
+          commentCount.textContent = parseInt(commentCount.textContent || '0') + 1;
         }
-      })
-      .catch(error => {
-        console.error('댓글 작성 오류:', error);
-        showToast('댓글 작성 중 오류가 발생했습니다', 'error');
-        // 임시 댓글 제거
-        removeTemporaryComment(tempCommentId);
-      })
-      .finally(() => {
-        commentSubmitBtn.disabled = false;
-        commentSubmitBtn.textContent = '댓글 작성';
-      });
+      } catch (countError) {
+        console.warn('댓글 수 업데이트 실패:', countError);
+      }
+    } else {
+      showToast(result.message || '댓글 작성 중 오류가 발생했습니다', 'error');
+    }
+  } catch (error) {
+    console.error('댓글 작성 오류:', error);
+    showToast('댓글 작성 중 오류가 발생했습니다', 'error');
+  } finally {
+    // 버튼 상태 복원
+    if (commentSubmitBtn) {
+      commentSubmitBtn.disabled = false;
+      commentSubmitBtn.textContent = '댓글 작성';
+      console.log('댓글 제출 버튼 활성화');
+    }
+  }
 }
 
 // 임시 댓글 추가 함수
 function addTemporaryComment(tempId, content) {
-  const commentsContainer = document.querySelector('.comments-list');
+  const commentsContainer = document.getElementById('commentsList');
+
+  if (!commentsContainer) {
+    console.error('commentsList 요소를 찾을 수 없습니다!');
+    return; // 일찍 반환해서 오류 방지
+  }
 
   const formattedDate = new Date().toISOString().split('T')[0];
 
@@ -652,7 +818,10 @@ function addTemporaryComment(tempId, content) {
   commentsContainer.insertAdjacentHTML('afterbegin', tempCommentHTML);
 
   // 댓글이 없는 경우 메시지 숨기기
-  document.querySelector('.no-comments').style.display = 'none';
+  const noComments = document.querySelector('.no-comments');
+  if (noComments) {
+    noComments.style.display = 'none';
+  }
 }
 
 // 임시 댓글 제거 함수
@@ -1198,79 +1367,695 @@ function showToast(message, type = 'info') {
     setTimeout(() => toast.remove(), 300);
   }, 3000);
 }
+// 좋아요 토글 함수
+async function handleLikeToggle(postId) {
+  try {
+    // 로그인 상태 확인
+    if (currentUser.isGuest) {
+      showToast('로그인이 필요한 기능입니다', 'info');
+      setTimeout(() => {
+        window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
+      }, 1500);
+      return;
+    }
 
+    const likeIcon = document.getElementById('likeIcon');
+    const likeCount = document.getElementById('likeCount');
+
+    if (!likeIcon || !likeCount) {
+      console.error('좋아요 버튼 또는 카운트 요소를 찾을 수 없습니다.');
+      return;
+    }
+
+    // 현재 좋아요 상태 확인
+    const isLiked = likeIcon.classList.contains('ri-heart-fill');
+
+    // API URL 설정
+    const apiUrl = `/api/v1/community/likes/${postId}`;
+    const method = isLiked ? 'DELETE' : 'POST';
+
+    console.log(`좋아요 ${isLiked ? '취소' : '등록'} 요청 시작:`, {
+      url: apiUrl,
+      method: method
+    });
+
+    // API 요청 데이터 (필요한 경우)
+    const requestBody = isLiked ? {} : {
+      userId: currentUser.id,
+      communityId: postId
+    };
+
+    // 헤더에 Content-Type 추가 및 credentials 포함
+    const response = await fetch(apiUrl, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      credentials: 'include',
+      body: method === 'POST' ? JSON.stringify(requestBody) : undefined
+    });
+
+    console.log('좋아요 응답 상태:', response.status);
+
+    // 401 오류 특별 처리
+    if (response.status === 401) {
+      console.error('인증 오류 발생 - 자세한 응답:', response);
+
+      showToast('로그인이 필요합니다. 다시 로그인해주세요.', 'info');
+      setTimeout(() => {
+        window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
+      }, 1500);
+      return;
+    }
+
+    if (!response.ok) {
+      throw new Error(`좋아요 처리 실패: ${response.status}`);
+    }
+
+    let data;
+    try {
+      data = await response.json();
+      console.log('좋아요 응답 데이터:', data);
+    } catch (e) {
+      console.warn('응답을 JSON으로 파싱할 수 없습니다:', e);
+      // 일부 API는 빈 응답을 반환할 수 있음 - 무시하고 진행
+    }
+
+    // UI 업데이트
+    if (isLiked) {
+      // 좋아요 취소
+      likeIcon.classList.remove('ri-heart-fill', 'text-red-500');
+      likeIcon.classList.add('ri-heart-line');
+      likeCount.textContent = Math.max(0, parseInt(likeCount.textContent) - 1);
+      showToast('좋아요를 취소했습니다', 'success');
+    } else {
+      // 좋아요 추가
+      likeIcon.classList.remove('ri-heart-line');
+      likeIcon.classList.add('ri-heart-fill', 'text-red-500');
+      likeCount.textContent = parseInt(likeCount.textContent) + 1;
+      showToast('좋아요를 눌렀습니다', 'success');
+    }
+  } catch (error) {
+    console.error('좋아요 처리 오류:', error);
+    showToast('좋아요 처리 중 오류가 발생했습니다', 'error');
+  }
+}
+
+// 북마크 토글 함수
+async function handleBookmarkToggle(postId) {
+  try {
+    // 로그인 상태 확인
+    if (currentUser.isGuest) {
+      showToast('로그인이 필요한 기능입니다', 'info');
+      setTimeout(() => {
+        window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
+      }, 1500);
+      return;
+    }
+
+    const bookmarkIcon = document.getElementById('bookmarkIcon');
+
+    if (!bookmarkIcon) {
+      console.error('북마크 버튼 요소를 찾을 수 없습니다.');
+      return;
+    }
+
+    // 현재 북마크 상태 확인
+    const isBookmarked = bookmarkIcon.classList.contains('ri-bookmark-fill');
+
+    // API URL 설정
+    const apiUrl = `/api/v1/community/bookmarks/${postId}`;
+    const method = isBookmarked ? 'DELETE' : 'POST';
+
+    console.log(`북마크 ${isBookmarked ? '취소' : '등록'} 요청 시작:`, {
+      url: apiUrl,
+      method: method
+    });
+
+    // API 요청 데이터 (필요한 경우)
+    const requestBody = isBookmarked ? {} : {
+      userId: currentUser.id,
+      communityId: postId
+    };
+
+    // 헤더에 Content-Type 추가 및 credentials 포함
+    const response = await fetch(apiUrl, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      credentials: 'include',
+      body: method === 'POST' ? JSON.stringify(requestBody) : undefined
+    });
+
+    console.log('북마크 응답 상태:', response.status);
+
+    // 401 오류 특별 처리
+    if (response.status === 401) {
+      console.error('인증 오류 발생 - 자세한 응답:', response);
+
+      showToast('로그인이 필요합니다. 다시 로그인해주세요.', 'info');
+      setTimeout(() => {
+        window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
+      }, 1500);
+      return;
+    }
+
+    if (!response.ok) {
+      throw new Error(`북마크 처리 실패: ${response.status}`);
+    }
+
+    let data;
+    try {
+      data = await response.json();
+      console.log('북마크 응답 데이터:', data);
+    } catch (e) {
+      console.warn('응답을 JSON으로 파싱할 수 없습니다:', e);
+      // 일부 API는 빈 응답을 반환할 수 있음 - 무시하고 진행
+    }
+
+    // UI 업데이트
+    if (isBookmarked) {
+      // 북마크 취소
+      bookmarkIcon.classList.remove('ri-bookmark-fill', 'text-primary');
+      bookmarkIcon.classList.add('ri-bookmark-line');
+      showToast('북마크를 취소했습니다', 'success');
+    } else {
+      // 북마크 추가
+      bookmarkIcon.classList.remove('ri-bookmark-line');
+      bookmarkIcon.classList.add('ri-bookmark-fill', 'text-primary');
+      showToast('북마크에 추가했습니다', 'success');
+    }
+  } catch (error) {
+    console.error('북마크 처리 오류:', error);
+    showToast('북마크 처리 중 오류가 발생했습니다', 'error');
+  }
+}
+
+// 게시글 삭제 함수
+async function deletePost(postId) {
+  try {
+    // 로딩 인디케이터 표시
+    showToast('게시글을 삭제 중입니다...', 'info');
+
+    const response = await fetch(`/api/v1/community/${postId}`, {
+      method: 'DELETE',
+      credentials: 'include'
+    });
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        showToast('로그인이 필요합니다. 다시 로그인해주세요.', 'error');
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 1500);
+        return;
+      }
+
+      if (response.status === 403) {
+        showToast('게시글을 삭제할 권한이 없습니다.', 'error');
+        return;
+      }
+
+      throw new Error(`게시글 삭제 실패: ${response.status}`);
+    }
+
+    showToast('게시글이 삭제되었습니다', 'success');
+
+    // 게시글 목록 페이지로 이동
+    setTimeout(() => {
+      window.location.href = '/community';
+    }, 1500);
+  } catch (error) {
+    console.error('게시글 삭제 오류:', error);
+    showToast('게시글 삭제 중 오류가 발생했습니다', 'error');
+  }
+}
+// 작성자 정보 업데이트 함수 - 수정 버전
+function updateAuthorInfo(post) {
+  console.log('작성자 정보 업데이트 시작:', post);
+
+  // ID 기반 요소 접근
+  const sidebarAuthorProfile = document.getElementById('sidebarAuthorProfile');
+  const sidebarAuthorNickname = document.getElementById('sidebarAuthorNickname');
+  const sidebarAuthorJob = document.getElementById('sidebarAuthorJob');
+  const sidebarAuthorBio = document.getElementById('sidebarAuthorBio');
+  const authorOtherPosts = document.getElementById('authorOtherPosts');
+
+  // 요소가 없으면 콘솔에 경고
+  if (!sidebarAuthorProfile) console.warn('사이드바 프로필 이미지 요소를 찾을 수 없습니다.');
+  if (!sidebarAuthorNickname) console.warn('사이드바 닉네임 요소를 찾을 수 없습니다.');
+  if (!sidebarAuthorJob) console.warn('사이드바 직업 요소를 찾을 수 없습니다.');
+  if (!sidebarAuthorBio) console.warn('사이드바 소개 요소를 찾을 수 없습니다.');
+
+  // 프로필 이미지 업데이트
+  if (sidebarAuthorProfile) {
+    const profileUrl = post.profileImageUrl || post.profile_image_url;
+    sidebarAuthorProfile.src = profileUrl || `https://i.pravatar.cc/40?u=${post.nickname}`;
+    sidebarAuthorProfile.alt = `${post.nickname}의 프로필`;
+    console.log('프로필 이미지 설정:', sidebarAuthorProfile.src);
+  }
+
+  // 닉네임 업데이트
+  if (sidebarAuthorNickname) {
+    sidebarAuthorNickname.textContent = post.nickname || '익명 사용자';
+    console.log('닉네임 설정:', sidebarAuthorNickname.textContent);
+  }
+
+  // 직업/직함 업데이트
+  if (sidebarAuthorJob) {
+    sidebarAuthorJob.textContent = getJobTitle(post.interest, post.role);
+    console.log('직업 설정:', sidebarAuthorJob.textContent);
+  }
+
+  // 소개글 업데이트
+  if (sidebarAuthorBio) {
+    sidebarAuthorBio.textContent = post.introduction ||
+        "자기소개가 등록되어 있지 않습니다.";
+    console.log('소개글 설정:', sidebarAuthorBio.textContent);
+  }
+
+  // 작성자 다른 글 보기 링크 업데이트
+  if (authorOtherPosts) {
+    authorOtherPosts.href = `/community?author=${post.nickname}`;
+    console.log('작성자 다른 글 링크 설정:', authorOtherPosts.href);
+  }
+
+  console.log('작성자 정보 업데이트 완료');
+}
+// 작성자 상세 정보 가져오기 - DB 구조에 맞게 수정
+async function fetchAuthorDetails(userId) {
+  if (!userId) {
+    console.warn('작성자 ID가 제공되지 않았습니다');
+    return null;
+  }
+
+  try {
+    console.log('작성자 상세 정보 요청 시작:', userId);
+
+    // 실제 API 호출
+    const response = await fetch(`/api/v1/user/${userId}/profile`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json'
+      },
+      credentials: 'include'
+    });
+
+    // 인증 오류 시 null 반환
+    if (response.status === 401) {
+      console.warn('작성자 정보 접근 권한이 없습니다 (401)');
+      return null;
+    }
+
+    if (!response.ok) {
+      throw new Error(`작성자 정보 로드 실패: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('작성자 상세 정보 응답:', data);
+
+    if (data.status === 200 && data.data) {
+      return data.data;
+    }
+
+    return null;
+  } catch (error) {
+    console.error('작성자 정보 로드 오류:', error);
+    return null;
+  }
+}
+
+// 게시글 로드 및 작성자 정보 처리
+async function loadPostDetail(postId) {
+  try {
+    console.log('게시글 상세 정보 로드 시작:', postId);
+
+    // 게시글 데이터 로드
+    const url = `/api/v1/community/detail/${postId}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json'
+      },
+      credentials: 'include'
+    });
+
+    if (!response.ok) {
+      throw new Error(`게시글 로드 실패: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('게시글 데이터:', data);
+
+    if (data.status === 200 && data.data) {
+      const post = data.data;
+
+      // 게시글 렌더링 - 추가 API 호출 없이 바로 표시
+      renderPostDetail(post);
+
+      // 부가 정보가 있으면 비동기적으로 업데이트 (UI는 먼저 표시)
+      if (post.userId) {
+        try {
+          // 백그라운드에서 작성자 상세 정보 로드 시도
+          const authorDetails = await fetchAuthorDetails(post.userId);
+
+          if (authorDetails) {
+            console.log('추가 작성자 정보 로드 성공:', authorDetails);
+
+            // 추가 정보로 작성자 정보 업데이트
+            const updatedAuthorInfo = {
+              ...post,
+              introduction: authorDetails.introduction,
+              interest: authorDetails.interest,
+              role: authorDetails.role || post.role,
+              profileImageUrl: authorDetails.profileImageUrl || post.profileImageUrl
+            };
+
+            // UI 갱신
+            updateAuthorInfo(updatedAuthorInfo);
+          }
+        } catch (authorError) {
+          console.warn('작성자 추가 정보 로드 실패, 기본 정보로 계속:', authorError);
+          // 오류가 발생해도 UI는 이미 기본 정보로 표시된 상태이므로 추가 처리 불필요
+        }
+      }
+    } else {
+      console.error('게시글 데이터 없음:', data);
+      showToast('게시글을 불러올 수 없습니다', 'error');
+
+      // 스켈레톤 UI 숨기기
+      const postLoadingSkeleton = document.getElementById('postLoadingSkeleton');
+      if (postLoadingSkeleton) {
+        postLoadingSkeleton.style.display = 'none';
+      }
+
+      // 에러 메시지 표시
+      const postContent = document.getElementById('postContent');
+      if (postContent) {
+        postContent.classList.remove('hidden');
+        postContent.innerHTML = `
+          <div class="text-center py-8">
+            <div class="text-gray-400 text-5xl mb-4">
+              <i class="ri-error-warning-line"></i>
+            </div>
+            <h2 class="text-xl font-semibold mb-2">게시글을 불러올 수 없습니다</h2>
+            <p class="text-gray-600">존재하지 않거나 접근할 수 없는 게시글입니다.</p>
+          </div>
+        `;
+      }
+    }
+  } catch (error) {
+    console.error('게시글 로드 오류:', error);
+    showToast('게시글을 불러오는 중 오류가 발생했습니다', 'error');
+
+    // 스켈레톤 UI 숨기기
+    const postLoadingSkeleton = document.getElementById('postLoadingSkeleton');
+    if (postLoadingSkeleton) {
+      postLoadingSkeleton.style.display = 'none';
+    }
+
+    // 에러 메시지 표시
+    const postContent = document.getElementById('postContent');
+    if (postContent) {
+      postContent.classList.remove('hidden');
+      postContent.innerHTML = `
+        <div class="text-center py-8">
+          <div class="text-gray-400 text-5xl mb-4">
+            <i class="ri-error-warning-line"></i>
+          </div>
+          <h2 class="text-xl font-semibold mb-2">게시글을 불러올 수 없습니다</h2>
+          <p class="text-gray-600">오류: ${error.message}</p>
+          <button onclick="window.location.reload()" class="mt-4 px-4 py-2 bg-primary text-white rounded-md hover:bg-indigo-600">
+            다시 시도
+          </button>
+        </div>
+      `;
+    }
+  }
+}
 // 이벤트 리스너
 document.addEventListener('DOMContentLoaded', async function() {
-  // 현재 사용자 정보 로드
-  await loadCurrentUser();
+  try {
+    // 현재 사용자 정보 로드
+    await loadCurrentUser();
 
-  // 게시글 ID 가져오기
-  const postId = getPostIdFromUrl();
-  if (!postId) {
-    showToast('게시글 정보를 찾을 수 없습니다', 'error');
-    return;
-  }
+    // 게시글 ID 가져오기
+    const postId = getPostIdFromUrl();
+    if (!postId) {
+      showToast('게시글 정보를 찾을 수 없습니다', 'error');
+      return;
+    }
 
-  // 게시글 상세 정보 로드
-  loadPostDetail(postId);
+    // 게시글 상세 정보 로드 (작성자 정보 포함)
+    await loadPostDetail(postId);
 
-  // 댓글 목록 로드
-  loadComments(postId);
+    // 댓글 목록 로드
+    await loadComments(postId);
 
-  // 댓글 작성 폼 이벤트 리스너
-  const commentForm = document.querySelector('.comment-form form');
-  if (commentForm) {
-    commentForm.addEventListener('submit', handleCommentSubmit);
-  }
+    // 댓글 작성 이벤트 리스너
+    const submitComment = document.getElementById('submitComment');
+    if (submitComment) {
+      submitComment.addEventListener('click', function(event) {
+        if (event) event.preventDefault();
 
-  // 더 보기 버튼 이벤트 리스너
-  const loadMoreButton = document.querySelector('.load-more-comments');
-  if (loadMoreButton) {
-    loadMoreButton.addEventListener('click', function() {
-      // 구현해야 할 경우 페이지네이션 로직 추가
+        if (currentUser.isGuest) {
+          showToast('로그인이 필요한 기능입니다', 'info');
+          setTimeout(() => {
+            window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
+          }, 1000);
+          return;
+        }
+
+        handleCommentSubmit();
+      });
+    }
+
+    // 댓글 입력창 엔터키 이벤트
+    const commentInput = document.getElementById('commentInput');
+    if (commentInput) {
+      commentInput.addEventListener('keydown', function(e) {
+        // Ctrl+Enter 또는 Command+Enter로 제출
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+          e.preventDefault();
+          if (!currentUser.isGuest) {
+            handleCommentSubmit();
+          } else {
+            showToast('로그인이 필요한 기능입니다', 'info');
+            setTimeout(() => {
+              window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
+            }, 1000);
+          }
+        }
+      });
+    }
+
+    // 좋아요 버튼 이벤트 리스너
+    const likeButton = document.getElementById('likeButton');
+    if (likeButton) {
+      likeButton.addEventListener('click', function() {
+        if (currentUser.isGuest) {
+          showToast('로그인이 필요한 기능입니다', 'info');
+          setTimeout(() => {
+            window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
+          }, 1000);
+          return;
+        }
+
+        handleLikeToggle(postId);
+      });
+    }
+
+    // 북마크 버튼 이벤트 리스너 (계속)
+    const bookmarkButton = document.getElementById('bookmarkButton');
+    if (bookmarkButton) {
+      bookmarkButton.addEventListener('click', function() {
+        if (currentUser.isGuest) {
+          showToast('로그인이 필요한 기능입니다', 'info');
+          setTimeout(() => {
+            window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
+          }, 1000);
+          return;
+        }
+
+        handleBookmarkToggle(postId);
+      });
+    }
+
+    // 수정/삭제 버튼 이벤트 리스너
+    const editPostBtn = document.getElementById('editPostBtn');
+    const deletePostBtn = document.getElementById('deletePostBtn');
+
+    if (editPostBtn) {
+      editPostBtn.addEventListener('click', function() {
+        window.location.href = `/community/edit?postId=${postId}`;
+      });
+    }
+
+    if (deletePostBtn) {
+      deletePostBtn.addEventListener('click', function() {
+        if (confirm('정말 이 게시글을 삭제하시겠습니까?')) {
+          deletePost(postId);
+        }
+      });
+    }
+
+    // 공유 버튼 이벤트 리스너
+    const shareButton = document.getElementById('shareButton');
+    const shareToast = document.getElementById('shareToast');
+    if (shareButton) {
+      shareButton.addEventListener('click', function() {
+        navigator.clipboard.writeText(window.location.href)
+            .then(() => {
+              if (shareToast) {
+                shareToast.classList.remove('hidden');
+                shareToast.classList.remove('opacity-0');
+                setTimeout(() => {
+                  shareToast.classList.add('opacity-0');
+                  setTimeout(() => {
+                    shareToast.classList.add('hidden');
+                  }, 300);
+                }, 2000);
+              } else {
+                showToast('URL이 클립보드에 복사되었습니다', 'success');
+              }
+            })
+            .catch(() => {
+              showToast('URL 복사에 실패했습니다', 'error');
+            });
+      });
+    }
+
+    // 목록으로 버튼 이벤트 리스너
+    const backToListBtn = document.querySelector('button[onclick*="location.href=\'/community\'"]');
+    if (backToListBtn) {
+      // 기존 인라인 onclick 제거
+      backToListBtn.removeAttribute('onclick');
+      // 새 이벤트 리스너 추가
+      backToListBtn.addEventListener('click', function() {
+        window.location.href = '/community';
+      });
+    }
+
+    // 이벤트 위임을 통한 댓글 관련 버튼 처리
+    document.addEventListener('click', function(event) {
+      // 비로그인 상태에서는 모든 인터랙션 로그인 필요 메시지 표시
+      if (currentUser.isGuest) {
+        if (event.target.closest('.reply-button') ||
+            event.target.closest('.edit-comment') ||
+            event.target.closest('.delete-comment') ||
+            event.target.closest('.edit-reply') ||
+            event.target.closest('.delete-reply')) {
+          showToast('로그인이 필요합니다', 'info');
+          setTimeout(() => {
+            window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
+          }, 1000);
+          return;
+        }
+      }
+
+      // 답글 버튼 클릭
+      if (event.target.closest('.reply-button')) {
+        const commentItem = event.target.closest('.comment-item');
+        if (commentItem) {
+          showReplyForm(commentItem);
+        }
+      }
+
+      // 댓글 수정 버튼 클릭
+      if (event.target.closest('.edit-comment')) {
+        const commentItem = event.target.closest('.comment-item');
+        if (commentItem) {
+          editComment(commentItem);
+        }
+      }
+
+      // 댓글 삭제 버튼 클릭
+      if (event.target.closest('.delete-comment')) {
+        const commentItem = event.target.closest('.comment-item');
+        if (commentItem) {
+          deleteComment(commentItem);
+        }
+      }
+
+      // 답글 수정 버튼 클릭
+      if (event.target.closest('.edit-reply')) {
+        const replyItem = event.target.closest('.reply-item');
+        if (replyItem) {
+          editReply(replyItem);
+        }
+      }
+
+      // 답글 삭제 버튼 클릭
+      if (event.target.closest('.delete-reply')) {
+        const replyItem = event.target.closest('.reply-item');
+        if (replyItem) {
+          deleteReply(replyItem);
+        }
+      }
+
+      // 댓글 취소 버튼 클릭
+      if (event.target.closest('.cancel-edit')) {
+        const editForm = event.target.closest('.edit-form');
+        if (editForm) {
+          const contentElement = editForm.closest('.comment-content, .reply-content');
+          if (contentElement) {
+            contentElement.querySelector('p').style.display = 'block';
+            editForm.remove();
+          }
+        }
+      }
+
+      // 답글 취소 버튼 클릭
+      if (event.target.closest('.cancel-reply')) {
+        const replyForm = event.target.closest('.reply-form');
+        if (replyForm) {
+          replyForm.remove();
+        }
+      }
     });
+
+    // 이벤트 바인딩 오류가 없는지 확인
+    validateEventBindings();
+
+    console.log('페이지 초기화 완료');
+  } catch (error) {
+    console.error('페이지 초기화 중 오류 발생:', error);
+    showToast('페이지를 불러오는 중 오류가 발생했습니다', 'error');
   }
+});
 
-  // 이벤트 위임을 통한 댓글 관련 버튼 처리
-  document.addEventListener('click', function(event) {
-    // 답글 작성 버튼 클릭
-    if (event.target.closest('.reply-button')) {
-      const commentItem = event.target.closest('.comment-item');
-      if (commentItem) {
-        showReplyForm(commentItem);
-      }
-    }
+// 이벤트 바인딩 유효성 검사
+function validateEventBindings() {
+  const criticalElements = [
+    { id: 'submitComment', name: '댓글 제출 버튼' },
+    { id: 'likeButton', name: '좋아요 버튼' },
+    { id: 'bookmarkButton', name: '북마크 버튼' },
+    { id: 'shareButton', name: '공유 버튼' }
+  ];
 
-    // 댓글 수정 버튼 클릭
-    if (event.target.closest('.edit-comment')) {
-      const commentItem = event.target.closest('.comment-item');
-      if (commentItem) {
-        editComment(commentItem);
-      }
-    }
-
-    // 댓글 삭제 버튼 클릭
-    if (event.target.closest('.delete-comment')) {
-      const commentItem = event.target.closest('.comment-item');
-      if (commentItem) {
-        deleteComment(commentItem);
-      }
-    }
-
-    // 답글 수정 버튼 클릭
-    if (event.target.closest('.edit-reply')) {
-      const replyItem = event.target.closest('.reply-item');
-      if (replyItem) {
-        editReply(replyItem);
-      }
-    }
-
-    // 답글 삭제 버튼 클릭
-    if (event.target.closest('.delete-reply')) {
-      const replyItem = event.target.closest('.reply-item');
-      if (replyItem) {
-        deleteReply(replyItem);
-      }
+  criticalElements.forEach(element => {
+    const el = document.getElementById(element.id);
+    if (!el) {
+      console.warn(`주요 UI 요소를 찾을 수 없습니다: ${element.name} (ID: ${element.id})`);
     }
   });
-});
+
+  // 작성자 정보 요소 확인
+  const authorInfoElements = [
+    { id: 'sidebarAuthorProfile', name: '작성자 프로필 이미지' },
+    { id: 'sidebarAuthorNickname', name: '작성자 닉네임' },
+    { id: 'sidebarAuthorJob', name: '작성자 직업' },
+    { id: 'sidebarAuthorBio', name: '작성자 소개' },
+    { id: 'authorOtherPosts', name: '작성자 다른 글 링크' }
+  ];
+
+  authorInfoElements.forEach(element => {
+    const el = document.getElementById(element.id);
+    if (!el) {
+      console.warn(`작성자 정보 요소를 찾을 수 없습니다: ${element.name} (ID: ${element.id})`);
+    }
+  });
+}
