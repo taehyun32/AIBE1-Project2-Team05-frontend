@@ -370,7 +370,8 @@ document.addEventListener('DOMContentLoaded', function() {
   if (saveChangesButton) {
     saveChangesButton.addEventListener('click', async function (e) {
       e.preventDefault();
-      saveProfileChanges();
+      confirm("변경사항을 저장하시겠습니까?");
+      await saveProfileChanges();
     });
   }
 });
