@@ -1,9 +1,14 @@
-// 페이지 이동 함수
-function navigateTo(path) {
-    window.location.href = path;
-  }
-  
-  document.addEventListener('DOMContentLoaded', async () => {
+async function navigateTo(path) {
+    if (path === '/matching-type-selection' || path === '/matching' || path === '/community') {
+     const response = await handle401Error();
+     if (!response) {
+       window.location.href = '/login';
+       return;
+     } 
+    }
+     window.location.href = path; 
+ };
+document.addEventListener('DOMContentLoaded', async () => {
     await loadIncludes();
     await initAuth();
   });
@@ -101,11 +106,11 @@ function navigateTo(path) {
   async function ensureAuthenticated() {
     const isLogged = sessionStorage.getItem('isLoggedIn') === 'true';
     if (isLogged) return true;
-    const refreshed = await handle401();
+    const refreshed = await handle401Error();
     return refreshed;
   }
   
-  async function handle401() {
+  async function handle401Error() {
     try {
       const res = await fetch('/status', { credentials: 'include' });
       if (res.ok) {
@@ -118,6 +123,8 @@ function navigateTo(path) {
     updateAuthUI();
     return false;
   }
+
+  window.handle401Error = handle401Error;
   
   async function refreshToken() {
     try {
