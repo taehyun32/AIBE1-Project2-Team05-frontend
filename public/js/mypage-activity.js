@@ -33,6 +33,76 @@ function populateActivityData(activityData) {
     populateCommentList(activityData.comments);
     populateBookmarkList(activityData.bookmarks);
     populateLikeList(activityData.likes);
+    populateMatchesList(activityData.matches);
+}
+function populateMatchesList(matches) {
+    const matchesList = document.getElementById('matching-list');
+    if (!matchesList) {
+        console.warn('Matches list element not found.');
+        return;
+    }
+
+    matchesList.innerHTML = '';
+
+    if (matches && matches.length > 0) {
+        matches.forEach(match => {
+            const date = convertUtcToKstDate(match.createdAt);
+            const status = match.status !== 'IN_PROGRESS' ? '완료' : '진행중';
+            const statusClass = status === "진행중"
+                ? "bg-green-100 text-green-700"
+                : "bg-gray-100 text-gray-500";
+
+            // mentor 정보 추출
+            const {
+                nickname,
+                profileImageUrl,
+                introduction,
+                interest,
+                activityTime,
+                contactLink
+            } = match.mentor;
+
+            const item = document.createElement('div');
+            item.innerHTML = `
+        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+            <div class="flex items-start gap-3">
+                <div class="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
+                    <img src="${profileImageUrl}" alt="프로필" class="w-full h-full object-cover" />
+                </div>
+                <div class="flex-1">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-medium">${nickname}</h3>
+                            <p class="text-xs text-gray-500">${date} 매칭</p>
+                        </div>
+                        <span class="${statusClass} text-xs px-2 py-1 rounded-full">${status}</span>
+                    </div>
+                    <p class="text-primary text-sm font-medium mt-1">${interest}</p>
+                    <p class="text-sm text-gray-600 mt-2">${introduction}</p>
+                    <div class="flex items-center justify-between mt-3">
+                        <div class="flex items-center text-sm text-gray-500">
+                            <div class="w-4 h-4 flex items-center justify-center mr-1">
+                                <i class="ri-time-line"></i>
+                            </div>
+                            <span>${activityTime}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <a href="${contactLink}" class="text-primary text-sm font-medium hover:underline">연락하기</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+            matchesList.appendChild(item);
+        });
+
+    } else {
+        const emptyMessage = document.createElement('p');
+        emptyMessage.textContent = '등록된 매칭이 없습니다.';
+        emptyMessage.className = 'text-sm text-gray-500';
+        matchesList.appendChild(emptyMessage);
+    }
 }
 
 function populateTalentList(talents) {
@@ -48,7 +118,6 @@ function populateTalentList(talents) {
         talents.forEach(talent => {
             const listItem = document.createElement('li');
             const date = convertUtcToKstDate(talent.createdAt);
-
             listItem.innerHTML = `
                 <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
                     <div class="flex items-center text-xs text-gray-500 mb-1">

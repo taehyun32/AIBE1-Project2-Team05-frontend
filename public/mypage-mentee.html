@@ -73,57 +73,44 @@
             <i class="ri-add-line mr-1"></i> 더보기
           </a>
         </div>
-        <div id="matches-container" class="space-y-4">
-          <!-- 매칭 데이터는 동적으로 추가됩니다 -->
-          <div class="text-center py-6 text-gray-500">
-            <p>데이터를 불러오는 중입니다...</p>
-          </div>
+        <div id="matching-list" class="space-y-4">
+
         </div>
       </div>
 
       <!-- 내가 작성한 커뮤니티 게시글 목록 -->
       <div class="bg-white rounded-lg shadow-sm p-6">
         <div class="flex justify-between items-center mb-4">
-          <h2 class="text-lg font-semibold">작성한 게시글</h2>
-          <a
-                  href="more-details.html?type=community"
-                  class="text-primary text-sm font-medium hover:underline flex items-center">
+          <h2 class="text-lg font-semibold">내가 작성한 커뮤니티 게시글</h2>
+          <a href=more-details.html?type=community" class="text-primary text-sm font-medium hover:underline flex items-center">
             <i class="ri-add-line mr-1"></i> 더보기
           </a>
         </div>
-        <div id="posts-container" class="space-y-4">
-          <!-- 게시글 데이터는 동적으로 추가됩니다 -->
-          <div class="text-center py-6 text-gray-500">
-            <p>데이터를 불러오는 중입니다...</p>
-          </div>
-        </div>
+        <ul id="community-posts-list" class="space-y-4">
+          <!-- 여기에 API에서 가져온 게시글 목록이 동적으로 추가됩니다. -->
+        </ul>
       </div>
 
       <!-- 내가 작성한 댓글 목록 -->
       <div class="bg-white rounded-lg shadow-sm p-6">
         <div class="flex justify-between items-center mb-4">
-          <h2 class="text-lg font-semibold mb-4">작성한 댓글</h2>
-          <a
-                  href="more-details.html?type=my-comments"
-                  class="text-primary text-sm font-medium hover:underline flex items-center">
+          <h2 class="text-lg font-semibold mb-4">내가 작성한 댓글</h2>
+          <a href="more-details.html?type=my-comments"
+             class="text-primary text-sm font-medium hover:underline flex items-center">
             <i class="ri-add-line mr-1"></i> 더보기
           </a>
         </div>
-        <div id="comments-container" class="space-y-4">
-          <!-- 댓글 데이터는 동적으로 추가됩니다 -->
-          <div class="text-center py-6 text-gray-500">
-            <p>데이터를 불러오는 중입니다...</p>
-          </div>
-        </div>
+        <ul id="comment-list" class="space-y-4">
+          <!-- 여기에 API에서 가져온 댓글 목록이 동적으로 추가됩니다. -->
+        </ul>
       </div>
 
       <!-- 관심 목록 (좋아요한 게시글 + 북마크한 게시글) -->
       <div class="bg-white rounded-lg shadow-sm p-6">
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-lg font-semibold">관심 목록</h2>
-          <a
-                  href="/more-details.html?filter=all"
-                  class="text-primary text-sm font-medium hover:underline flex items-center">
+          <a href="/more-details.html?filter=all"
+             class="text-primary text-sm font-medium hover:underline flex items-center">
             <i class="ri-add-line mr-1"></i> 더보기
           </a>
         </div>
@@ -131,28 +118,21 @@
         <!-- 북마크한 게시글 -->
         <div class="mb-6">
           <h3 class="text-base font-semibold mb-2 text-gray-800">📌 북마크한 게시글</h3>
-          <div id="bookmarks-container" class="space-y-4">
-            <!-- 북마크 데이터는 동적으로 추가됩니다 -->
-            <div class="text-center py-6 text-gray-500">
-              <p>데이터를 불러오는 중입니다...</p>
-            </div>
-          </div>
+          <ul id="bookmark-list" class="space-y-4">
+            <!-- 북마크한 게시글 목록이 동적으로 추가됩니다. -->
+          </ul>
         </div>
 
         <!-- 좋아요한 게시글 -->
         <div>
           <h3 class="text-base font-semibold mb-2 text-gray-800">❤️ 좋아요한 게시글</h3>
-          <div id="likes-container" class="space-y-4">
-            <!-- 좋아요 데이터는 동적으로 추가됩니다 -->
-            <div class="text-center py-6 text-gray-500">
-              <p>데이터를 불러오는 중입니다...</p>
-            </div>
-          </div>
+          <ul id="like-list" class="space-y-4">
+            <!-- 좋아요한 게시글 목록이 동적으로 추가됩니다. -->
+          </ul>
         </div>
       </div>
     </div>
   </div>
-
   <!-- 탭 컨텐츠 - 작성 리뷰 -->
   <div class="tab-content hidden" id="reviews-content">
     <div class="bg-white rounded-lg shadow-sm p-6">
@@ -383,4 +363,5 @@
 </body>
 <script src="/js/include-and-authHandler.js"></script>
 <script src="js/mypage.js"></script>
+<script src="./js/mypage-activity.js"></script>
 </html>
