@@ -360,7 +360,7 @@ function renderPostDetail(post) {
   }
 
   // 좋아요 상태 표시
-  if (post.isLiked) {
+  if (post.liked) {
     const likeIcon = document.getElementById('likeIcon');
     if (likeIcon) {
       likeIcon.classList.remove('ri-heart-line');
@@ -369,7 +369,7 @@ function renderPostDetail(post) {
   }
 
   // 북마크 상태 표시
-  if (post.isBookmarked) {
+  if (post.bookmarked) {
     const bookmarkIcon = document.getElementById('bookmarkIcon');
     if (bookmarkIcon) {
       bookmarkIcon.classList.remove('ri-bookmark-line');
@@ -1396,8 +1396,8 @@ async function handleLikeToggle(postId) {
     const isLiked = likeIcon.classList.contains('ri-heart-fill');
 
     // API URL 설정
-    const apiUrl = `/api/v1/community/likes/${postId}`;
-    const method = isLiked ? 'DELETE' : 'POST';
+    const apiUrl = `/api/v1/community/details/${postId}/like`;
+    const method = 'POST';
 
     console.log(`좋아요 ${isLiked ? '취소' : '등록'} 요청 시작:`, {
       url: apiUrl,
@@ -1490,8 +1490,8 @@ async function handleBookmarkToggle(postId) {
     const isBookmarked = bookmarkIcon.classList.contains('ri-bookmark-fill');
 
     // API URL 설정
-    const apiUrl = `/api/v1/community/bookmarks/${postId}`;
-    const method = isBookmarked ? 'DELETE' : 'POST';
+    const apiUrl = `/api/v1/community/details/${postId}/bookmark`;
+    const method = 'POST';
 
     console.log(`북마크 ${isBookmarked ? '취소' : '등록'} 요청 시작:`, {
       url: apiUrl,
