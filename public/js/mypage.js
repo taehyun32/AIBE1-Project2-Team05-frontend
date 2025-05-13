@@ -134,7 +134,7 @@ async function fetchSigunguData(areaCode) {
 
 async function getProfile() {
   const nickname = sessionStorage.getItem('nickname');
-  const response = await fetch(`/api/v1/users/${nickname}`, {
+  const response = await fetch(`/api/v1/users/${nickname}/profile`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -149,101 +149,108 @@ async function getProfile() {
   return result.data;
 }
 async function populateProfileData() {
-  const data = await getProfile();
+  try {
+    const data = await getProfile();
+    console.log(data);
+    const nicknameInput = document.getElementById('nickname');
+    if (nicknameInput) nicknameInput.value = data.nickname || '';
 
-  const nicknameInput = document.getElementById('nickname');
-  if (nicknameInput) nicknameInput.value = data.nickname || '';
+    const imgPreview = document.getElementById('profile-image-preview');
+    const imgHeader = document.getElementById('profile-image');
 
-  const imgPreview = document.getElementById('profile-image-preview');
-  const imgHeader = document.getElementById('profile-image'); // 추가
-
-  if (imgPreview) {
-    imgPreview.src = data.profileImageUrl;
-    imgPreview.alt = data.nickname ? `${data.nickname}님의 프로필 이미지` : '기본 프로필 이미지';
-  }
-
-  if (imgHeader) {
-    imgHeader.src = data.profileImageUrl
-    imgHeader.alt = data.nickname ? `${data.nickname}님의 프로필 이미지` : '기본 프로필 이미지'; // 추가
-  }
-  // 프로필 헤더 정보 업데이트
-  const profileName = document.querySelector('.flex-1.text-center.md\\:text-left .text-2xl.font-bold');
-  if (profileName) profileName.textContent = data.nickname || '닉네임 없음';
-
-  const profileLocation = document.querySelector('.flex-1.text-center.md\\:text-left .text-gray-600.mb-4');
-  if (profileLocation) {
-    profileLocation.textContent = `${data.interestDisplayName || '전문 분야 없음'} | ${data.area || '지역 없음'} ${data.sigunguName || ''}`;
-  }
-
-  const profileIntro = document.querySelector('.flex-1.text-center.md\\:text-left .text-gray-700.mb-4');
-  if (profileIntro) profileIntro.textContent = data.introduction || '소개글 없음';
-
-  // 태그 업데이트 (API에 태그 정보가 있는 경우)
-  const tagContainer = document.querySelector('.flex-1.text-center.md\\:text-left .flex.flex-wrap.gap-2');
-  if (tagContainer) {
-    tagContainer.innerHTML = ''; // 기존 태그 초기화
-    if (data.tags && data.tags.length > 0) {
-      data.tags.forEach(tag => {
-        const tagElement = document.createElement('span');
-        tagElement.className = 'bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full';
-        tagElement.textContent = `#${tag}`;
-        tagContainer.appendChild(tagElement);
-      });
-    } else {
-      // 태그가 없는 경우 메시지 표시
-      const noTagsMessage = document.createElement('span');
-      noTagsMessage.textContent = '태그 없음';
-      tagContainer.appendChild(noTagsMessage);
+    if (imgPreview) {
+      imgPreview.src = data.profileImageUrl || '';
+      imgPreview.alt = data.nickname ? `${data.nickname}님의 프로필 이미지` : '기본 프로필 이미지';
     }
-  }
 
-  const intro = document.getElementById('introduction');
-  if (intro) intro.value = data.introduction || '';
-
-  const regionButton = document.getElementById('regionButton');
-  const sigunguButton = document.getElementById('sigunguButton');
-  if(data.area){
-    regionButton.querySelector('span').textContent = data.area;
-    regionButton.setAttribute('data-area', data.areaCode);
-  }
-  if(data.sigunguName){
-    sigunguButton.querySelector('span').textContent = data.sigunguName;
-    sigunguButton.setAttribute('data-sigungu', data.sigunguCode);
-  }
-
-  const timeSelect = document.getElementById('available_time');
-  if (timeSelect) timeSelect.value = data.activityTime || '';
-
-  const activityTypeInputs = document.querySelectorAll('input[name="activity-type"]');
-  activityTypeInputs.forEach(input => {
-    if (data.activityType && input.value === data.activityType) {
-      input.checked = true;
+    if (imgHeader) {
+      imgHeader.src = data.profileImageUrl || '';
+      imgHeader.alt = data.nickname ? `${data.nickname}님의 프로필 이미지` : '기본 프로필 이미지';
     }
-  });
 
-  const tagInput = document.getElementById('tags');
-  if (tagInput) tagInput.value = data.tags ? data.tags.join(',') : '';
+    const profileName = document.querySelector('.flex-1.text-center.md\\:text-left .text-2xl.font-bold');
+    if (profileName) profileName.textContent = data.nickname || '닉네임 없음';
 
-  const contactInput = document.getElementById('contact');
-  if (contactInput) contactInput.value = data.contactLink || '';
+    const profileLocation = document.querySelector('.flex-1.text-center.md\\:text-left .text-gray-600.mb-4');
+    if (profileLocation) {
+      profileLocation.textContent = `${data.interestDisplayName || '전문 분야 없음'} | ${data.area || '지역 없음'} ${data.sigunguName || ''}`;
+    }
 
-  const matchToggle = document.querySelector('input[name="accept-matching"]');
-  if (matchToggle !== null) matchToggle.checked = data.acceptingRequests;
+    const profileIntro = document.querySelector('.flex-1.text-center.md\\:text-left .text-gray-700.mb-4');
+    if (profileIntro) profileIntro.textContent = data.introduction || '소개글 없음';
 
-  const introductionInput = document.getElementById('introduction');
-  if (introductionInput) introductionInput.value = data.introduction || '';
+    const tagContainer = document.querySelector('.flex-1.text-center.md\\:text-left .flex.flex-wrap.gap-2');
+    if (tagContainer) {
+      tagContainer.innerHTML = '';
+      if (data.tags && data.tags.length > 0) {
+        data.tags.forEach(tag => {
+          const tagElement = document.createElement('span');
+          tagElement.className = 'bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full';
+          tagElement.textContent = `#${tag}`;
+          tagContainer.appendChild(tagElement);
+        });
+      } else {
+        const noTagsMessage = document.createElement('span');
+        noTagsMessage.textContent = '태그 없음';
+        tagContainer.appendChild(noTagsMessage);
+      }
+    }
 
-  const availableTimeSelect = document.getElementById('available_time');
-  if (availableTimeSelect) availableTimeSelect.value = data.activityTime || '';
+    const intro = document.getElementById('introduction');
+    if (intro) intro.value = data.introduction || '';
 
-  const tagsInput = document.getElementById('tags');
-  if (tagsInput) tagsInput.value = data.tags ? data.tags.join(',') : '';
+    // 지역 및 시군구 코드 설정
+    const regionButton = document.getElementById('regionButton');
+    const sigunguButton = document.getElementById('sigunguButton');
+    if (regionButton && sigunguButton) {
+      if (data.areaCode) {
+        regionButton.setAttribute('data-area', data.areaCode);
+        regionButton.querySelector('span').textContent = data.area; // 지역 이름 표시
+        fetchSigunguData(data.areaCode); // 시군구 데이터 로드
+      }
+      if (data.sigunguCode) {
+        sigunguButton.setAttribute('data-sigungu', data.sigunguCode);
+        sigunguButton.querySelector('span').textContent = data.sigunguName; // 시군구 이름 표시
+      }
+    }
 
-  const expertSelect = document.getElementById('expertise');
-  if (expertSelect) expertSelect.value = data.interest || '';
+    const timeSelect = document.getElementById('available_time');
+    if (timeSelect) timeSelect.value = data.activityTime || '';
 
-  const contact = document.getElementById('contact');
-  if (contact) contact.value = data.contactLink || '';
+    const activityTypeInputs = document.querySelectorAll('input[name="activity-type"]');
+    activityTypeInputs.forEach(input => {
+      if (data.activityType && input.value === data.activityType) {
+        input.checked = true;
+      }
+    });
+
+    const tagInput = document.getElementById('tags');
+    if (tagInput) tagInput.value = data.tags ? data.tags.join(',') : '';
+
+    const contactInput = document.getElementById('contact');
+    if (contactInput) contactInput.value = data.contactLink || '';
+
+    const matchToggle = document.querySelector('input[name="accept-matching"]');
+    if (matchToggle !== null) matchToggle.checked = data.acceptingRequests;
+
+    const introductionInput = document.getElementById('introduction');
+    if (introductionInput) introductionInput.value = data.introduction || '';
+
+    const availableTimeSelect = document.getElementById('available_time');
+    if (availableTimeSelect) availableTimeSelect.value = data.activityTime || '';
+
+    const tagsInput = document.getElementById('tags');
+    if (tagsInput) tagsInput.value = data.tags ? data.tags.join(',') : '';
+
+    const expertSelect = document.getElementById('expertise');
+    if (expertSelect) expertSelect.value = data.interest || '';
+
+    const contact = document.getElementById('contact');
+    if (contact) contact.value = data.contactLink || '';
+
+  } catch (error) {
+    console.error('프로필 데이터 가져오기 및 설정 오류:', error);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -361,7 +368,10 @@ document.addEventListener('DOMContentLoaded', function() {
   // 변경사항 저장 버튼 이벤트 리스너
   const saveChangesButton = document.getElementById('saveChangesButton');
   if (saveChangesButton) {
-    saveChangesButton.addEventListener('click', saveProfileChanges);
+    saveChangesButton.addEventListener('click', async function (e) {
+      e.preventDefault();
+      saveProfileChanges();
+    });
   }
 });
 
@@ -445,6 +455,7 @@ async function saveProfileChanges() {
     });
 
     if (response.status === 200) {
+      await populateProfileData();
       console.log("성공")
     } else {
       console.log(`프로필 업데이트 실패: ${response.status}`);
