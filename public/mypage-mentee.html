@@ -188,172 +188,192 @@
         <div class="bg-white rounded-lg shadow-sm p-6">
           <h2 class="text-xl font-semibold mb-6">프로필 설정</h2>
 
-          <form id="profile-settings-form" class="space-y-6">
-            <!-- 기본 정보 섹션 -->
-            <div>
-              <h3 class="text-lg font-medium mb-4">기본 정보</h3>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- 프로필 이미지 -->
-                <div class="flex flex-col items-center md:items-start">
-                  <label class="block text-sm font-medium text-gray-700 mb-2">프로필 이미지</label>
-                  <div class="relative">
-                    <div class="w-32 h-32 rounded-full bg-gray-200 overflow-hidden">
-                      <img
-                        id="profile-image-preview"
-                        src="../assets/images/default-profile.png"
-                        alt="프로필 이미지"
-                        class="w-full h-full object-cover" />
-                    </div>
-                    <button
-                      type="button"
-                      id="change-profile-image-btn"
-                      class="absolute bottom-0 right-0 bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-indigo-600">
-                      <i class="ri-camera-line"></i>
-                    </button>
-                    <input type="file" id="profile-image-input" accept="image/*" class="hidden" />
-                  </div>
-                  <p class="text-xs text-gray-500 mt-2">권장 크기: 500x500 픽셀</p>
-                </div>
 
-                <!-- 닉네임 및 사용자 유형 -->
-                <div class="space-y-4">
-                  <div>
-                    <label for="nickname" class="block text-sm font-medium text-gray-700 mb-1">닉네임</label>
-                    <input
-                      type="text"
-                      id="nickname"
-                      name="nickname"
-                      class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
-                  </div>
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">사용자 유형</label>
-                    <div class="flex flex-col md:flex-row md:items-center gap-2 mb-2">
-                      <span id="user-role-display" class="bg-primary text-white text-xs px-2 py-1 rounded-full"
-                        >멘티</span
-                      >
-                    </div>
-                  </div>
+      <form class="space-y-6">
+        <!-- 기본 정보 섹션 -->
+        <!-- 프로필 설정 탭 - 기본 정보 섹션 -->
+        <div>
+          <h3 class="text-lg font-medium mb-4">기본 정보</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- 프로필 이미지 -->
+            <div class="flex flex-col items-center md:items-start">
+              <label class="block text-sm font-medium text-gray-700 mb-2">프로필 이미지</label>
+              <div class="relative">
+                <div class="w-32 h-32 rounded-full bg-gray-200 overflow-hidden">
+                  <img
+                          id="profile-image-preview"
+                          src=""
+                          alt="프로필 이미지"
+                          class="w-full h-full object-cover"
+                  />
                 </div>
+                <button
+                        type="button"
+                        class="absolute bottom-0 right-0 bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-indigo-600"
+                >
+                  <i class="ri-camera-line"></i>
+                </button>
               </div>
+              <p class="text-xs text-gray-500 mt-2">권장 크기: 500x500 픽셀</p>
             </div>
 
-            <!-- 지역 및 소개 -->
-            <div class="border-t border-gray-200 pt-6">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- 닉네임 및 사용자 유형 -->
+            <div class="space-y-4">
+              <div class="flex items-center gap-2">
                 <div>
-                  <label for="area" class="block text-sm font-medium text-gray-700 mb-1">지역</label>
-                  <select
-                    id="area"
-                    name="area"
-                    class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                    <option value="">지역 선택</option>
-                    <option value="서울">서울</option>
-                    <option value="인천">인천</option>
-                    <option value="대전">대전</option>
-                    <option value="대구">대구</option>
-                    <option value="광주">광주</option>
-                    <option value="부산">부산</option>
-                    <option value="울산">울산</option>
-                    <option value="세종">세종</option>
-                    <option value="경기">경기</option>
-                    <option value="강원">강원</option>
-                    <option value="충북">충북</option>
-                    <option value="충남">충남</option>
-                    <option value="경북">경북</option>
-                    <option value="경남">경남</option>
-                    <option value="전북">전북</option>
-                    <option value="전남">전남</option>
-                    <option value="제주">제주</option>
-                  </select>
-                </div>
-                <div>
-                  <label for="sigungu" class="block text-sm font-medium text-gray-700 mb-1">시군구</label>
-                  <select
-                    id="sigungu"
-                    name="sigungu"
-                    class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                    <option value="">시군구 선택</option>
-                    <!-- 시군구 옵션은 동적으로 생성됩니다 -->
-                  </select>
-                </div>
-                <div>
-                  <label for="activity_time" class="block text-sm font-medium text-gray-700 mb-1"
-                    >활동 가능 시간대</label
-                  >
-                  <select
-                    id="activity_time"
-                    name="activity_time"
-                    class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                    <option value="">시간대 선택</option>
-                    <option value="WEEKDAY_MORNING">평일 오전</option>
-                    <option value="WEEKDAY_AFTERNOON">평일 오후</option>
-                    <option value="WEEKDAY_EVENING">평일 저녁</option>
-                    <option value="WEEKEND_MORNING">주말 오전</option>
-                    <option value="WEEKEND_AFTERNOON">주말 오후</option>
-                    <option value="WEEKEND_EVENING">주말 저녁</option>
-                  </select>
-                </div>
-                <div>
-                  <label for="activity_type" class="block text-sm font-medium text-gray-700 mb-1">활동 유형</label>
-                  <select
-                    id="activity_type"
-                    name="activity_type"
-                    class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                    <option value="">활동 유형 선택</option>
-                    <option value="ONLINE">온라인</option>
-                    <option value="OFFLINE">오프라인</option>
-                    <option value="BOTH">온라인/오프라인</option>
-                  </select>
-                </div>
-              </div>
-              <div class="mt-4">
-                <label for="introduction" class="block text-sm font-medium text-gray-700 mb-1">소개글</label>
-                <textarea
-                  id="introduction"
-                  name="introduction"
-                  rows="4"
-                  class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
-              </div>
-            </div>
-
-            <!-- 멘티 전용 설정 -->
-            <div id="mentee-settings" class="border-t border-gray-200 pt-6">
-              <h3 class="text-lg font-medium mb-4">멘티 설정</h3>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label for="interest" class="block text-sm font-medium text-gray-700 mb-1">관심 분야</label>
-                  <select
-                    id="interest"
-                    name="interest"
-                    class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                    <option value="">관심 분야 선택</option>
-                    <option value="WEB_DEV">프로그래밍/웹개발</option>
-                    <option value="APP_DEV">프로그래밍/앱개발</option>
-                    <option value="DESIGN_UX_UI">디자인/UX/UI</option>
-                    <option value="DESIGN_GRAPHIC">디자인/그래픽</option>
-                    <option value="EDUCATION_MATH">교육/수학</option>
-                    <option value="EDUCATION_ENGLISH">교육/영어</option>
-                    <option value="MUSIC_PIANO">음악/피아노</option>
-                    <option value="FITNESS_YOGA">운동/요가</option>
-                  </select>
-                </div>
-                <div>
-                  <label for="tag" class="block text-sm font-medium text-gray-700 mb-1">태그 (쉼표로 구분)</label>
+                  <label for="nickname" class="block text-sm font-medium text-gray-700 mb-1">닉네임</label>
                   <input
-                    type="text"
-                    id="tag"
-                    name="tag"
-                    placeholder="예: 프로그래밍,웹개발"
-                    class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+                          type="text"
+                          id="nickname"
+                          name="nickname"
+                          value=""
+                          class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  />
+                </div>
+                <button type="button"
+                        class="bg-primary text-white text-xs px-2 py-2 rounded mb-1 ml-2 mt-6">
+                  <span> 중복 확인</span>
+                </button>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">사용자 유형</label>
+                <div class="flex items-center gap-2">
+                  <span class="bg-primary text-white text-xs px-2 py-1 rounded-full">멘토</span>
+                  <span class="text-xs text-gray-500">(회원가입 시 선택한 유형은 변경할 수 없습니다)</span>
+
                 </div>
               </div>
             </div>
+
+
+
+        <!-- 지역 및 소개 -->
+        <div class="w-full">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="flex-1">
+              <label class="block text-sm font-medium text-gray-700 mb-1">지역</label>
+              <div class="flex gap-2">
+                <!-- 지역 선택 -->
+                <div class="relative w-full">
+                  <button
+                          type="button"
+                          class="w-full bg-white border border-gray-300 rounded px-6 py-2 text-left flex items-center justify-between"
+                          id="regionButton"
+                  >
+                    <span>지역</span>
+                    <div class="w-5 h-5 flex items-center justify-center">
+                      <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                  </button>
+                  <div
+                          class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden"
+                          id="regionDropdown"
+                  >
+                    <div class="py-1 max-h-60 overflow-y-auto custom-scrollbar">
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="1">서울</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="2">인천</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="3">대전</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="4">대구</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="5">광주</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="6">부산</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="7">울산</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="8">세종</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="31">경기</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="32">강원</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="33">충북</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="34">충남</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="35">경북</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="36">경남</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="37">전북</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="38">전남</button>
+                      <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="39">제주</button>
+                    </div>
+                  </div>
+                </div>
+                <!-- 시군구 선택 -->
+                <div class="relative w-full">
+                  <button
+                          type="button"
+                          class="w-full bg-white border border-gray-300 rounded px-4 py-2 text-left flex items-center justify-between"
+                          id="sigunguButton"
+                  >
+                    <span>시군구</span>
+                    <div class="w-5 h-5 flex items-center justify-center">
+                      <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                  </button>
+                  <div
+                          class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden"
+                          id="sigunguDropdown"
+                  >
+                    <div class="py-1 max-h-60 overflow-y-auto custom-scrollbar" id="sigunguOptions">
+                      <!-- 시군구 옵션은 지역에 따라 동적으로 생성 -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="flex-1">
+              <label for="available_time"
+                     class="block text-sm font-medium text-gray-700 mb-1">활동 가능 시간대</label>
+              <select
+                      id="available_time"
+                      name="available_time"
+                      class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              >
+                <option value="WEEKDAY_MORNING">평일 오전</option>
+                <option value="WEEKDAY_AFTERNOON">평일 오후</option>
+                <option value="WEEKDAY_EVENING">평일 저녁</option>
+                <option value="WEEKEND_MORNING">주말 오전</option>
+                <option value="WEEKEND_AFTERNOON">주말 오후</option>
+                <option value="WEEKEND_EVENING">주말 저녁</option>
+                <option value="" selected>선택</option>
+              </select>
+            </div>
+          </div>
+          <div class="mt-4">
+            <label for="introduction" class="block text-sm font-medium text-gray-700 mb-1">소개글</label>
+            <textarea
+                    id="introduction"
+                    name="introduction"
+                    rows="4"
+                    class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            >
+    </textarea>
+          </div>
+        </div>
+
+        <!-- 멘티 전용 설정 -->
+        <div id="mentee-settings" class="border-t border-gray-200 pt-6">
+          <h3 class="text-lg font-medium mb-4">멘티 설정</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="expertise" class="block text-sm font-medium text-gray-700 mb-1">관심 분야</label>
+              <select id="expertise" name="expertise" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                <option value="선택">선택</option>
+                <option value="WEB_DEV">프로그래밍 / 웹개발</option>
+                <option value="APP_DEV">프로그래밍 / 앱개발</option>
+                <option value="DESIGN_UX_UI">디자인 / UI/UX</option>
+                <option value="DESIGN_GRAPHIC">디자인 / 그래픽</option>
+                <option value="EDUCATION_MATH">교육 / 수학</option>
+                <option value="EDUCATION_ENGLISH">교육 / 영어</option>
+                <option value="MUSIC_PIANO">음악 / 피아노</option>
+                <option value="FITNESS_YOGA">운동 / 요가</option>
+              </select>
+            </div>
+            <div>
+              <label for="tags" class="block text-sm font-medium text-gray-700 mb-1">태그 (쉼표로 구분)</label>
+              <input type="text" id="tags" name="tags" value="" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+            </div>
+          </div>
+        </div>
+
 
             <!-- 저장 버튼 -->
             <div class="border-t border-gray-200 pt-6 flex justify-end">
-              <button
-                type="submit"
-                class="bg-primary text-white px-6 py-2 rounded-button whitespace-nowrap hover:bg-indigo-600">
+              <button type="submit"
+                      id="save-settings-btn"
+                      class="bg-primary text-white px-6 py-2 rounded-button whitespace-nowrap hover:bg-indigo-600">
                 변경사항 저장
               </button>
             </div>
