@@ -360,7 +360,7 @@ function renderPostDetail(post) {
   }
 
   // 좋아요 상태 표시
-  if (post.isLiked) {
+  if (post.liked) {
     const likeIcon = document.getElementById('likeIcon');
     if (likeIcon) {
       likeIcon.classList.remove('ri-heart-line');
@@ -369,7 +369,7 @@ function renderPostDetail(post) {
   }
 
   // 북마크 상태 표시
-  if (post.isBookmarked) {
+  if (post.bookmarked) {
     const bookmarkIcon = document.getElementById('bookmarkIcon');
     if (bookmarkIcon) {
       bookmarkIcon.classList.remove('ri-bookmark-line');
