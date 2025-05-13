@@ -374,6 +374,15 @@ document.addEventListener('DOMContentLoaded', function() {
       await saveProfileChanges();
     });
   }
+
+  const saveMenteeBtn = document.getElementById('save-settings-btn');
+  if (saveMenteeBtn) {
+    saveMenteeBtn.addEventListener('click', async function (e) {
+      e.preventDefault();
+      confirm('변경사항을 저장하시겠습니까?')
+      await saveProfileChanges();
+    });
+  }
 });
 
 async function saveProfileChanges() {
@@ -409,15 +418,11 @@ async function saveProfileChanges() {
 
   // 필수 필드 검사 (선택 필드 검사 강화)
   if (!interest || interest === '선택') {
-    alert('전문 분야를 선택해주세요.');
+    alert('분야를 선택해주세요.');
     return;
   }
   if (!nickname) {
     alert('닉네임을 입력해주세요.');
-    return;
-  }
-  if (!activityType || activityType === '선택') {
-    alert('활동 유형을 선택해주세요.');
     return;
   }
   if (!areaCode) {
