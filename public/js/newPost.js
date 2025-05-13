@@ -328,4 +328,15 @@ document.addEventListener("DOMContentLoaded", function () {
             return "";
         }
     });
+
+    // ❶ 로컬 스토리지에서 userType 읽기 (include-and-authHandler.js 에서 세팅됨)
+    const userType = localStorage.getItem("userType"); // 'mentor', 'mentee' 등
+
+    // ❷ 멘토면 재능나눔 카테고리 보이기
+    if (userType === "mentor") {
+        const talentItem = document.getElementById("talentCategoryItem");
+        if (talentItem) {
+            talentItem.classList.remove("hidden");
+        }
+    }
 });
