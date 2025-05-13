@@ -217,7 +217,7 @@ async function loadProfileSettingsData(nickname) {
 }
 
 // 작성 리뷰 데이터 로드
-async function loadReviewsData(nickname) {
+async function loadReviewsData(nickname, page = 0) {
   // nickname이 없으면 세션스토리지에서 가져옵니다
   if (!nickname) {
     nickname = sessionStorage.getItem("nickname");
@@ -247,8 +247,8 @@ async function loadReviewsData(nickname) {
   }
 
   try {
-    // API 호출하여 리뷰 데이터 가져오기
-    const response = await fetch(`/api/v1/mentee/review/list/${nickname}`, {
+    // API 호출하여 리뷰 데이터 가져오기 (페이지 파라미터 추가)
+    const response = await fetch(`/api/v1/mentee/review/list/${nickname}?page=${page}&size=3`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -263,7 +263,7 @@ async function loadReviewsData(nickname) {
         return;
       }
       // 토큰 갱신 성공, 요청 재시도
-      return await loadReviewsData(nickname);
+      return await loadReviewsData(nickname, page);
     }
 
     if (!response.ok) {
@@ -285,7 +285,29 @@ async function loadReviewsData(nickname) {
 
     if (result.status === 200 && result.code === "SUCCESS") {
       // 리뷰 데이터 처리 및 화면에 표시
-      updateReviewsData(result.data);
+      if (result.data && result.data.content) {
+        // 데이터 구조가 변경됨 - 페이지 정보 포함
+        updateReviewsData(result.data.content);
+
+        // 페이지네이션 정보가 있으면 페이지네이션 렌더링
+        if (result.data.page) {
+          renderPagination(result.data.page, nickname);
+        }
+      } else {
+        // 기존 구조 (페이지 정보 없음)
+        updateReviewsData(result.data);
+
+        // 기존 더미 페이지네이션 표시
+        if (paginationContainer) {
+          paginationContainer.innerHTML = `
+            <nav class="inline-flex rounded-md shadow-sm">
+              <a href="#" class="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 rounded-l-md opacity-50 cursor-not-allowed">이전</a>
+              <a href="#" class="px-3 py-2 border-t border-b border-gray-300 bg-primary text-white">1</a>
+              <a href="#" class="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 rounded-r-md opacity-50 cursor-not-allowed">다음</a>
+            </nav>
+          `;
+        }
+      }
     } else {
       console.error("API 응답 형식이 예상과 다릅니다:", result);
       if (reviewsContainer) {
@@ -314,7 +336,6 @@ async function loadReviewsData(nickname) {
 // 리뷰 데이터 업데이트
 function updateReviewsData(data) {
   const reviewsContainer = document.getElementById("reviews-container");
-  const paginationContainer = document.getElementById("reviews-pagination");
 
   if (!reviewsContainer) return;
 
@@ -329,78 +350,59 @@ function updateReviewsData(data) {
   }
 
   // 리뷰 목록 HTML 생성
-  let reviewsHTML = '<div class="space-y-6">';
-
-  data.forEach((review) => {
+  const reviewElements = data.map((review) => {
     // 별점 HTML 생성
     const starRating = parseFloat(review.star) || 0;
     const fullStars = Math.floor(starRating);
     const halfStar = starRating % 1 >= 0.5;
 
-    let starsHTML = "";
-    for (let i = 0; i < 5; i++) {
-      if (i < fullStars) {
-        starsHTML += '<i class="ri-star-fill text-yellow-400"></i>';
-      } else if (i === fullStars && halfStar) {
-        starsHTML += '<i class="ri-star-half-fill text-yellow-400"></i>';
-      } else {
-        starsHTML += '<i class="ri-star-line text-yellow-400"></i>';
-      }
-    }
+    const starsHTML = Array(5)
+      .fill("")
+      .map((_, i) => {
+        if (i < fullStars) {
+          return '<i class="ri-star-fill text-yellow-400"></i>';
+        } else if (i === fullStars && halfStar) {
+          return '<i class="ri-star-half-fill text-yellow-400"></i>';
+        } else {
+          return '<i class="ri-star-line text-yellow-400"></i>';
+        }
+      })
+      .join("");
 
-    // 관심분야 표시 (api 수정 후 사라질 예정)
-    let interestText = "";
-    switch (review.interest) {
-      case "WEB_DEV":
-        interestText = "프로그래밍/웹개발";
-        break;
-      case "APP_DEV":
-        interestText = "프로그래밍/앱개발";
-        break;
-      case "DESIGN_UX_UI":
-        interestText = "디자인/UX/UI";
-        break;
-      case "DESIGN_GRAPHIC":
-        interestText = "디자인/그래픽";
-        break;
-      case "EDUCATION_MATH":
-        interestText = "교육/수학";
-        break;
-      case "EDUCATION_ENGLISH":
-        interestText = "교육/영어";
-        break;
-      case "MUSIC_PIANO":
-        interestText = "음악/피아노";
-        break;
-      case "FITNESS_YOGA":
-        interestText = "운동/요가";
-        break;
-      default:
-        interestText = review.interest || "기타";
-    }
+    // 관심분야 표시
+    const interestMapping = {
+      WEB_DEV: "프로그래밍/웹개발",
+      APP_DEV: "프로그래밍/앱개발",
+      DESIGN_UX_UI: "디자인/UX/UI",
+      DESIGN_GRAPHIC: "디자인/그래픽",
+      EDUCATION_MATH: "교육/수학",
+      EDUCATION_ENGLISH: "교육/영어",
+      MUSIC_PIANO: "음악/피아노",
+      FITNESS_YOGA: "운동/요가",
+    };
+
+    const interestText = interestMapping[review.interest] || review.interest || "기타";
 
     // 현재 날짜 생성 (실제로는 API에서 날짜를 받아와야 함)
-    const createdDate = new Date();
+    const createdDate = new Date(review.createdAt);
     const formattedDate = `${createdDate.getFullYear()}-${String(createdDate.getMonth() + 1).padStart(2, "0")}-${String(
       createdDate.getDate()
     ).padStart(2, "0")}`;
 
-    reviewsHTML += `
-      <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition" data-review-id="${
-        review.mentoringSessionId
-      }">
+    return `
+      <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition" data-review-id="${review.reviewId}">
         <div class="flex justify-between items-start mb-4">
           <div class="flex items-center gap-3">
             <div class="w-12 h-12 rounded-full bg-gray-200 overflow-hidden">
               <img
-                src="../assets/images/default-profile.png"
+                src="${review.profileImageUrl || "../assets/images/default-profile.png"}"
                 alt="프로필"
                 class="w-full h-full object-cover"
                 onerror="handleImageError(this)"
               />
             </div>
             <div>
-              <h3 class="font-medium">${interestText} 멘토링</h3>
+              <h3 class="font-medium">${review.mentorName}</h3>
               <p class="text-xs text-gray-500">${formattedDate} 작성</p>
             </div>
           </div>
@@ -415,14 +417,10 @@ function updateReviewsData(data) {
         </div>
         <div class="flex justify-end">
           <div class="flex items-center gap-2">
-            <button class="text-gray-500 hover:text-primary edit-review-btn" data-review-id="${
-              review.mentoringSessionId
-            }">
+            <button class="text-gray-500 hover:text-primary edit-review-btn" data-review-id="${review.reviewId}">
               <i class="ri-edit-line"></i>
             </button>
-            <button class="text-gray-500 hover:text-red-500 delete-review-btn" data-review-id="${
-              review.mentoringSessionId
-            }">
+            <button class="text-gray-500 hover:text-red-500 delete-review-btn" data-review-id="${review.reviewId}">
               <i class="ri-delete-bin-line"></i>
             </button>
           </div>
@@ -431,8 +429,8 @@ function updateReviewsData(data) {
     `;
   });
 
-  reviewsHTML += "</div>";
-  reviewsContainer.innerHTML = reviewsHTML;
+  // 모든 리뷰 HTML을 컨테이너에 추가
+  reviewsContainer.innerHTML = `<div class="space-y-6">${reviewElements.join("")}</div>`;
 
   // 리뷰 수정 버튼에 이벤트 리스너 추가
   const editButtons = document.querySelectorAll(".edit-review-btn");
@@ -451,75 +449,128 @@ function updateReviewsData(data) {
       deleteReview(reviewId);
     });
   });
+}
 
-  // 페이지네이션은 추가 예정..
-  if (paginationContainer) {
-    paginationContainer.innerHTML = `
-      <nav class="inline-flex rounded-md shadow-sm">
-        <a href="#" class="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 rounded-l-md opacity-50 cursor-not-allowed">이전</a>
-        <a href="#" class="px-3 py-2 border-t border-b border-gray-300 bg-primary text-white">1</a>
-        <a href="#" class="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 rounded-r-md opacity-50 cursor-not-allowed">다음</a>
-      </nav>
-    `;
+// 페이지네이션 렌더링 함수 (my-matches.js에서 가져옴)
+function renderPagination(pageInfo, nickname) {
+  const paginationContainer = document.getElementById("reviews-pagination");
+  if (!paginationContainer) return;
+
+  // 페이지네이션 컨테이너 초기화
+  paginationContainer.innerHTML = '<nav class="inline-flex rounded-md shadow-sm"></nav>';
+
+  const navElement = paginationContainer.querySelector("nav");
+
+  // 이전 페이지 버튼
+  const prevButton = document.createElement("a");
+  prevButton.href = "#";
+  prevButton.className = "px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 rounded-l-md";
+  prevButton.textContent = "이전";
+
+  if (pageInfo.number > 0) {
+    prevButton.addEventListener("click", function (e) {
+      e.preventDefault();
+      loadReviewsData(nickname, pageInfo.number - 1);
+    });
+  } else {
+    prevButton.classList.add("opacity-50", "cursor-not-allowed");
   }
+
+  navElement.appendChild(prevButton);
+
+  // 페이지 번호 버튼
+  const startPage = Math.max(0, pageInfo.number - 2);
+  const endPage = Math.min(pageInfo.totalPages - 1, pageInfo.number + 2);
+
+  for (let i = startPage; i <= endPage; i++) {
+    const pageButton = document.createElement("a");
+    pageButton.href = "#";
+    pageButton.textContent = i + 1;
+
+    if (i === pageInfo.number) {
+      pageButton.className = "px-3 py-2 border-t border-b border-gray-300 bg-primary text-white";
+    } else {
+      pageButton.className = "px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50";
+      pageButton.addEventListener("click", function (e) {
+        e.preventDefault();
+        loadReviewsData(nickname, i);
+      });
+    }
+
+    navElement.appendChild(pageButton);
+  }
+
+  // 다음 페이지 버튼
+  const nextButton = document.createElement("a");
+  nextButton.href = "#";
+  nextButton.className = "px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 rounded-r-md";
+  nextButton.textContent = "다음";
+
+  if (pageInfo.number < pageInfo.totalPages - 1) {
+    nextButton.addEventListener("click", function (e) {
+      e.preventDefault();
+      loadReviewsData(nickname, pageInfo.number + 1);
+    });
+  } else {
+    nextButton.classList.add("opacity-50", "cursor-not-allowed");
+  }
+
+  navElement.appendChild(nextButton);
 }
 
 // 리뷰 수정 함수 추가 예정
 function editReview(reviewId) {
   console.log(`리뷰 ${reviewId} 수정`);
   // 수정 페이지로 이동하거나 모달 창 표시
-  window.location.href = `/edit-review.html?id=${reviewId}`;
+  window.location.href = `/edit-review?id=${reviewId}`;
 }
 
-// 리뷰 삭제 함수 추가 예정
-function deleteReview(reviewId) {
-  console.log(`리뷰 ${reviewId} 삭제`);
-
+// 리뷰 삭제 함수
+async function deleteReview(reviewId) {
   if (confirm("정말 이 리뷰를 삭제하시겠습니까?")) {
-    // API 호출하여 리뷰 삭제
-    fetch(`/api/v1/mentee/review/${reviewId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    })
-      .then((response) => {
-        if (response.status === 401) {
-          return handle401Error().then((retry) => {
-            if (retry) {
-              return deleteReview(reviewId);
-            } else {
-              window.location.href = "/login";
-            }
-          });
-        }
-
-        if (!response.ok) {
-          throw new Error("리뷰 삭제 실패");
-        }
-
-        return response.json();
-      })
-      .then((data) => {
-        if (data.status === 200 || data.status === 204) {
-          alert("리뷰가 삭제되었습니다.");
-          // 리뷰 목록 다시 로드
-          const nickname = sessionStorage.getItem("nickname");
-          if (nickname) {
-            loadReviewsData(nickname);
-          }
-        } else {
-          alert("리뷰 삭제에 실패했습니다.");
-        }
-      })
-      .catch((error) => {
-        console.error("리뷰 삭제 중 오류 발생:", error);
-        alert("리뷰 삭제 중 오류가 발생했습니다.");
+    try {
+      // API 호출하여 리뷰 삭제
+      const response = await fetch(`/api/v1/mentee/review/${reviewId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
       });
+
+      if (response.status === 401) {
+        const retry = await handle401Error();
+        if (!retry) {
+          window.location.href = "/login";
+          return;
+        }
+        // 토큰 갱신 성공, 요청 재시도
+        return await deleteReview(reviewId);
+      }
+
+      if (!response.ok) {
+        throw new Error("리뷰 삭제 실패");
+      }
+
+      const result = await response.json();
+
+      if (result.status === 200) {
+        alert("리뷰가 삭제되었습니다.");
+        // 리뷰 목록 다시 로드
+        const nickname = sessionStorage.getItem("nickname");
+        if (nickname) {
+          loadReviewsData(nickname);
+        }
+      } else {
+        console.error("API 응답 형식이 예상과 다릅니다:", result);
+        alert("리뷰 삭제에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("리뷰 삭제 중 오류 발생:", error);
+      alert("리뷰 삭제 중 오류가 발생했습니다.");
+    }
   }
 }
-
 // 오류 메시지 표시
 function showErrorMessage(message) {
   // 메인 컨테이너에 오류 메시지 표시

@@ -534,6 +534,88 @@ function renderComments(comments, hasNext, isGuest = false) {
   }
 }
 
+// AI 답변 조회
+async function loadAiAnswer(postId) {
+  try {
+    const aiAnswerSection = document.getElementById('aiAnswerSection'); 
+    const aiAnswerContent = document.getElementById('aiAnswerContent');  
+
+    if (!aiAnswerSection || !aiAnswerContent) {
+      console.warn('AI 답변 섹션 또는 컨텐츠 요소를 찾을 수 없습니다.');
+      return;
+    }
+
+    // 기존 토글 버튼 제거 (재로드 시 중복 방지)
+    const existingToggleButton = aiAnswerSection.querySelector('.ai-toggle-button');
+    if (existingToggleButton) {
+      existingToggleButton.remove();
+    }
+
+    const response = await fetch(`/api/v1/community/ai/${postId}`, {
+      credentials: 'include'
+    });
+
+    if (!response.ok) {
+      // AI 답변이 없는 경우 또는 오류 시 섹션 숨김 처리 (기본 상태)
+      aiAnswerSection.classList.add('hidden');
+      console.log('AI 답변을 가져오지 못했거나 없습니다. 상태:', response.status);
+      return;
+    }
+const result = await response.json();
+    const aiAnswer = result.data?.Content || result.data?.content;
+
+    if (aiAnswer && aiAnswer.trim() !== "") {
+      aiAnswerContent.innerHTML = aiAnswer; // 서버에서 이미 안전하게 처리되었다고 가정합니다.
+      aiAnswerSection.classList.remove('hidden');
+
+      // 내용 길이에 따라 토글 기능 적용 여부 결정 
+      const initialMaxHeight = 50; 
+      const isContentOverflowing = aiAnswerContent.scrollHeight > initialMaxHeight;
+
+      if (isContentOverflowing) {
+        aiAnswerContent.classList.add('collapsed');
+        aiAnswerContent.style.maxHeight = `${initialMaxHeight}px`;
+
+        const toggleButton = document.createElement('button');
+        toggleButton.textContent = '더 보기';
+        toggleButton.className = 'ai-toggle-button text-sm text-primary hover:underline mt-2 focus:outline-none'; 
+
+        toggleButton.addEventListener('click', () => {
+          if (aiAnswerContent.classList.contains('collapsed')) {
+            aiAnswerContent.classList.remove('collapsed');
+            aiAnswerContent.classList.add('expanded');
+            aiAnswerContent.style.maxHeight = `${aiAnswerContent.scrollHeight}px`;
+            toggleButton.textContent = '간단히 보기';
+          } else {
+            aiAnswerContent.classList.remove('expanded');
+            aiAnswerContent.classList.add('collapsed');
+            aiAnswerContent.style.maxHeight = `${initialMaxHeight}px`;
+            toggleButton.textContent = '더 보기';
+            aiAnswerSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        });
+
+        // 버튼을 aiAnswerContent 다음에 추가하거나, aiAnswerSection의 적절한 위치에 추가
+        aiAnswerContent.parentNode.insertBefore(toggleButton, aiAnswerContent.nextSibling);
+      } else {
+        // 내용이 짧으면 토글 버튼을 만들지 않고, maxHeight 제한도 해제
+        aiAnswerContent.style.maxHeight = 'none';
+        aiAnswerContent.classList.remove('collapsed', 'expanded');
+      }
+    } else {
+      // AI 답변 내용이 없는 경우 섹션 숨김
+      aiAnswerSection.classList.add('hidden');
+      console.log('AI 답변 내용이 비어있습니다.');
+    }
+  } catch (error) {
+    console.error('AI 답변 조회 오류:', error);
+    const aiAnswerSection = document.getElementById('aiAnswerSection');
+    if (aiAnswerSection) {
+      aiAnswerSection.classList.add('hidden'); // 오류 발생 시 AI 답변 섹션 숨김 상태 유지
+    }
+  }
+}
+
 // 댓글 HTML 생성 함수
 function createCommentHTML(comment) {
 
@@ -1651,17 +1733,17 @@ function updateAuthorInfo(post) {
   console.log('작성자 정보 업데이트 완료');
 }
 // 작성자 상세 정보 가져오기 - DB 구조에 맞게 수정
-async function fetchAuthorDetails(userId) {
-  if (!userId) {
+async function fetchAuthorDetails(nickname) {
+  if (!nickname) {
     console.warn('작성자 ID가 제공되지 않았습니다');
     return null;
   }
 
   try {
-    console.log('작성자 상세 정보 요청 시작:', userId);
+    console.log('작성자 상세 정보 요청 시작:', nickname);
 
     // 실제 API 호출
-    const response = await fetch(`/api/v1/user/${userId}/profile`, {
+    const response = await fetch(`/api/v1/users/${nickname}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json'
@@ -1721,11 +1803,16 @@ async function loadPostDetail(postId) {
       // 게시글 렌더링 - 추가 API 호출 없이 바로 표시
       renderPostDetail(post);
 
+      // AI 답변 확인 (질문/답변 카테고리인 경우)
+      if (post.category === 'QUESTION') {
+        loadAiAnswer(postId);     
+      }
+
       // 부가 정보가 있으면 비동기적으로 업데이트 (UI는 먼저 표시)
       if (post.userId) {
         try {
           // 백그라운드에서 작성자 상세 정보 로드 시도
-          const authorDetails = await fetchAuthorDetails(post.userId);
+          const authorDetails = await fetchAuthorDetails(post.nickname);
 
           if (authorDetails) {
             console.log('추가 작성자 정보 로드 성공:', authorDetails);
