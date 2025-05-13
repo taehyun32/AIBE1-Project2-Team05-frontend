@@ -220,3 +220,21 @@ input:checked + .switch-slider:before {
   font-weight: 500; /* font-medium */
 }
 /* ====== 태그 버튼 스타일 끝 ====== */
+#aiAnswerContent {
+  overflow: hidden; /* 이 부분이 중요합니다. max-height와 함께 사용되어 내용을 접습니다. */
+  transition: max-height 0.35s ease-in-out, opacity 0.3s ease-in-out; /* 부드러운 애니메이션 */
+  line-height: 1.6;
+  opacity: 1; /* 확장 시 확실히 보이도록 */
+}
+
+#aiAnswerContent.collapsed {
+  /* max-height는 JS에서 설정합니다. */
+  opacity: 0.7; /* 접혔을 때 약간 흐리게 하여 더 볼 내용이 있음을 암시 (선택적) */
+}
+
+#aiAnswerContent.expanding, #aiAnswerContent.collapsing {
+  /* 애니메이션 중에는 opacity를 조절하여 자연스럽게 */
+  opacity: 0.5;
+}
+
+
