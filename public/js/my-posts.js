@@ -184,29 +184,29 @@ function updateMyPostsPageUrl(page, displayFilter, search) {
  * @param {string} apiStatusFilter - API 요청에 사용할 status 필터 값
  * @param {string} searchQuery - 검색어
  */
-async function loadMyPostsData(nickname, page = 0, apiStatusFilter = "ALL", searchQuery = "") {
+async function loadMyPostsData(nickname, requestedPage = 0, apiStatusFilter = "ALL", searchQuery = "") {
     const contentList = document.getElementById("content-list");
     const paginationContainer = document.querySelector(".flex.justify-center.mt-6");
 
     if (!contentList || !paginationContainer) {
-        console.error("Essential page elements (content-list or paginationContainer) not found.");
+        console.error("게시글 목록 또는 페이지네이션 컨테이너를 찾을 수 없습니다.");
         return;
     }
 
     contentList.innerHTML = `<div class="flex justify-center items-center py-20"><div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div><p class="ml-2 text-gray-500">게시글을 불러오는 중...</p></div>`;
-    paginationContainer.innerHTML = ""; // 페이지네이션 초기화
+    paginationContainer.innerHTML = "";
 
-    const size = 5; // 페이지당 게시글 수
-    let apiUrl = `/api/v1/users/${nickname}/activity/more-details?type=my-posts&page=${page}&size=${size}`;
-
-    // API URL에 status 필터 추가 (참고 1의 API URL 형식 준수)
-    apiUrl += `&status=${encodeURIComponent(apiStatusFilter)}`;
-
-    if (searchQuery) {
-        apiUrl += `&search=${encodeURIComponent(searchQuery)}`; // API가 search 파라미터를 지원한다고 가정
-    }
 
     try {
+
+        const itemsPerPageFromAPI = 5; // API가 반환하는 pageSize 또는 요청 시 보내는 size
+        let apiUrl = `/api/v1/users/${nickname}/activity/more-details?type=my-posts&page=${requestedPage}&size=${itemsPerPageFromAPI}`;
+        apiUrl += `&filter=${encodeURIComponent(apiStatusFilter)}`;
+        if (searchQuery) {
+            apiUrl += `&search=${encodeURIComponent(searchQuery)}`;
+        }
+        console.log(apiStatusFilter);
+
         const response = await fetch(apiUrl, {
             method: "GET",
             headers: { "Content-Type": "application/json" },
@@ -214,7 +214,6 @@ async function loadMyPostsData(nickname, page = 0, apiStatusFilter = "ALL", sear
         });
 
         if (response.status === 401) {
-            // include-and-authHandler.js의 전역 핸들러 사용 가정
             const refreshed = await window.handle401Error();
             if (refreshed) {
                 return await loadMyPostsData(nickname, page, apiStatusFilter, searchQuery); // 재시도
@@ -223,7 +222,7 @@ async function loadMyPostsData(nickname, page = 0, apiStatusFilter = "ALL", sear
                 return;
             }
         }
-        
+    
         const result = await response.json();
 
         if (!response.ok) {
@@ -233,31 +232,55 @@ async function loadMyPostsData(nickname, page = 0, apiStatusFilter = "ALL", sear
 
         if (result.status === 200 || result.code === "SUCCESS") {
             const postsData = result.data.content || [];
-            const isMe = result.data.me === true; // "my-posts"이므로 항상 true여야 함
+            const isMe = result.data.me === true; 
 
-            // 페이지네이션 정보 (참고 1 API 응답 구조 기반)
-            const pageInfo = result.data.page || {
-                number: page,
-                totalPages: result.data.totalPages !== undefined ? result.data.totalPages : 1,
-                hasNext: result.data.hasNext !== undefined ? result.data.hasNext : false,
-                last: result.data.last !== undefined ? result.data.last : true
-            };
-             if(pageInfo.number === undefined) pageInfo.number = page; // API가 number 안 줄 경우 대비
-             if(pageInfo.totalPages === undefined && result.data.content) { // totalPages 안정적으로 계산
-                pageInfo.totalPages = pageInfo.last ? page + 1 : page + 2; // 임시 계산법
-             }
+            // --- 페이지 정보 처리
+            const pageData = result.data.page;
+            let pageInfoForPagination; // setupMyPostsPagination에 전달될 객체
 
+            if (pageData && typeof pageData.number === 'number' && typeof pageData.totalPages === 'number') {
+                pageInfoForPagination = {
+                    number: pageData.number,
+                    totalPages: pageData.totalPages,
+                    hasNext: pageData.number < pageData.totalPages - 1,
+                    isFirst: pageData.number === 0,
+                    // 필요한 경우 pageData의 다른 필드도 추가: size, totalElements 등
+                    size: pageData.pageSize,
+                    totalElements: pageData.totalElements // API가 이 필드를 준다면 사용
+                };
+            } else {
+                console.warn("API 응답에 'page' 객체 또는 필수 페이지 정보가 없습니다. (my-posts)");
+                // 폴백 로직
+                const itemsOnPage = postsData.length;
+                const pageSizeFallback = itemsPerPageFromAPI;
+                let calculatedTotalPages;
+                if (itemsOnPage === 0 && requestedPage === 0) { calculatedTotalPages = 1; }
+                else if (itemsOnPage < pageSizeFallback) { calculatedTotalPages = requestedPage + 1; }
+                else { calculatedTotalPages = requestedPage + 2; } // 임시로 다음 페이지가 더 있다고 가정
+
+                pageInfoForPagination = {
+                    number: requestedPage,
+                    totalPages: calculatedTotalPages,
+                    hasNext: (itemsOnPage === pageSizeFallback) && (requestedPage +1 < calculatedTotalPages) ,
+                    isFirst: requestedPage === 0
+                };
+                 if (pageInfoForPagination.totalPages <= pageInfoForPagination.number +1 ) pageInfoForPagination.hasNext = false;
+            }
+            // --- 페이지 정보 처리 끝 ---
 
             displayMyPosts(postsData, contentList, isMe);
-            if (pageInfo.totalPages > 1) {
-                 setupMyPostsPagination(paginationContainer, pageInfo, nickname, apiStatusFilter, searchQuery);
+
+            if (pageInfoForPagination.totalPages > 1) {
+                setupMyPostsPagination(paginationContainer, pageInfoForPagination, nickname, apiStatusFilter, searchQuery);
+            } else {
+                paginationContainer.innerHTML = "";
             }
         } else {
             showMyPostsErrorMessage(result.message || "게시글을 불러오는데 실패했습니다.");
         }
     } catch (error) {
         console.error("내 게시글 로드 중 오류 발생:", error);
-        showMyPostsErrorMessage(`오류 발생: ${error.message}`);
+        showMyPostsErrorMessage(`내 게시글 로드 중 오류: ${error.message}`);
     }
 }
 
@@ -295,9 +318,9 @@ function displayMyPosts(posts, container, isMe) {
         // 게시글 클릭 시 상세 페이지로 이동 (수정/삭제 버튼 제외)
         postElement.addEventListener('click', (e) => {
             if (e.target.closest('.edit-post-btn, .delete-post-btn')) {
-                return; // 수정 또는 삭제 버튼 클릭 시에는 이동 방지
+                return; // 수정 또는 삭제 버튼 클릭 시에는 이동 방지    
             }
-            window.location.href = `/community-detail.html?postId=${post.id}`;
+            window.location.href = `/community-detail.html?postId=${post.postId}`;
         });
         postElement.className = "border border-gray-200 rounded-lg p-4 hover:shadow-md transition cursor-pointer";
 
@@ -380,7 +403,7 @@ function setupMyPostActionButtons() {
 async function deleteMyPostApiCall(postId) {
     try {
         // 실제 API 엔드포인트 확인 필요
-        const response = await fetch(`/api/v1/community/posts/${postId}`, {
+        const response = await fetch(`/api/v1/community/${postId}`, {
             method: "DELETE",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
