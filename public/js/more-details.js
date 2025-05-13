@@ -1,3 +1,5 @@
+//more-details.js
+
 document.addEventListener("DOMContentLoaded", function () {
   // Include header and footer
   const includeElements = document.querySelectorAll("[data-include-path]");
@@ -48,9 +50,18 @@ function setupPage(type, id) {
       break;
     case "my-posts":
       pageTitle.textContent = "작성한 게시글";
-      setupFilters(["전체", "질문/답변", "정보공유", "후기", "자유게시판"]);
-      loadMyPosts(id);
+      const searchSectionForPosts = document.getElementById("search-section");
+      if (searchSectionForPosts) {
+          searchSectionForPosts.style.display = "block"; // 검색창 보이게
+      }
+      if (typeof initializeMyPostsView === 'function') {
+        initializeMyPostsView(id); // id는 현재 사용되지 않음
+      } else {
+        console.error("initializeMyPostsView is not defined. Ensure myposts.js is loaded before more-details.js or this call.");
+        showMyPostsErrorMessage("게시글 로딩 기능을 초기화할 수 없습니다.");
+      }
       break;
+      
     case "my-comments":
       pageTitle.textContent = "작성한 댓글";
       setupFilters(["전체", "최신순"]);
