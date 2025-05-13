@@ -1,5 +1,8 @@
 //more-details.js
 
+let currentPage = 0;
+let isLastPage = false;
+
 document.addEventListener("DOMContentLoaded", function () {
   // Include header and footer
   const includeElements = document.querySelectorAll("[data-include-path]");
@@ -17,6 +20,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Set page title and load content based on type
   setupPage(type, id);
+
+  // ✅ [추가] 더보기 버튼 클릭 이벤트 등록
+  const moreBtn = document.getElementById("load-more-btn");
+  if (moreBtn) {
+    moreBtn.addEventListener("click", () => {
+      e.preventDefault();
+      const nickname = sessionStorage.getItem("nickname");
+      if (nickname) loadInterestQnA(nickname);
+    });
+  }
 });
 
 /**
@@ -36,8 +49,12 @@ function setupPage(type, id) {
   switch (type) {
     case "reviews":
       pageTitle.textContent = "받은 리뷰";
-      setupFilters(["전체", "최신순", "높은 평점순", "낮은 평점순"]);
-      loadReviews(id);
+
+      // 필터 영역 숨기기 (선택)
+      const filterSection = document.getElementById("filter-section");
+      if (filterSection) filterSection.classList.add("hidden");
+
+      loadReviews(id/*, sort*/);  //sort 전달
       break;
     case "my-matches":
       pageTitle.textContent = "신청한 매칭";
@@ -61,7 +78,7 @@ function setupPage(type, id) {
         showMyPostsErrorMessage("게시글 로딩 기능을 초기화할 수 없습니다.");
       }
       break;
-      
+
     case "my-comments":
       pageTitle.textContent = "작성한 댓글";
       setupFilters(["전체", "최신순"]);
@@ -71,6 +88,12 @@ function setupPage(type, id) {
       pageTitle.textContent = "관심 목록";
       setupFilters(["전체", "멘토", "게시글"]);
       loadFavorites(id);
+      break;
+    case "interest-qna":
+      pageTitle.textContent = "추천 QnA";
+      filterSection?.classList.add("hidden");
+      loadMoreBtn?.classList.remove("hidden");
+      loadInterestQnA(id); // ✅ 첫 페이지 로딩
       break;
     default:
       pageTitle.textContent = "상세 정보";
@@ -91,22 +114,39 @@ function setupFilters(filters) {
     const button = document.createElement("button");
     button.textContent = filter;
     button.className =
-      index === 0
-        ? "px-4 py-2 bg-primary text-white rounded-full whitespace-nowrap"
-        : "px-4 py-2 bg-gray-100 text-gray-700 rounded-full whitespace-nowrap hover:bg-gray-200";
+        index === 0
+            ? "px-4 py-2 bg-primary text-white rounded-full whitespace-nowrap"
+            : "px-4 py-2 bg-gray-100 text-gray-700 rounded-full whitespace-nowrap hover:bg-gray-200";
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const type = urlParams.get("type");
+
+    // 받은 리뷰 탭일 경우에만 강조/정렬 동작
+    if (type === "reviews") {
+      const isActive =
+          (filter === "최신순" && selectedSort === "recent") ||
+          (filter === "높은 평점순" && selectedSort === "high") ||
+          (filter === "낮은 평점순" && selectedSort === "low");
+
+      if (isActive) {
+        button.className = "px-4 py-2 bg-primary text-white rounded-full whitespace-nowrap";
+      }
+    }
+
     button.addEventListener("click", () => {
-      // Remove active class from all buttons
-      filterContainer.querySelectorAll("button").forEach((btn) => {
-        btn.className = "px-4 py-2 bg-gray-100 text-gray-700 rounded-full whitespace-nowrap hover:bg-gray-200";
-      });
-      // Add active class to clicked button
-      button.className = "px-4 py-2 bg-primary text-white rounded-full whitespace-nowrap";
-      // Filter content
-      filterContent(filter);
+      const type = new URLSearchParams(window.location.search).get("type");
+        // Remove active class from all buttons
+        filterContainer.querySelectorAll("button").forEach((btn) => {
+          btn.className = "px-4 py-2 bg-gray-100 text-gray-700 rounded-full whitespace-nowrap hover:bg-gray-200";
+        });
+        // Add active class to clicked button
+        button.className = "px-4 py-2 bg-primary text-white rounded-full whitespace-nowrap";
+        // Filter content
+        filterContent(filter);
+      })
     });
     filterContainer.appendChild(button);
-  });
-}
+  }
 
 /**
  * Filter content based on selected filter
@@ -120,76 +160,117 @@ function filterContent(filter) {
   const type = urlParams.get("type");
   const id = urlParams.get("id");
 
+  // // ⭐ 정렬용 필터는 리뷰 탭일 때만 적용
+  // if (type === "reviews") {
+  //   const sortMap = {
+  //     "최신순": "recent",
+  //     "높은 평점순": "high",
+  //     "낮은 평점순": "low"
+  //   };
+  //   const sort = sortMap[filter] || "recent";
   // Reload content with filter
-  setupPage(type, id);
+  setupPage(type, id);  // 기존 동작 유지
+
 }
 
 /**
  * Load reviews data
  * @param {string} id - Optional ID for specific content
  */
-function loadReviews(id) {
+async function loadReviews(id) {
   const contentList = document.getElementById("content-list");
+  contentList.innerHTML = "";
+
+  const nickname = sessionStorage.getItem("nickname");
+  if (!nickname) {
+    contentList.innerHTML = "<p class='text-sm text-gray-500'>닉네임 정보를 찾을 수 없습니다.</p>";
+    return;
+  }
+  try {
+    const res = await fetch(`/api/v1/users/${nickname}/matching/more-details?type=received-reviews`);
+    const result = await res.json();
+
+    if (result.code !== "SUCCESS") {
+      contentList.innerHTML = `<p class='text-sm text-gray-500'>리뷰를 불러오는 데 실패했습니다: ${result.message}</p>`;
+      return;
+    }
+
+    const reviews = result.data.content;
+    console.log("[받은 리뷰 응답]", reviews);  // 👈 이 줄 추가
+    reviews.forEach((r, i) => {
+      console.log(`리뷰 ${i + 1}:`, {
+        name: r.reviewerName,
+        star: r.star,
+        date: r.reviewDate,
+        content: r.content,
+        image: r.reviewerProfileImageUrl
+      });
+    });
+
+    if (!reviews || reviews.length === 0) {
+      contentList.innerHTML = "<p class='text-sm text-gray-500'>받은 리뷰가 없습니다.</p>";
+      return;
+    }
 
   // In a real application, this would fetch data from a server
   // For now, we'll use mock data
-  const mockReviews = [
-    {
-      id: 1,
-      mentee: {
-        name: "정우진",
-        image:
-          "https://readdy.ai/api/search-image?query=professional%20asian%20male%20portrait%2C%20neutral%20background%2C%20athletic%20build%2C%20high%20quality&width=100&height=100&seq=5&orientation=squarish",
-        date: "2025-04-25",
-      },
-      rating: 5,
-      content:
-        "React와 Node.js 멘토링이 정말 도움이 많이 되었습니다. 실무에서 사용하는 팁들을 많이 알려주셔서 개발 실력이 크게 향상되었어요. 특히 코드 구조화와 최적화 부분에서 많은 것을 배웠습니다.",
-    },
-    {
-      id: 2,
-      mentee: {
-        name: "김유진",
-        image:
-          "https://readdy.ai/api/search-image?query=professional%20asian%20female%20portrait%2C%20neutral%20background%2C%20business%20attire%2C%20high%20quality&width=100&height=100&seq=6&orientation=squarish",
-        date: "2025-04-20",
-      },
-      rating: 4,
-      content:
-        "코드 리뷰를 통해 많은 인사이트를 얻었습니다. 제가 놓치고 있던 부분들을 정확히 짚어주셔서 감사합니다. 다만 일정이 가끔 지연되는 점이 아쉬웠습니다.",
-    },
-    {
-      id: 3,
-      mentee: {
-        name: "이지훈",
-        image:
-          "https://readdy.ai/api/search-image?query=professional%20asian%20male%20portrait%2C%20neutral%20background%2C%20casual%20style%2C%20high%20quality&width=100&height=100&seq=7&orientation=squarish",
-        date: "2025-04-15",
-      },
-      rating: 5,
-      content:
-        "웹 개발 멘토링을 통해 실무에서 사용하는 기술들을 배울 수 있어서 좋았습니다. 특히 프로젝트 구조와 코드 리뷰 과정이 많은 도움이 되었습니다.",
-    },
-  ];
+  // const mockReviews = [
+  //   {
+  //     id: 1,
+  //     mentee: {
+  //       name: "정우진",
+  //       image:
+  //         "https://readdy.ai/api/search-image?query=professional%20asian%20male%20portrait%2C%20neutral%20background%2C%20athletic%20build%2C%20high%20quality&width=100&height=100&seq=5&orientation=squarish",
+  //       date: "2025-04-25",
+  //     },
+  //     rating: 5,
+  //     content:
+  //       "React와 Node.js 멘토링이 정말 도움이 많이 되었습니다. 실무에서 사용하는 팁들을 많이 알려주셔서 개발 실력이 크게 향상되었어요. 특히 코드 구조화와 최적화 부분에서 많은 것을 배웠습니다.",
+  //   },
+  //   {
+  //     id: 2,
+  //     mentee: {
+  //       name: "김유진",
+  //       image:
+  //         "https://readdy.ai/api/search-image?query=professional%20asian%20female%20portrait%2C%20neutral%20background%2C%20business%20attire%2C%20high%20quality&width=100&height=100&seq=6&orientation=squarish",
+  //       date: "2025-04-20",
+  //     },
+  //     rating: 4,
+  //     content:
+  //       "코드 리뷰를 통해 많은 인사이트를 얻었습니다. 제가 놓치고 있던 부분들을 정확히 짚어주셔서 감사합니다. 다만 일정이 가끔 지연되는 점이 아쉬웠습니다.",
+  //   },
+  //   {
+  //     id: 3,
+  //     mentee: {
+  //       name: "이지훈",
+  //       image:
+  //         "https://readdy.ai/api/search-image?query=professional%20asian%20male%20portrait%2C%20neutral%20background%2C%20casual%20style%2C%20high%20quality&width=100&height=100&seq=7&orientation=squarish",
+  //       date: "2025-04-15",
+  //     },
+  //     rating: 5,
+  //     content:
+  //       "웹 개발 멘토링을 통해 실무에서 사용하는 기술들을 배울 수 있어서 좋았습니다. 특히 프로젝트 구조와 코드 리뷰 과정이 많은 도움이 되었습니다.",
+  //   },
+  // ];
 
   // Render reviews
-  mockReviews.forEach((review) => {
+    reviews.forEach((review) => {
     const reviewElement = document.createElement("div");
     reviewElement.className = "border border-gray-200 rounded-lg p-4 hover:shadow-md transition";
     reviewElement.innerHTML = `
       <div class="flex items-start gap-3">
         <div class="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
-          <img src="${review.mentee.image}" alt="프로필" class="w-full h-full object-cover">
+          <img src="${review.reviewerProfileImageUrl}" alt="프로필" class="w-full h-full object-cover">
         </div>
         <div class="flex-1">
           <div class="flex justify-between items-start">
             <div>
-              <h3 class="font-medium">${review.mentee.name}</h3>
-              <p class="text-xs text-gray-500">${review.mentee.date} 작성</p>
+              <h3 class="font-medium">${review.reviewerName}</h3>
+              <p class="text-xs text-gray-500">${review.reviewDate} 작성</p>
             </div>
             <div class="flex items-center">
-              ${generateStarRating(review.rating)}
-              <span class="ml-1 text-sm font-medium">${review.rating}.0</span>
+              ${generateStarRating(review.star)}
+              <span class="ml-1 text-sm font-medium text-yellow-400">${review.star.toFixed(1)}</span>
             </div>
           </div>
           <p class="text-sm text-gray-600 mt-2">${review.content}</p>
@@ -198,6 +279,10 @@ function loadReviews(id) {
     `;
     contentList.appendChild(reviewElement);
   });
+} catch (error) {
+    contentList.innerHTML = "<p class='text-sm text-gray-500'>리뷰 데이터를 불러오는 중 오류가 발생했습니다.</p>";
+    console.error("리뷰 API 호출 실패:", error);
+  }
 }
 
 /**
@@ -465,4 +550,42 @@ function generateStarRating(rating) {
     }
   }
   return stars;
+}
+
+// ✅ [새로 추가된 전체 함수]
+async function loadInterestQnA(nickname) {
+  if (isLastPage) return;
+
+  try {
+    const res = await fetch(`/api/v1/users/${nickname}/matching/more-details?type=interest-qna&page=${currentPage}&size=5`);
+    const result = await res.json();
+
+    if (result.code !== "SUCCESS") {
+      console.error("🔥 QnA 더보기 실패:", result.message);
+      return;
+    }
+
+    const posts = result.data.content;
+    const container = document.getElementById("content-list");
+
+    posts.forEach(post => {
+      const postElement = document.createElement("div");
+      postElement.className = "border p-4 rounded-md shadow-sm bg-white";
+      postElement.innerHTML = `
+        <h3 class="text-base font-semibold">${post.title}</h3>
+        <p class="text-sm text-gray-500 mt-1">${post.preview}</p>
+      `;
+      container.appendChild(postElement);
+    });
+
+    if (result.data.last) {
+      isLastPage = true;
+      document.getElementById("load-more-btn")?.classList.add("hidden");
+    } else {
+      currentPage++;
+    }
+
+  } catch (err) {
+    console.error("❌ QnA 더보기 API 호출 에러:", err);
+  }
 }
