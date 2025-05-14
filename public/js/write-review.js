@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             responseData.data.forEach((session) => {
               const option = document.createElement("option");
               option.value = session.sessionId;
-              option.textContent = `${session.mentorName}`;
+              option.textContent = `${session.mentorNickname}`;
               mentorSelect.appendChild(option);
             });
           }
@@ -209,7 +209,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       // 멘토 정보 추가
       const option = document.createElement("option");
       option.value = reviewData.mentoringSessionId;
-      option.textContent = `${reviewData.mentorName}`;
+      option.textContent = `${reviewData.mentorNickname}`;
       option.selected = true;
       mentorSelect.appendChild(option);
 
