@@ -1,217 +1,221 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>재능 기부 플랫폼 - 게시글 상세</title>
-  <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png">
-  <link rel="manifest" href="./assets/favicon/site.webmanifest">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LinkUp | 게시글 상세</title>
 
-  <link rel="stylesheet" href="css/main.compiled.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet"/>
-  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
-  <link href="css/community.css" rel="stylesheet">
-</head>
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicon/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png" />
+    <link rel="manifest" href="./assets/favicon/site.webmanifest" />
 
-<body>
-<div id="header-placeholder"></div>
-<main class="container mx-auto px-4 py-6">
-  <!-- 뒤로가기 버튼 추가 -->
-  <div class="mb-4">
-    <button onclick="window.location.href='/community'" class="flex items-center text-gray-600 hover:text-primary">
-      <i class="ri-arrow-left-line mr-2"></i>
-      <span>목록으로</span>
-    </button>
-  </div>
+    <link rel="stylesheet" href="css/main.compiled.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+      rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
+    <link href="css/community.css" rel="stylesheet" />
+  </head>
 
-  <div class="flex flex-col md:flex-row gap-6">
-    <div class="w-full md:w-3/4">
-      <!-- 게시글 상세 내용 -->
-      <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-        <!-- 로딩 스켈레톤 추가 -->
-        <div id="postLoadingSkeleton" class="animate-pulse">
-          <div class="h-8 bg-gray-200 rounded mb-4"></div>
-          <div class="flex items-center mb-6">
-            <div class="w-10 h-10 bg-gray-200 rounded-full mr-3"></div>
-            <div>
-              <div class="h-4 bg-gray-200 rounded w-24 mb-2"></div>
-              <div class="h-3 bg-gray-200 rounded w-32"></div>
-            </div>
-          </div>
-          <div class="h-4 bg-gray-200 rounded mb-2"></div>
-          <div class="h-4 bg-gray-200 rounded mb-2"></div>
-          <div class="h-4 bg-gray-200 rounded w-3/4"></div>
-        </div>
+  <body>
+    <div id="header-placeholder"></div>
+    <main class="container mx-auto px-4 py-6">
+      <!-- 뒤로가기 버튼 추가 -->
+      <div class="mb-4">
+        <button onclick="window.location.href='/community'" class="flex items-center text-gray-600 hover:text-primary">
+          <i class="ri-arrow-left-line mr-2"></i>
+          <span>목록으로</span>
+        </button>
+      </div>
 
-        <!-- 실제 컨텐츠 (처음에는 숨김) -->
-        <div id="postContent" class="hidden">
-          <!-- 게시글 헤더 -->
-          <div class="mb-6">
-            <div class="flex items-center text-xs text-gray-500 mb-2">
-              <span id="postDate">2025-04-20</span>
-              <span class="mx-1">•</span>
-              <span id="postCategory" class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">정보공유</span>
-            </div>
-            <h1 id="postTitle" class="text-2xl font-bold mb-4">게시글 제목</h1>
-            <!-- 작성자 정보와 수정/삭제 버튼을 하나의 섹션으로 통합 -->
-            <div class="flex justify-between items-start">
-              <div class="flex items-start gap-3">
-                <div class="w-10 h-10 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
-                  <img id="authorProfileImage" src="" alt="프로필" class="w-full h-full object-cover object-top" />
-                </div>
+      <div class="flex flex-col md:flex-row gap-6">
+        <div class="w-full md:w-3/4">
+          <!-- 게시글 상세 내용 -->
+          <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <!-- 로딩 스켈레톤 추가 -->
+            <div id="postLoadingSkeleton" class="animate-pulse">
+              <div class="h-8 bg-gray-200 rounded mb-4"></div>
+              <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-gray-200 rounded-full mr-3"></div>
                 <div>
-                  <h3 id="authorNickname" class="font-medium">작성자</h3>
-                  <div class="flex items-center text-xs text-gray-500">
-                    <span>작성일: <span id="createdAt"></span></span>
-                    <span class="mx-1">•</span>
-                    <span>조회수: <span id="viewCount">0</span></span>
+                  <div class="h-4 bg-gray-200 rounded w-24 mb-2"></div>
+                  <div class="h-3 bg-gray-200 rounded w-32"></div>
+                </div>
+              </div>
+              <div class="h-4 bg-gray-200 rounded mb-2"></div>
+              <div class="h-4 bg-gray-200 rounded mb-2"></div>
+              <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+            </div>
+
+            <!-- 실제 컨텐츠 (처음에는 숨김) -->
+            <div id="postContent" class="hidden">
+              <!-- 게시글 헤더 -->
+              <div class="mb-6">
+                <div class="flex items-center text-xs text-gray-500 mb-2">
+                  <span id="postDate">2025-04-20</span>
+                  <span class="mx-1">•</span>
+                  <span id="postCategory" class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">정보공유</span>
+                </div>
+                <h1 id="postTitle" class="text-2xl font-bold mb-4">게시글 제목</h1>
+                <!-- 작성자 정보와 수정/삭제 버튼을 하나의 섹션으로 통합 -->
+                <div class="flex justify-between items-start">
+                  <div class="flex items-start gap-3">
+                    <div class="w-10 h-10 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
+                      <img id="authorProfileImage" src="" alt="프로필" class="w-full h-full object-cover object-top" />
+                    </div>
+                    <div>
+                      <h3 id="authorNickname" class="font-medium">작성자</h3>
+                      <div class="flex items-center text-xs text-gray-500">
+                        <span>작성일: <span id="createdAt"></span></span>
+                        <span class="mx-1">•</span>
+                        <span>조회수: <span id="viewCount">0</span></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 작성자인 경우에만 표시할 수정/삭제 버튼 -->
+                  <div id="postActions" class="hidden">
+                    <button id="editPostBtn" class="text-sm text-gray-600 hover:text-primary px-2 py-1 rounded">
+                      <i class="ri-edit-line mr-1"></i> 수정
+                    </button>
+                    <button id="deletePostBtn" class="text-sm text-gray-600 hover:text-red-500 px-2 py-1 rounded">
+                      <i class="ri-delete-bin-line mr-1"></i> 삭제
+                    </button>
                   </div>
                 </div>
               </div>
-
-              <!-- 작성자인 경우에만 표시할 수정/삭제 버튼 -->
-              <div id="postActions" class="hidden">
-                <button id="editPostBtn" class="text-sm text-gray-600 hover:text-primary px-2 py-1 rounded">
-                  <i class="ri-edit-line mr-1"></i> 수정
-                </button>
-                <button id="deletePostBtn" class="text-sm text-gray-600 hover:text-red-500 px-2 py-1 rounded">
-                  <i class="ri-delete-bin-line mr-1"></i> 삭제
-                </button>
+              <!-- 게시글 본문 -->
+              <div id="postContentBody" class="prose max-w-none mb-6">
+                <!-- 본문 내용 -->
               </div>
-            </div>
-          </div>
-          <!-- 게시글 본문 -->
-          <div id="postContentBody" class="prose max-w-none mb-6">
-            <!-- 본문 내용 -->
-          </div>
 
-          <!-- 게시글 이미지 -->
-          <div id="postImages" class="mb-6">
-            <!-- 이미지가 여기에 추가됨 -->
-          </div>
+              <!-- 게시글 이미지 -->
+              <div id="postImages" class="mb-6">
+                <!-- 이미지가 여기에 추가됨 -->
+              </div>
 
-          <!-- 게시글 하단 (태그, 좋아요, 공유) -->
-          <div class="border-t border-gray-200 pt-4">
-            <div id="postTags" class="flex flex-wrap gap-2 mb-4">
-              <!-- 태그가 여기에 추가됨 -->
-            </div>
-            <div class="flex justify-between items-center">
-              <div class="flex items-center space-x-4">
-                <button id="likeButton" class="flex items-center gap-1 text-gray-500 hover:text-primary">
-                  <i class="ri-heart-line text-xl" id="likeIcon"></i>
-                  <span id="likeCount">0</span>
-                </button>
-                <div class="flex items-center gap-1 text-gray-500">
-                  <i class="ri-chat-1-line text-xl"></i>
-                  <span id="commentCount">0</span>
+              <!-- 게시글 하단 (태그, 좋아요, 공유) -->
+              <div class="border-t border-gray-200 pt-4">
+                <div id="postTags" class="flex flex-wrap gap-2 mb-4">
+                  <!-- 태그가 여기에 추가됨 -->
+                </div>
+                <div class="flex justify-between items-center">
+                  <div class="flex items-center space-x-4">
+                    <button id="likeButton" class="flex items-center gap-1 text-gray-500 hover:text-primary">
+                      <i class="ri-heart-line text-xl" id="likeIcon"></i>
+                      <span id="likeCount">0</span>
+                    </button>
+                    <div class="flex items-center gap-1 text-gray-500">
+                      <i class="ri-chat-1-line text-xl"></i>
+                      <span id="commentCount">0</span>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <button id="shareButton" class="flex items-center gap-1 text-gray-600 hover:text-primary">
+                      <i class="ri-share-line text-xl"></i>
+                      <span>공유</span>
+                    </button>
+                    <button id="bookmarkButton" class="flex items-center gap-1 text-gray-600 hover:text-primary">
+                      <i id="bookmarkIcon" class="ri-bookmark-line text-xl"></i>
+                      <span>북마크</span>
+                    </button>
+                  </div>
                 </div>
               </div>
-              <div class="flex items-center gap-3">
-                <button id="shareButton" class="flex items-center gap-1 text-gray-600 hover:text-primary">
-                  <i class="ri-share-line text-xl"></i>
-                  <span>공유</span>
-                </button>
-                <button id="bookmarkButton" class="flex items-center gap-1 text-gray-600 hover:text-primary">
-                  <i id="bookmarkIcon" class="ri-bookmark-line text-xl"></i>
-                  <span>북마크</span>
-                </button>
-              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <!-- URL 복사 성공 알림 토스트 -->
-      <div id="shareToast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-2 rounded shadow-lg opacity-0 transition-opacity duration-300 hidden">
-        URL이 클립보드에 복사되었습니다.
-      </div>
+          <!-- URL 복사 성공 알림 토스트 -->
+          <div
+            id="shareToast"
+            class="fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-2 rounded shadow-lg opacity-0 transition-opacity duration-300 hidden">
+            URL이 클립보드에 복사되었습니다.
+          </div>
 
-      <!-- AI 답변 섹션 (처음에는 숨김) -->
-      <div id="aiAnswerSection" class="hidden bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-        <div class="flex items-center mb-2">
-          <i class="ri-robot-line text-blue-600 text-xl mr-2"></i>
-          <h3 class="font-semibold text-blue-800">AI 답변</h3>
-        </div>
-        <div id="aiAnswerContent" class="text-gray-700"></div>
-      </div>
+          <!-- AI 답변 섹션 (처음에는 숨김) -->
+          <div id="aiAnswerSection" class="hidden bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <div class="flex items-center mb-2">
+              <i class="ri-robot-line text-blue-600 text-xl mr-2"></i>
+              <h3 class="font-semibold text-blue-800">AI 답변</h3>
+            </div>
+            <div id="aiAnswerContent" class="text-gray-700"></div>
+          </div>
 
-      <!-- 댓글 섹션 -->
-      <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-        <h2 class="text-lg font-semibold mb-4">댓글 <span id="totalComments">0</span>개</h2>
+          <!-- 댓글 섹션 -->
+          <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <h2 class="text-lg font-semibold mb-4">댓글 <span id="totalComments">0</span>개</h2>
 
-        <!-- 댓글 작성 폼 -->
-        <div class="mb-6">
-          <div class="flex items-start gap-3">
-            <div class="flex-1">
+            <!-- 댓글 작성 폼 -->
+            <div class="mb-6">
+              <div class="flex items-start gap-3">
+                <div class="flex-1">
                   <textarea
-                          id="commentInput"
-                          placeholder="댓글을 작성해주세요"
-                          class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
-                          rows="3"
-                  ></textarea>
-              <div class="flex justify-end mt-2">
-                <button id="submitComment" class="bg-primary text-white px-4 py-2 rounded-button hover:bg-indigo-600">
-                  댓글 작성
-                </button>
+                    id="commentInput"
+                    placeholder="댓글을 작성해주세요"
+                    class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+                    rows="3"></textarea>
+                  <div class="flex justify-end mt-2">
+                    <button
+                      id="submitComment"
+                      class="bg-primary text-white px-4 py-2 rounded-button hover:bg-indigo-600">
+                      댓글 작성
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <!-- 댓글 목록 -->
-        <div id="commentsList" class="space-y-6">
-          <!-- 댓글이 여기에 추가됨 -->
-        </div>
-
-        <!-- 더보기 버튼 -->
-        <div class="flex justify-center mt-6">
-          <button id="loadMoreComments" class="text-primary hover:underline hidden">
-            댓글 더보기
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div class="w-full md:w-1/4">
-      <!-- 사이드바 -->
-      <div class="space-y-6">
-        <!-- 작성자 정보 -->
-        <div class="bg-white rounded-lg shadow-sm p-4">
-          <h3 class="font-medium mb-3">작성자 정보</h3>
-          <div class="flex items-center gap-3 mb-3">
-            <div class="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
-              <img id="sidebarAuthorProfile" src="" alt="프로필" class="w-full h-full object-cover" />
+            <!-- 댓글 목록 -->
+            <div id="commentsList" class="space-y-6">
+              <!-- 댓글이 여기에 추가됨 -->
             </div>
-            <div>
-              <h4 id="sidebarAuthorNickname" class="font-medium">작성자</h4>
-              <p id="sidebarAuthorJob" class="text-xs text-gray-500">UI/UX 디자이너</p>
+
+            <!-- 더보기 버튼 -->
+            <div class="flex justify-center mt-6">
+              <button id="loadMoreComments" class="text-primary hover:underline hidden">댓글 더보기</button>
             </div>
           </div>
-          <p id="sidebarAuthorBio" class="text-sm text-gray-600 mb-3">
-            현직 UI/UX 디자이너로 활동 중입니다. 디자인 관련 지식과 경험을 공유합니다.
-          </p>
-          <a id="authorOtherPosts" href="#" class="text-primary text-sm hover:underline">작성자의 다른 글 보기</a>
         </div>
 
-        <!-- 관련 게시글 -->
-        <div id="related-posts-section" class="bg-white rounded-lg shadow-sm p-4 hidden">
-          <h3 class="font-medium mb-3">관련 게시글</h3>
-          <ul class="space-y-3">
-            <!-- 관련 게시글 목록 -->
-          </ul>
+        <div class="w-full md:w-1/4">
+          <!-- 사이드바 -->
+          <div class="space-y-6">
+            <!-- 작성자 정보 -->
+            <div class="bg-white rounded-lg shadow-sm p-4">
+              <h3 class="font-medium mb-3">작성자 정보</h3>
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
+                  <img id="sidebarAuthorProfile" src="" alt="프로필" class="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <h4 id="sidebarAuthorNickname" class="font-medium">작성자</h4>
+                  <p id="sidebarAuthorJob" class="text-xs text-gray-500">UI/UX 디자이너</p>
+                </div>
+              </div>
+              <p id="sidebarAuthorBio" class="text-sm text-gray-600 mb-3">
+                현직 UI/UX 디자이너로 활동 중입니다. 디자인 관련 지식과 경험을 공유합니다.
+              </p>
+              <a id="authorOtherPosts" href="#" class="text-primary text-sm hover:underline">작성자의 다른 글 보기</a>
+            </div>
+
+            <!-- 관련 게시글 -->
+            <div id="related-posts-section" class="bg-white rounded-lg shadow-sm p-4 hidden">
+              <h3 class="font-medium mb-3">관련 게시글</h3>
+              <ul class="space-y-3">
+                <!-- 관련 게시글 목록 -->
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</main>
+    </main>
 
-<div id="footer-placeholder" class="mt-10"></div>
+    <div id="footer-placeholder" class="mt-10"></div>
 
-<script src="/js/include-and-authHandler.js"></script>
-<script src="js/community-detail.js"></script>
-</body>
+    <script src="/js/include-and-authHandler.js"></script>
+    <script src="js/community-detail.js"></script>
+  </body>
 </html>
