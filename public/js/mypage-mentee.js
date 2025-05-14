@@ -108,8 +108,9 @@ function updateUserProfile(userData) {
 
   // 관심 분야 및 지역 업데이트
   const infoElement = document.getElementById("user-info");
+
   if (infoElement) {
-    const interest = userData.interest || "";
+    const interest = userData.interestDisplayName || "";
     const location = (userData.area || "") + (userData.sigungu ? " " + userData.sigungu : "");
     infoElement.textContent = `${interest} | ${location}`;
   }
