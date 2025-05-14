@@ -1,31 +1,26 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns="">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>재능 기부 플랫폼 - 마이페이지</title>
-  <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png">
-  <link rel="manifest" href="./assets/favicon/site.webmanifest">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LinkUp | 마이페이지</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicon/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png" />
+    <link rel="manifest" href="./assets/favicon/site.webmanifest" />
 
-  <link rel="stylesheet" href="css/main.compiled.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-          href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+KR:wght@400;500;700&display=swap"
-          rel="stylesheet"
-  />
-  <link
-          href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
-          rel="stylesheet"
-  />
-  <link rel="stylesheet" href="./css/mypage.css" />
-  <link rel="stylesheet" href="./css/match.css" />
-</head>
-<body class="bg-gray-50">
-  <div id="header-placeholder"></div>
-
+    <link rel="stylesheet" href="css/main.compiled.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+      rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./css/mypage.css" />
+    <link rel="stylesheet" href="./css/match.css" />
+  </head>
+  <body class="bg-gray-50">
+    <div id="header-placeholder"></div>
   <main class="container mx-auto px-4 py-8">
     <!-- 사용자 프로필 헤더 -->
     <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
@@ -53,179 +48,186 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- 탭 메뉴 -->
-    <div class="bg-white rounded-lg shadow-sm mb-6">
-      <div class="border-b border-gray-200">
-        <nav class="flex overflow-x-auto">
-          <button class="tab-button active" data-tab="activity">나의 활동 내역</button>
-          <button class="tab-button" data-tab="matching">매칭 현황</button>
-          <button class="tab-button" data-tab="settings">프로필 설정</button>
-        </nav>
-      </div>
-    </div>
-
-    <!-- 탭 컨텐츠 - 나의 활동 내역 -->
-    <div class="tab-content" id="activity-content">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- 내가 등록한 재능 목록 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-semibold">내가 등록한 재능 목록</h2>
-            <a
-                    href="more-details.html?type=my-talents"
-                    class="text-primary text-sm font-medium hover:underline flex items-center">
-              <i class="ri-add-line mr-1"></i> 더보기
-            </a>
-          </div>
-          <ul id="talent-list" class="space-y-4">
-            <!-- 여기에 API에서 가져온 재능 목록이 동적으로 추가됩니다. -->
-          </ul>
-        </div>
-
-        <!-- 내가 작성한 커뮤니티 게시글 목록 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-semibold">내가 작성한 커뮤니티 게시글</h2>
-            <a
-                    href="more-details.html?type=my-posts"
-                    class="text-primary text-sm font-medium hover:underline flex items-center">
-              <i class="ri-add-line mr-1"></i> 더보기
-            </a>
-          </div>
-          <ul id="community-posts-list" class="space-y-4">
-            <!-- 여기에 API에서 가져온 게시글 목록이 동적으로 추가됩니다. -->
-          </ul>
-        </div>
-
-        <!-- 내가 작성한 댓글 목록 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-semibold mb-4">내가 작성한 댓글</h2>
-            <a href="more-details.html?type=my-comments"
-               class="text-primary text-sm font-medium hover:underline flex items-center">
-              <i class="ri-add-line mr-1"></i> 더보기
-            </a>
-          </div>
-          <ul id="comment-list" class="space-y-4">
-            <!-- 여기에 API에서 가져온 댓글 목록이 동적으로 추가됩니다. -->
-          </ul>
-        </div>
-
-        <!-- 관심 목록 (좋아요한 게시글 + 북마크한 게시글) -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-semibold">관심 목록</h2>
-            <a
-                    href="more-details.html?type=my-interests&filter=all"
-                    class="text-primary text-sm font-medium hover:underline flex items-center">
-              <i class="ri-add-line mr-1"></i> 더보기
-            </a>
-          </div>
-
-          <!-- 북마크한 게시글 -->
-          <div class="mb-6">
-            <h3 class="text-base font-semibold mb-2 text-gray-800">📌 북마크한 게시글</h3>
-            <ul id="bookmark-list" class="space-y-4">
-              <!-- 북마크한 게시글 목록이 동적으로 추가됩니다. -->
-            </ul>
-          </div>
-
-          <!-- 좋아요한 게시글 -->
-          <div>
-            <h3 class="text-base font-semibold mb-2 text-gray-800">❤️ 좋아요한 게시글</h3>
-            <ul id="like-list" class="space-y-4">
-              <!-- 좋아요한 게시글 목록이 동적으로 추가됩니다. -->
-            </ul>
-          </div>
+      <!-- 탭 메뉴 -->
+      <div class="bg-white rounded-lg shadow-sm mb-6">
+        <div class="border-b border-gray-200">
+          <nav class="flex overflow-x-auto">
+            <button class="tab-button active" data-tab="activity">나의 활동 내역</button>
+            <button class="tab-button" data-tab="matching">매칭 현황</button>
+            <button class="tab-button" data-tab="settings">프로필 설정</button>
+          </nav>
         </div>
       </div>
-    </div>
 
-    <!-- 탭 컨텐츠 - 매칭 현황 -->
-    <div class="tab-content hidden" id="matching-content">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- 멘토 전용: 받은 리뷰 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-semibold">받은 리뷰</h2>
-            <div class="flex items-center gap-2">
-              <a  href="more-details.html?type=reviews" class="text-primary text-sm font-medium hover:underline flex items-center">
-                <i class="ri-add-line mr-1"></i> 더 보기
+      <!-- 탭 컨텐츠 - 나의 활동 내역 -->
+      <div class="tab-content" id="activity-content">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- 내가 등록한 재능 목록 -->
+          <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-lg font-semibold">내가 등록한 재능 목록</h2>
+              <a
+                href="more-details.html?type=my-talents"
+                class="text-primary text-sm font-medium hover:underline flex items-center">
+                <i class="ri-add-line mr-1"></i> 더보기
               </a>
             </div>
+            <ul id="talent-list" class="space-y-4">
+              <!-- 여기에 API에서 가져온 재능 목록이 동적으로 추가됩니다. -->
+            </ul>
           </div>
-          <p class="text-sm text-gray-600 mb-4">
-            멘티들로부터 받은 리뷰와 평가를 확인할 수 있습니다. <br>
-            리뷰는 멘토링 완료 후 멘티가 작성할 수 있습니다.
-          </p>
-          <div class="border-t border-gray-200 pt-4 space-y-4" id="received-review-list">
-            <p id="received-review-list-empty" class="text-sm text-gray-500">
-              아직 받은 리뷰가 없습니다.
+
+          <!-- 내가 작성한 커뮤니티 게시글 목록 -->
+          <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-lg font-semibold">내가 작성한 커뮤니티 게시글</h2>
+              <a
+                href="more-details.html?type=my-posts"
+                class="text-primary text-sm font-medium hover:underline flex items-center">
+                <i class="ri-add-line mr-1"></i> 더보기
+              </a>
+            </div>
+            <ul id="community-posts-list" class="space-y-4">
+              <!-- 여기에 API에서 가져온 게시글 목록이 동적으로 추가됩니다. -->
+            </ul>
+          </div>
+
+          <!-- 내가 작성한 댓글 목록 -->
+          <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-lg font-semibold mb-4">내가 작성한 댓글</h2>
+              <a
+                href="more-details.html?type=my-comments"
+                class="text-primary text-sm font-medium hover:underline flex items-center">
+                <i class="ri-add-line mr-1"></i> 더보기
+              </a>
+            </div>
+            <ul id="comment-list" class="space-y-4">
+              <!-- 여기에 API에서 가져온 댓글 목록이 동적으로 추가됩니다. -->
+            </ul>
+          </div>
+
+          <!-- 관심 목록 (좋아요한 게시글 + 북마크한 게시글) -->
+          <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-lg font-semibold">관심 목록</h2>
+              <a
+                href="more-details.html?type=my-interests&filter=all"
+                class="text-primary text-sm font-medium hover:underline flex items-center">
+                <i class="ri-add-line mr-1"></i> 더보기
+              </a>
+            </div>
+
+            <!-- 북마크한 게시글 -->
+            <div class="mb-6">
+              <h3 class="text-base font-semibold mb-2 text-gray-800">📌 북마크한 게시글</h3>
+              <ul id="bookmark-list" class="space-y-4">
+                <!-- 북마크한 게시글 목록이 동적으로 추가됩니다. -->
+              </ul>
+            </div>
+
+            <!-- 좋아요한 게시글 -->
+            <div>
+              <h3 class="text-base font-semibold mb-2 text-gray-800">❤️ 좋아요한 게시글</h3>
+              <ul id="like-list" class="space-y-4">
+                <!-- 좋아요한 게시글 목록이 동적으로 추가됩니다. -->
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 탭 컨텐츠 - 매칭 현황 -->
+      <div class="tab-content hidden" id="matching-content">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- 멘토 전용: 받은 리뷰 -->
+          <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-lg font-semibold">받은 리뷰</h2>
+              <div class="flex items-center gap-2">
+                <a
+                  href="more-details.html?type=reviews"
+                  class="text-primary text-sm font-medium hover:underline flex items-center">
+                  <i class="ri-add-line mr-1"></i> 더 보기
+                </a>
+              </div>
+            </div>
+            <p class="text-sm text-gray-600 mb-4">
+              멘티들로부터 받은 리뷰와 평가를 확인할 수 있습니다. <br />
+              리뷰는 멘토링 완료 후 멘티가 작성할 수 있습니다.
             </p>
-          </div>
-        </div>
-
-        <!-- 커뮤니티 질문 답변 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-<!--          <h2 class="text-lg font-semibold mb-4">커뮤니티 질문 답변</h2>-->
-          <div class="flex justify-between items-center mb-2">
-            <h2 class="text-lg font-semibold">커뮤니티 질문 답변</h2>
-<!--            <a-->
-<!--                    href="more-details.html?type=my-posts"-->
-<!--                    class="text-primary text-sm font-medium hover:underline flex items-center">-->
-<!--              <i class="ri-add-line mr-1"></i> 더보기-->
-<!--            </a>-->
-            <a href="more-details.html?type=interest-qna" class="text-sm text-primary font-medium hover:underline whitespace-nowrap flex items-center">
-              더 많은 질문 보기
-              <i class="ri-arrow-right-s-line ml-1"></i>
-            </a>
-          </div>
-          <!-- 설명 아래 선 추가 -->
-          <p class="text-sm text-gray-600 mb-4">
-            최근 커뮤니티에서 활발히 논의되고 있는 질문과 답변입니다. <br>
-            전문 지식을 공유하고 다양한 의견을 확인해보세요.
-          </p>
-          <div class="border-t border-gray-200 mb-4"></div>
-          <div class="space-y-4" id="interest-qna-list">
-            <!-- JS가 렌더링한 인기 QnA 카드가 여기에 들어감 -->
-          </div>
-        </div>
-
-        <!-- 나의 멘토링 통계 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <h2 class="text-lg font-semibold mb-4">나의 멘토링 통계</h2>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div class="bg-blue-50 rounded-lg p-4 text-center">
-              <p class="text-sm text-gray-600">총 멘토링 횟수</p>
-              <p class="text-2xl font-bold text-primary mt-1" id="total-mentoring-count">24</p>
+            <div class="border-t border-gray-200 pt-4 space-y-4" id="received-review-list">
+              <p id="received-review-list-empty" class="text-sm text-gray-500">아직 받은 리뷰가 없습니다.</p>
             </div>
-            <div class="bg-yellow-100 text-yellow-700 rounded-lg p-4 text-center">
-              <p class="text-sm text-gray-600">현재 진행 중</p>
-              <p class="text-2xl font-bold text-yellow-600 mt-1" id="ongoing-mentoring-count">2</p>
+          </div>
+
+          <!-- 커뮤니티 질문 답변 -->
+          <div class="bg-white rounded-lg shadow-sm p-6">
+            <!--          <h2 class="text-lg font-semibold mb-4">커뮤니티 질문 답변</h2>-->
+            <div class="flex justify-between items-center mb-2">
+              <h2 class="text-lg font-semibold">커뮤니티 질문 답변</h2>
+              <!--            <a-->
+              <!--                    href="more-details.html?type=my-posts"-->
+              <!--                    class="text-primary text-sm font-medium hover:underline flex items-center">-->
+              <!--              <i class="ri-add-line mr-1"></i> 더보기-->
+              <!--            </a>-->
+              <a
+                href="more-details.html?type=interest-qna"
+                class="text-sm text-primary font-medium hover:underline whitespace-nowrap flex items-center">
+                더 많은 질문 보기
+                <i class="ri-arrow-right-s-line ml-1"></i>
+              </a>
             </div>
-            <div class="bg-purple-50 rounded-lg p-4 text-center">
-              <p class="text-sm text-gray-600">평균 만족도</p>
-              <div class="flex items-center justify-center mt-1" id= id="average-rating">
-                <p class="text-2xl font-bold text-purple-600 mr-2">4.8</p>
-                <div class="flex items-center">
-                  <i class="ri-star-fill text-yellow-400"></i>
+            <!-- 설명 아래 선 추가 -->
+            <p class="text-sm text-gray-600 mb-4">
+              최근 커뮤니티에서 활발히 논의되고 있는 질문과 답변입니다. <br />
+              전문 지식을 공유하고 다양한 의견을 확인해보세요.
+            </p>
+            <div class="border-t border-gray-200 mb-4"></div>
+            <div class="space-y-4" id="interest-qna-list">
+              <!-- JS가 렌더링한 인기 QnA 카드가 여기에 들어감 -->
+            </div>
+          </div>
+
+          <!-- 나의 멘토링 통계 -->
+          <div class="bg-white rounded-lg shadow-sm p-6">
+            <h2 class="text-lg font-semibold mb-4">나의 멘토링 통계</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div class="bg-blue-50 rounded-lg p-4 text-center">
+                <p class="text-sm text-gray-600">총 멘토링 횟수</p>
+                <p class="text-2xl font-bold text-primary mt-1" id="total-mentoring-count">24</p>
+              </div>
+              <div class="bg-yellow-100 text-yellow-700 rounded-lg p-4 text-center">
+                <p class="text-sm text-gray-600">현재 진행 중</p>
+                <p class="text-2xl font-bold text-yellow-600 mt-1" id="ongoing-mentoring-count">2</p>
+              </div>
+              <div class="bg-purple-50 rounded-lg p-4 text-center">
+                <p class="text-sm text-gray-600">평균 만족도</p>
+                <div class="flex items-center justify-center mt-1" id="id" ="average-rating">
+                  <p class="text-2xl font-bold text-purple-600 mr-2">4.8</p>
+                  <div class="flex items-center">
+                    <i class="ri-star-fill text-yellow-400"></i>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="flex justify-between items-center mb-3">
-            <h3 class="font-medium mb-3">멘토링 분야별 통계</h3>
-            <!-- 부모: group 클래스 부여 -->
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="font-medium mb-3">멘토링 분야별 통계</h3>
+              <!-- 부모: group 클래스 부여 -->
               <div class="relative group">
                 <button class="text-sm text-gray-400 hover:text-gray-600">🟢</button>
 
                 <!-- 자식: group-hover로 표시 -->
-                <div id="mentor-stat-popup"
-                     class="absolute right-0 z-10 mt-1 w-[550px] bg-white border border-gray-200 rounded-lg shadow-lg p-4 space-y-3 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200">
-                <!-- 나머지 항목들만 JS가 렌더링 -->
+                <div
+                  id="mentor-stat-popup"
+                  class="absolute right-0 z-10 mt-1 w-[550px] bg-white border border-gray-200 rounded-lg shadow-lg p-4 space-y-3 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200">
+                  <!-- 나머지 항목들만 JS가 렌더링 -->
+                </div>
+              </div>
             </div>
+            <!-- 상위 2개 항목만 JS가 여기에 렌더링 -->
+            <div class="space-y-4" id="mentor-stat-list"></div>
           </div>
         </div>
         <!-- 상위 2개 항목만 JS가 여기에 렌더링 -->
@@ -243,68 +245,61 @@
           </div>
           <div class="space-y-4" id="ongoing-matching-list">
             <!-- JS가 카드들을 렌더링할 영역 -->
-
+          <!-- 진행 중인 매칭 -->
+          <div class="bg-white rounded-lg shadow-sm p-6">
+            <h2 class="text-lg font-semibold mb-4">진행 중인 매칭</h2>
+            <div class="space-y-4" id="ongoing-matching-list">
+              <!-- JS가 카드들을 렌더링할 영역 -->
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- 탭 컨텐츠 - 프로필 설정 -->
-    <div class="tab-content hidden" id="settings-content">
-      <div class="bg-white rounded-lg shadow-sm p-6">
-        <h2 class="text-xl font-semibold mb-6">프로필 설정</h2>
+      <!-- 탭 컨텐츠 - 프로필 설정 -->
+      <div class="tab-content hidden" id="settings-content">
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h2 class="text-xl font-semibold mb-6">프로필 설정</h2>
 
-        <form class="space-y-6">
-          <!-- 기본 정보 섹션 -->
-          <!-- 프로필 설정 탭 - 기본 정보 섹션 -->
-          <div>
+          <form class="space-y-6">
+            <!-- 기본 정보 섹션 -->
+            <!-- 프로필 설정 탭 - 기본 정보 섹션 -->
+            <div>
               <h3 class="text-lg font-medium mb-4">기본 정보</h3>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- 프로필 이미지 -->
                 <div class="flex flex-col items-center md:items-start">
-                <label class="block text-sm font-medium text-gray-700 mb-2">프로필 이미지</label>
-                <div class="relative">
-                  <div class="w-32 h-32 rounded-full bg-gray-200 overflow-hidden">
-                    <img
-                            id="profile-image-preview"
-                            src=""
-                            alt="프로필 이미지"
-                            class="w-full h-full object-cover"
-                    />
+                  <label class="block text-sm font-medium text-gray-700 mb-2">프로필 이미지</label>
+                  <div class="relative">
+                    <div class="w-32 h-32 rounded-full bg-gray-200 overflow-hidden">
+                      <img id="profile-image-preview" src="" alt="프로필 이미지" class="w-full h-full object-cover" />
+                    </div>
+                    <input type="file" id="profileImageInput" class="hidden" accept="image/*" />
+                    <button
+                      type="button"
+                      id="changeProfileImageButton"
+                      class="absolute bottom-0 right-0 bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-indigo-600">
+                      <i class="ri-camera-line"></i>
+                    </button>
                   </div>
-                  <input
-                          type="file"
-                          id="profileImageInput"
-                          class="hidden"
-                          accept="image/*"
-                  />
-                  <button
-                          type="button"
-                          id="changeProfileImageButton"
-                          class="absolute bottom-0 right-0 bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-indigo-600"
-                  >
-                    <i class="ri-camera-line"></i>
-                  </button>
+                  <p class="text-xs text-gray-500 mt-2">권장 크기: 500x500 픽셀</p>
                 </div>
-                <p class="text-xs text-gray-500 mt-2">권장 크기: 500x500 픽셀</p>
-              </div>
                 <!-- 닉네임 및 사용자 유형 -->
                 <div class="space-y-4">
                   <div class="flex items-center gap-2">
                     <div>
                       <label for="nickname" class="block text-sm font-medium text-gray-700 mb-1">닉네임</label>
                       <input
-                              type="text"
-                              id="nickname"
-                              name="nickname"
-                              value=""
-                              class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                      />
+                        type="text"
+                        id="nickname"
+                        name="nickname"
+                        value=""
+                        class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
                     </div>
-                    <button type="button"
-                            id="checkNicknameButton"
-                            class="bg-primary text-white text-xs px-2 py-2 rounded mb-1 ml-2 mt-6">
-                     <span> 중복 확인</span>
+                    <button
+                      type="button"
+                      id="checkNicknameButton"
+                      class="bg-primary text-white text-xs px-2 py-2 rounded mb-1 ml-2 mt-6">
+                      <span> 중복 확인</span>
                     </button>
                   </div>
                   <div>
@@ -318,186 +313,234 @@
               </div>
             </div>
 
-
-          <!-- 지역 및 소개 -->
-          <div class="w-full">
-            <div class="flex items-center gap-2 mb-4">
-              <div class="flex-1">
-                <label class="block text-sm font-medium text-gray-700 mb-1">지역</label>
-                <div class="flex gap-2">
-                  <!-- 지역 선택 -->
-                  <div class="relative w-full">
-                    <button
-                            type="button"
-                            class="w-full bg-white border border-gray-300 rounded px-6 py-2 text-left flex items-center justify-between"
-                            id="regionButton"
-                    >
-                      <span>지역</span>
-                      <div class="w-5 h-5 flex items-center justify-center">
-                        <i class="ri-arrow-down-s-line"></i>
-                      </div>
-                    </button>
-                    <div
-                            class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden"
-                            id="regionDropdown"
-                    >
-                      <div class="py-1 max-h-60 overflow-y-auto custom-scrollbar">
-                        <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="1">서울</button>
-                        <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="2">인천</button>
-                        <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="3">대전</button>
-                        <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="4">대구</button>
-                        <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="5">광주</button>
-                        <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="6">부산</button>
-                        <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="7">울산</button>
-                        <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="8">세종</button>
-                        <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="31">경기</button>
-                        <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="32">강원</button>
-                        <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="33">충북</button>
-                        <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="34">충남</button>
-                        <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="35">경북</button>
-                        <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="36">경남</button>
-                        <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="37">전북</button>
-                        <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="38">전남</button>
-                        <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="39">제주</button>
+            <!-- 지역 및 소개 -->
+            <div class="w-full">
+              <div class="flex items-center gap-2 mb-4">
+                <div class="flex-1">
+                  <label class="block text-sm font-medium text-gray-700 mb-1">지역</label>
+                  <div class="flex gap-2">
+                    <!-- 지역 선택 -->
+                    <div class="relative w-full">
+                      <button
+                        type="button"
+                        class="w-full bg-white border border-gray-300 rounded px-6 py-2 text-left flex items-center justify-between"
+                        id="regionButton">
+                        <span>지역</span>
+                        <div class="w-5 h-5 flex items-center justify-center">
+                          <i class="ri-arrow-down-s-line"></i>
+                        </div>
+                      </button>
+                      <div
+                        class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden"
+                        id="regionDropdown">
+                        <div class="py-1 max-h-60 overflow-y-auto custom-scrollbar">
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="1">
+                            서울
+                          </button>
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="2">
+                            인천
+                          </button>
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="3">
+                            대전
+                          </button>
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="4">
+                            대구
+                          </button>
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="5">
+                            광주
+                          </button>
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="6">
+                            부산
+                          </button>
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="7">
+                            울산
+                          </button>
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="8">
+                            세종
+                          </button>
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="31">
+                            경기
+                          </button>
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="32">
+                            강원
+                          </button>
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="33">
+                            충북
+                          </button>
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="34">
+                            충남
+                          </button>
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="35">
+                            경북
+                          </button>
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="36">
+                            경남
+                          </button>
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="37">
+                            전북
+                          </button>
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="38">
+                            전남
+                          </button>
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="39">
+                            제주
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <!-- 시군구 선택 -->
-                  <div class="relative w-full">
-                    <button
-                            type="button"
-                            class="w-full bg-white border border-gray-300 rounded px-4 py-2 text-left flex items-center justify-between"
-                            id="sigunguButton"
-                    >
-                      <span>시군구</span>
-                      <div class="w-5 h-5 flex items-center justify-center">
-                        <i class="ri-arrow-down-s-line"></i>
-                      </div>
-                    </button>
-                    <div
-                            class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden"
-                            id="sigunguDropdown"
-                    >
-                      <div class="py-1 max-h-60 overflow-y-auto custom-scrollbar" id="sigunguOptions">
-                        <!-- 시군구 옵션은 지역에 따라 동적으로 생성 -->
+                    <!-- 시군구 선택 -->
+                    <div class="relative w-full">
+                      <button
+                        type="button"
+                        class="w-full bg-white border border-gray-300 rounded px-4 py-2 text-left flex items-center justify-between"
+                        id="sigunguButton">
+                        <span>시군구</span>
+                        <div class="w-5 h-5 flex items-center justify-center">
+                          <i class="ri-arrow-down-s-line"></i>
+                        </div>
+                      </button>
+                      <div
+                        class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden"
+                        id="sigunguDropdown">
+                        <div class="py-1 max-h-60 overflow-y-auto custom-scrollbar" id="sigunguOptions">
+                          <!-- 시군구 옵션은 지역에 따라 동적으로 생성 -->
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
+                <div class="flex-1">
+                  <label for="available_time" class="block text-sm font-medium text-gray-700 mb-1"
+                    >활동 가능 시간대</label
+                  >
+                  <select
+                    id="available_time"
+                    name="available_time"
+                    class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                    <option value="WEEKDAY_MORNING">평일 오전</option>
+                    <option value="WEEKDAY_AFTERNOON">평일 오후</option>
+                    <option value="WEEKDAY_EVENING">평일 저녁</option>
+                    <option value="WEEKEND_MORNING">주말 오전</option>
+                    <option value="WEEKEND_AFTERNOON">주말 오후</option>
+                    <option value="WEEKEND_EVENING">주말 저녁</option>
+                    <option value="" selected>선택</option>
+                  </select>
+                </div>
               </div>
-              <div class="flex-1">
-                <label for="available_time" class="block text-sm font-medium text-gray-700 mb-1">활동 가능 시간대</label>
-                <select
-                        id="available_time"
-                        name="available_time"
-                        class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                >
-                  <option value="WEEKDAY_MORNING">평일 오전</option>
-                  <option value="WEEKDAY_AFTERNOON">평일 오후</option>
-                  <option value="WEEKDAY_EVENING">평일 저녁</option>
-                  <option value="WEEKEND_MORNING">주말 오전</option>
-                  <option value="WEEKEND_AFTERNOON">주말 오후</option>
-                  <option value="WEEKEND_EVENING">주말 저녁</option>
-                  <option value="" selected>선택</option>
-                </select>
+              <div class="mt-4">
+                <label for="introduction" class="block text-sm font-medium text-gray-700 mb-1">소개글</label>
+                <textarea
+                  id="introduction"
+                  name="introduction"
+                  rows="4"
+                  class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                </textarea>
               </div>
             </div>
-            <div class="mt-4">
-              <label for="introduction" class="block text-sm font-medium text-gray-700 mb-1">소개글</label>
-              <textarea
-                      id="introduction"
-                      name="introduction"
-                      rows="4"
-                      class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              >
-    </textarea>
-            </div>
-          </div>
-          <!-- 멘토 전용 설정 -->
-          <div id="mentor-settings" class="border-t border-gray-200 pt-6">
-            <h3 class="text-lg font-medium mb-4">멘토 설정</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label for="expertise" class="block text-sm font-medium text-gray-700 mb-1">전문 분야</label>
-                <select id="expertise" name="expertise" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                  <option value="선택">선택</option>
-                  <option value="WEB_DEV">프로그래밍 / 웹개발</option>
-                  <option value="APP_DEV">프로그래밍 / 앱개발</option>
-                  <option value="DESIGN_UX_UI">디자인 / UI/UX</option>
-                  <option value="DESIGN_GRAPHIC">디자인 / 그래픽</option>
-                  <option value="EDUCATION_MATH">교육 / 수학</option>
-                  <option value="EDUCATION_ENGLISH">교육 / 영어</option>
-                  <option value="MUSIC_PIANO">음악 / 피아노</option>
-                  <option value="FITNESS_YOGA">운동 / 요가</option>
-                </select>
-              </div>
-              <div>
+            <!-- 멘토 전용 설정 -->
+            <div id="mentor-settings" class="border-t border-gray-200 pt-6">
+              <h3 class="text-lg font-medium mb-4">멘토 설정</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label for="tags" class="block text-sm font-medium text-gray-700 mb-1">태그 (쉼표로 구분)</label>
-                  <input type="text" id="tags" name="tags" value="" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                  <label for="expertise" class="block text-sm font-medium text-gray-700 mb-1">전문 분야</label>
+                  <select
+                    id="expertise"
+                    name="expertise"
+                    class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                    <option value="선택">선택</option>
+                    <option value="WEB_DEV">프로그래밍 / 웹개발</option>
+                    <option value="APP_DEV">프로그래밍 / 앱개발</option>
+                    <option value="DESIGN_UX_UI">디자인 / UI/UX</option>
+                    <option value="DESIGN_GRAPHIC">디자인 / 그래픽</option>
+                    <option value="EDUCATION_MATH">교육 / 수학</option>
+                    <option value="EDUCATION_ENGLISH">교육 / 영어</option>
+                    <option value="MUSIC_PIANO">음악 / 피아노</option>
+                    <option value="FITNESS_YOGA">운동 / 요가</option>
+                  </select>
+                </div>
+                <div>
+                  <div>
+                    <label for="tags" class="block text-sm font-medium text-gray-700 mb-1">태그 (쉼표로 구분)</label>
+                    <input
+                      type="text"
+                      id="tags"
+                      name="tags"
+                      value=""
+                      class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+                  </div>
+                </div>
+                <div>
+                  <label for="contact" class="block text-sm font-medium text-gray-700 mb-1"
+                    >연락처 (오픈 채팅방 링크)</label
+                  >
+                  <input
+                    type="text"
+                    id="contact"
+                    name="contact"
+                    value=""
+                    class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">활동 유형</label>
+                  <div class="flex gap-4">
+                    <label class="inline-flex items-center">
+                      <input type="radio" name="activity-type" value="ONLINE" class="custom-radio" />
+                      <span class="ml-2">온라인</span>
+                    </label>
+                    <label class="inline-flex items-center">
+                      <input type="radio" name="activity-type" value="OFFLINE" class="custom-radio" />
+                      <span class="ml-2">오프라인</span>
+                    </label>
+                    <label class="inline-flex items-center">
+                      <input type="radio" name="activity-type" value="ALL" class="custom-radio" checked />
+                      <span class="ml-2">모두</span>
+                    </label>
+                  </div>
                 </div>
               </div>
-              <div>
-                <label for="contact" class="block text-sm font-medium text-gray-700 mb-1">연락처 (오픈 채팅방 링크)</label>
-                <input type="text" id="contact" name="contact" value="" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">활동 유형</label>
-                <div class="flex gap-4">
-                  <label class="inline-flex items-center">
-                    <input type="radio" name="activity-type" value="ONLINE" class="custom-radio">
-                    <span class="ml-2">온라인</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="radio" name="activity-type" value="OFFLINE" class="custom-radio">
-                    <span class="ml-2">오프라인</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="radio" name="activity-type" value="ALL" class="custom-radio" checked>
-                    <span class="ml-2">모두</span>
-                  </label>
-                </div>
+              <div class="mt-4 flex items-center gap-2">
+                <span class="text-sm font-medium text-gray-700">매칭 요청 받기</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" name="accept-matching" checked />
+                  <span class="toggle-slider"></span>
+                </label>
+                <span class="text-xs text-gray-500">(비활성화 시 새로운 매칭 요청을 받지 않습니다)</span>
               </div>
             </div>
-            <div class="mt-4 flex items-center gap-2">
-              <span class="text-sm font-medium text-gray-700">매칭 요청 받기</span>
-              <label class="toggle-switch">
-                <input type="checkbox" name="accept-matching" checked>
-                <span class="toggle-slider"></span>
-              </label>
-              <span class="text-xs text-gray-500">(비활성화 시 새로운 매칭 요청을 받지 않습니다)</span>
-            </div>
-          </div>
 
-          <!-- 저장 버튼 -->
-          <div class="border-t border-gray-200 pt-6 flex justify-end">
-            <button type="submit"
-                    id="saveChangesButton"
-                    class="bg-primary text-white px-6 py-2 rounded-button whitespace-nowrap hover:bg-indigo-600">
-              변경사항 저장
-            </button>
-          </div>
-        </form>
+            <!-- 저장 버튼 -->
+            <div class="border-t border-gray-200 pt-6 flex justify-end">
+              <button
+                type="submit"
+                id="saveChangesButton"
+                class="bg-primary text-white px-6 py-2 rounded-button whitespace-nowrap hover:bg-indigo-600">
+                변경사항 저장
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <div id="footer-placeholder" class="mt-auto"></div>
+
+    <!-- 🔍 리뷰 전체보기 팝업 -->
+    <div
+      id="review-popup"
+      style="position: fixed !important; z-index: 9999 !important; background: rgba(0, 0, 0, 0.5)"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+      <div class="bg-white p-6 rounded-lg w-96 shadow-lg relative">
+        <button id="close-popup" class="absolute top-2 right-2 text-gray-500 hover:text-black">&times;</button>
+        <h2 id="popup-reviewer-name" class="font-semibold text-lg"></h2>
+        <p id="popup-review-date" class="text-sm text-gray-500"></p>
+        <p id="popup-star" class="text-yellow-400 my-2"></p>
+        <p id="popup-content" class="text-gray-700 whitespace-pre-wrap mt-4"></p>
       </div>
     </div>
-  </main>
-
-  <div id="footer-placeholder" class="mt-auto"></div>
-
-  <!-- 🔍 리뷰 전체보기 팝업 -->
-  <div id="review-popup" style="position: fixed !important; z-index: 9999 !important; background: rgba(0,0,0,0.5);" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
-    <div class="bg-white p-6 rounded-lg w-96 shadow-lg relative">
-      <button id="close-popup" class="absolute top-2 right-2 text-gray-500 hover:text-black">&times;</button>
-      <h2 id="popup-reviewer-name" class="font-semibold text-lg"></h2>
-      <p id="popup-review-date" class="text-sm text-gray-500"></p>
-      <p id="popup-star" class="text-yellow-400 my-2"></p>
-      <p id="popup-content" class="text-gray-700 whitespace-pre-wrap mt-4"></p>
-    </div>
-  </div>
-
-</body>
-<script src="/js/include-and-authHandler.js"></script>
-<script src="js/mypage.js"></script>
-<script src="./js/mypage-activity.js"></script>
-<script src="js/mypage.js" defer></script>  <!-- defer → HTML이 전부 파싱된 후 JS가 실행(DOM 요소 접근이 안전)-->
+  </body>
+  <script src="/js/include-and-authHandler.js"></script>
+  <script src="js/mypage.js"></script>
+  <script src="./js/mypage-activity.js"></script>
+  <script src="js/mypage.js" defer></script>
+  <!-- defer → HTML이 전부 파싱된 후 JS가 실행(DOM 요소 접근이 안전)-->
 </html>

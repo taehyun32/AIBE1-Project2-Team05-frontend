@@ -3,24 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>재능 기부 플랫폼 - 커뮤니티</title>
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="./assets/favicon/apple-touch-icon.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="./assets/favicon/favicon-32x32.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="./assets/favicon/favicon-16x16.png"
-    />
+    <title>LinkUp | 커뮤니티</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicon/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png" />
     <link rel="manifest" href="./assets/favicon/site.webmanifest" />
 
     <!-- Tailwind CSS CDN -->
@@ -29,7 +15,7 @@
       tailwind.config = {
         theme: {
           extend: {
-            colors: { primary: "#4F46E5", secondary: "#10B981" },
+            colors: {primary: "#4F46E5", secondary: "#10B981"},
             borderRadius: {
               none: "0px",
               sm: "4px",
@@ -50,21 +36,12 @@
     <!-- Google Fonts (Pacifico) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
     <!-- Google Fonts (Noto Sans KR) - 이전 CSS에서 사용했으므로 추가 -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
 
     <!-- Remix Icon CDN -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
-      rel="stylesheet"
-    />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
 
     <!-- 분리된 커스텀 CSS 파일 링크 -->
     <link rel="stylesheet" href="./css/community.css" />
@@ -81,19 +58,16 @@
               type="text"
               id="searchInput"
               placeholder="검색어를 입력하세요"
-              class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-            />
+              class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
             <div
-              class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 flex items-center justify-center text-gray-400"
-            >
+              class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 flex items-center justify-center text-gray-400">
               <i id="searchButton" class="ri-search-line cursor-pointer"></i>
             </div>
           </div>
           <a
             href="/newPost"
             data-readdy="true"
-            class="bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap hover:bg-indigo-600 flex items-center"
-          >
+            class="bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap hover:bg-indigo-600 flex items-center">
             <div class="w-5 h-5 flex items-center justify-center mr-1">
               <i class="ri-edit-line"></i>
             </div>
@@ -102,48 +76,28 @@
         </div>
       </div>
       <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
-        <div
-          id="categoryButtonsContainer"
-          class="flex space-x-1 overflow-x-auto pb-2"
-        >
-          <button
-            class="px-4 py-2 bg-primary text-white rounded-full whitespace-nowrap"
-          >
-            전체
-          </button>
-          <button
-            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full whitespace-nowrap hover:bg-gray-200"
-          >
+        <div id="categoryButtonsContainer" class="flex space-x-1 overflow-x-auto pb-2">
+          <button class="px-4 py-2 bg-primary text-white rounded-full whitespace-nowrap">전체</button>
+          <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full whitespace-nowrap hover:bg-gray-200">
             질문/답변
           </button>
-          <button
-            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full whitespace-nowrap hover:bg-gray-200"
-          >
+          <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full whitespace-nowrap hover:bg-gray-200">
             정보공유
           </button>
-          <button
-            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full whitespace-nowrap hover:bg-gray-200"
-          >
+          <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full whitespace-nowrap hover:bg-gray-200">
             후기
           </button>
-          <button
-            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full whitespace-nowrap hover:bg-gray-200"
-          >
+          <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full whitespace-nowrap hover:bg-gray-200">
             자유게시판
           </button>
-          <button
-            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full whitespace-nowrap hover:bg-gray-200"
-          >
+          <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full whitespace-nowrap hover:bg-gray-200">
             재능 나눔
           </button>
         </div>
       </div>
 
       <!-- add errorMessage -->
-      <div
-        id="errorMessage"
-        class="text-red-600 bg-red-100 border border-red-400 p-3 rounded mb-4 hidden"
-      ></div>
+      <div id="errorMessage" class="text-red-600 bg-red-100 border border-red-400 p-3 rounded mb-4 hidden"></div>
 
       <div class="flex flex-col md:flex-row gap-6">
         <div class="w-full md:w-3/4">
@@ -158,24 +112,13 @@
               <!--            </div>-->
               <!--          </div>-->
             </div>
-            <div
-              id="mainPopularPostsContainer"
-              class="grid grid-cols-1 md:grid-cols-2 gap-4"
-            >
+            <div id="mainPopularPostsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <!-- loading -->
-              <div
-                data-placeholder="loading-popular"
-                class="text-center py-8 col-span-full hidden"
-              >
-                <i
-                  class="ri-loader-4-line animate-spin text-2xl text-primary"
-                ></i>
+              <div data-placeholder="loading-popular" class="text-center py-8 col-span-full hidden">
+                <i class="ri-loader-4-line animate-spin text-2xl text-primary"></i>
                 <p class="mt-2 text-gray-500">인기 게시글을 불러오는 중...</p>
               </div>
-              <div
-                data-placeholder="empty-popular"
-                class="text-center py-8 col-span-full hidden"
-              >
+              <div data-placeholder="empty-popular" class="text-center py-8 col-span-full hidden">
                 <i class="ri-information-line text-2xl text-gray-400"></i>
                 <p class="mt-2 text-gray-500">인기 게시글이 없습니다.</p>
               </div>
@@ -254,8 +197,7 @@
               <div class="relative">
                 <button
                   class="flex items-center text-sm text-gray-700 border border-gray-300 rounded px-3 py-1"
-                  id="sortButton"
-                >
+                  id="sortButton">
                   <span>최신순</span>
                   <div class="w-4 h-4 flex items-center justify-center ml-1">
                     <i class="ri-arrow-down-s-line"></i>
@@ -263,28 +205,11 @@
                 </button>
                 <div
                   class="absolute right-0 mt-1 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-10 hidden"
-                  id="sortDropdown"
-                >
-                  <button
-                    class="w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
-                  >
-                    최신순
-                  </button>
-                  <button
-                    class="w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
-                  >
-                    인기순
-                  </button>
-                  <button
-                    class="w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
-                  >
-                    조회순
-                  </button>
-                  <button
-                    class="w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
-                  >
-                    댓글순
-                  </button>
+                  id="sortDropdown">
+                  <button class="w-full text-left px-3 py-2 text-sm hover:bg-gray-100">최신순</button>
+                  <button class="w-full text-left px-3 py-2 text-sm hover:bg-gray-100">인기순</button>
+                  <button class="w-full text-left px-3 py-2 text-sm hover:bg-gray-100">조회순</button>
+                  <button class="w-full text-left px-3 py-2 text-sm hover:bg-gray-100">댓글순</button>
                 </div>
               </div>
             </div>
@@ -292,9 +217,7 @@
             <div id="communityListContainer" class="space-y-4">
               <!--  -->
               <div data-placeholder="loading" class="text-center py-8 hidden">
-                <i
-                  class="ri-loader-4-line animate-spin text-2xl text-primary"
-                ></i>
+                <i class="ri-loader-4-line animate-spin text-2xl text-primary"></i>
                 <p class="mt-2 text-gray-500">게시글을 불러오는 중...</p>
               </div>
               <div data-placeholder="empty" class="text-center py-8 hidden">
@@ -379,29 +302,17 @@
                   class="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 rounded-l-md"
                   >이전</a
                 >
-                <a
-                  href="#"
-                  class="px-3 py-2 border-t border-b border-gray-300 bg-primary text-white"
-                  >1</a
-                >
-                <a
-                  href="#"
-                  class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+                <a href="#" class="px-3 py-2 border-t border-b border-gray-300 bg-primary text-white">1</a>
+                <a href="#" class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
                   >2</a
                 >
-                <a
-                  href="#"
-                  class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+                <a href="#" class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
                   >3</a
                 >
-                <a
-                  href="#"
-                  class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+                <a href="#" class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
                   >4</a
                 >
-                <a
-                  href="#"
-                  class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+                <a href="#" class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
                   >5</a
                 >
                 <a
@@ -420,23 +331,13 @@
             <div class="bg-white rounded-lg shadow-sm p-4">
               <h3 class="font-medium mb-3">인기 태그</h3>
               <div id="popularTagsContainer" class="flex flex-wrap gap-2">
-                <div
-                  data-placeholder="loading-popular-tags"
-                  class="text-center py-3 hidden"
-                >
-                  <i
-                    class="ri-loader-4-line animate-spin text-lg text-primary"
-                  ></i>
+                <div data-placeholder="loading-popular-tags" class="text-center py-3 hidden">
+                  <i class="ri-loader-4-line animate-spin text-lg text-primary"></i>
                   <p class="mt-1 text-xs text-gray-500">태그 로딩 중...</p>
                 </div>
-                <div
-                  data-placeholder="empty-popular-tags"
-                  class="text-center py-3 hidden"
-                >
+                <div data-placeholder="empty-popular-tags" class="text-center py-3 hidden">
                   <i class="ri-information-line text-lg text-gray-400"></i>
-                  <p class="mt-1 text-xs text-gray-500">
-                    인기 태그가 없습니다.
-                  </p>
+                  <p class="mt-1 text-xs text-gray-500">인기 태그가 없습니다.</p>
                 </div>
 
                 <!-- testData -->
@@ -458,25 +359,13 @@
               <h3 class="font-medium mb-3">주간 인기 게시글</h3>
               <ul id="weeklyPopularPostsContainer" class="space-y-3">
                 <!-- loading -->
-                <div
-                  data-placeholder="loading-weekly-popular"
-                  class="text-center py-4 hidden"
-                >
-                  <i
-                    class="ri-loader-4-line animate-spin text-xl text-primary"
-                  ></i>
-                  <p class="mt-1 text-xs text-gray-500">
-                    주간 인기글 로딩 중...
-                  </p>
+                <div data-placeholder="loading-weekly-popular" class="text-center py-4 hidden">
+                  <i class="ri-loader-4-line animate-spin text-xl text-primary"></i>
+                  <p class="mt-1 text-xs text-gray-500">주간 인기글 로딩 중...</p>
                 </div>
-                <div
-                  data-placeholder="empty-weekly-popular"
-                  class="text-center py-4 hidden"
-                >
+                <div data-placeholder="empty-weekly-popular" class="text-center py-4 hidden">
                   <i class="ri-information-line text-xl text-gray-400"></i>
-                  <p class="mt-1 text-xs text-gray-500">
-                    주간 인기 게시글이 없습니다.
-                  </p>
+                  <p class="mt-1 text-xs text-gray-500">주간 인기 게시글이 없습니다.</p>
                 </div>
                 <!-- loading -->
 
@@ -558,37 +447,22 @@
             <div class="bg-white rounded-lg shadow-sm p-4">
               <h3 class="font-medium mb-3">활발한 사용자</h3>
 
-              <div
-                data-placeholder="loading-active-users"
-                class="text-center py-4 hidden"
-              >
-                <i
-                  class="ri-loader-4-line animate-spin text-xl text-primary"
-                ></i>
-                <p class="mt-1 text-xs text-gray-500">
-                  활발한 사용자 로딩 중...
-                </p>
+              <div data-placeholder="loading-active-users" class="text-center py-4 hidden">
+                <i class="ri-loader-4-line animate-spin text-xl text-primary"></i>
+                <p class="mt-1 text-xs text-gray-500">활발한 사용자 로딩 중...</p>
               </div>
-              <div
-                data-placeholder="empty-active-users"
-                class="text-center py-4 hidden"
-              >
+              <div data-placeholder="empty-active-users" class="text-center py-4 hidden">
                 <i class="ri-information-line text-xl text-gray-400"></i>
-                <p class="mt-1 text-xs text-gray-500">
-                  활발한 사용자가 없습니다.
-                </p>
+                <p class="mt-1 text-xs text-gray-500">활발한 사용자가 없습니다.</p>
               </div>
 
               <ul id="activeUsersContainer" class="space-y-3">
                 <li class="flex items-center gap-2">
-                  <div
-                    class="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden"
-                  >
+                  <div class="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
                     <img
                       src="https://readdy.ai/api/search-image?query=professional%2520asian%2520male%2520portrait%252C%2520neutral%2520background%252C%2520professional%2520looking%252C%2520high%2520quality&width=100&height=100&seq=1&orientation=squarish"
                       alt="프로필"
-                      class="w-full h-full object-cover object-top"
-                    />
+                      class="w-full h-full object-cover object-top" />
                   </div>
                   <div class="flex-1">
                     <p class="text-sm font-medium">김민준</p>
@@ -596,14 +470,11 @@
                   </div>
                 </li>
                 <li class="flex items-center gap-2">
-                  <div
-                    class="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden"
-                  >
+                  <div class="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
                     <img
                       src="https://readdy.ai/api/search-image?query=professional%2520asian%2520female%2520portrait%252C%2520neutral%2520background%252C%2520friendly%2520smile%252C%2520high%2520quality&width=100&height=100&seq=2&orientation=squarish"
                       alt="프로필"
-                      class="w-full h-full object-cover object-top"
-                    />
+                      class="w-full h-full object-cover object-top" />
                   </div>
                   <div class="flex-1">
                     <p class="text-sm font-medium">이지은</p>
@@ -611,14 +482,11 @@
                   </div>
                 </li>
                 <li class="flex items-center gap-2">
-                  <div
-                    class="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden"
-                  >
+                  <div class="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
                     <img
                       src="https://readdy.ai/api/search-image?query=professional%2520asian%2520male%2520portrait%252C%2520neutral%2520background%252C%2520casual%2520business%2520attire%252C%2520high%2520quality&width=100&height=100&seq=7&orientation=squarish"
                       alt="프로필"
-                      class="w-full h-full object-cover object-top"
-                    />
+                      class="w-full h-full object-cover object-top" />
                   </div>
                   <div class="flex-1">
                     <p class="text-sm font-medium">이태준</p>
@@ -626,14 +494,11 @@
                   </div>
                 </li>
                 <li class="flex items-center gap-2">
-                  <div
-                    class="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden"
-                  >
+                  <div class="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
                     <img
                       src="https://readdy.ai/api/search-image?query=professional%2520asian%2520female%2520portrait%252C%2520neutral%2520background%252C%2520casual%2520style%252C%2520high%2520quality&width=100&height=100&seq=4&orientation=squarish"
                       alt="프로필"
-                      class="w-full h-full object-cover object-top"
-                    />
+                      class="w-full h-full object-cover object-top" />
                   </div>
                   <div class="flex-1">
                     <p class="text-sm font-medium">최서연</p>
@@ -641,14 +506,11 @@
                   </div>
                 </li>
                 <li class="flex items-center gap-2">
-                  <div
-                    class="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden"
-                  >
+                  <div class="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
                     <img
                       src="https://readdy.ai/api/search-image?query=professional%2520asian%2520male%2520portrait%252C%2520neutral%2520background%252C%2520glasses%252C%2520friendly%2520look%252C%2520high%2520quality&width=100&height=100&seq=3&orientation=squarish"
                       alt="프로필"
-                      class="w-full h-full object-cover object-top"
-                    />
+                      class="w-full h-full object-cover object-top" />
                   </div>
                   <div class="flex-1">
                     <p class="text-sm font-medium">박준호</p>
@@ -668,40 +530,27 @@
     <template id="postItemTemplate">
       <div
         class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition cursor-pointer post-item flex flex-col"
-        data-post-id=""
-      >
+        data-post-id="">
         <div>
           <div class="flex items-start gap-3 mb-3">
-            <div
-              class="w-10 h-10 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden"
-            >
-              <img
-                src=""
-                alt="프로필"
-                class="w-full h-full object-cover profile-img"
-              />
+            <div class="w-10 h-10 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
+              <img src="" alt="프로필" class="w-full h-full object-cover profile-img" />
             </div>
             <div>
               <h3 class="font-medium text-sm nickname"></h3>
               <div class="flex items-center text-xs text-gray-500">
                 <span class="post-date"></span>
                 <span class="mx-1">•</span>
-                <span
-                  class="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded text-xs post-category"
-                ></span>
+                <span class="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded text-xs post-category"></span>
               </div>
             </div>
           </div>
-          <h4
-            class="font-medium mb-2 text-base leading-snug line-clamp-2 post-title"
-          ></h4>
+          <h4 class="font-medium mb-2 text-base leading-snug line-clamp-2 post-title"></h4>
         </div>
 
         <p class="text-sm text-gray-600 mb-3 post-content line-clamp-2"></p>
 
-        <div
-          class="flex items-center justify-between text-sm text-gray-500 mt-auto pt-3"
-        >
+        <div class="flex items-center justify-between text-sm text-gray-500 mt-auto pt-3">
           <div class="flex items-center space-x-3">
             <div class="flex items-center" title="조회수">
               <div class="w-4 h-4 flex items-center justify-center mr-1">
@@ -729,17 +578,13 @@
 
     <!-- 주간 인기글 템플릿 -->
     <template id="weeklyPopularPostItemTemplate">
-      <li
-        class="weekly-popular-item group border-b border-gray-100 pb-3 last:border-b-0 last:pb-0"
-      >
+      <li class="weekly-popular-item group border-b border-gray-100 pb-3 last:border-b-0 last:pb-0">
         <a href="#" class="block hover:text-primary weekly-post-link">
           <div class="flex items-center text-xs text-gray-500 mb-1">
             <span class="weekly-post-rank px-1.5 rounded mr-1.5"></span>
             <span class="weekly-post-category">카테고리</span>
           </div>
-          <p class="text-sm font-medium line-clamp-2 weekly-post-title">
-            게시글 제목
-          </p>
+          <p class="text-sm font-medium line-clamp-2 weekly-post-title">게시글 제목</p>
         </a>
       </li>
     </template>
@@ -747,14 +592,8 @@
     <!-- ActiveUser 템플릿 -->
     <template id="activeUserItemTemplate">
       <li class="flex items-center gap-2">
-        <div
-          class="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden"
-        >
-          <img
-            src=""
-            alt="프로필"
-            class="w-full h-full object-cover active-user-profile-img"
-          />
+        <div class="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
+          <img src="" alt="프로필" class="w-full h-full object-cover active-user-profile-img" />
         </div>
         <div class="flex-1">
           <p class="text-sm font-medium active-user-nickname"></p>
