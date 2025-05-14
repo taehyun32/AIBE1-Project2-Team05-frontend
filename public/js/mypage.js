@@ -658,7 +658,7 @@ async function populateProfileData() {
 
     })
 
-// ✅ 여기 넣으면 돼!
+
     document.addEventListener('DOMContentLoaded', () => {
       const closeBtn = document.getElementById('close-popup');
       if (closeBtn) {
@@ -855,7 +855,7 @@ async function populateProfileData() {
     const container = document.getElementById('interest-qna-list');
     if (!container || !posts || posts.length === 0) return;
 
-    // ✅ 여기에서 응답 데이터 로그 확인
+    //  응답 데이터 로그 확인
     console.log("🔍 [QnA 리스트 응답]:", posts);
     posts.forEach((post, idx) => {
       console.log(`📌 QnA[${idx}]`);
