@@ -337,15 +337,66 @@ function renderPostDetail(post) {
   if (elements.likeCount) elements.likeCount.textContent = post.likeCount || 0;
   if (elements.commentCount) elements.commentCount.textContent = post.commentCount || 0;
 
-  // 이미지 표시
-  if (elements.postImages && post.imageUrls && post.imageUrls.length > 0) {
-    elements.postImages.innerHTML = post.imageUrls.map(url => `
-      <div class="mb-3">
-        <img src="${url}" alt="게시글 이미지" class="rounded-md max-w-full">
-      </div>
-    `).join('');
-  } else if (elements.postImages) {
-    elements.postImages.style.display = 'none';
+// 이미지 표시 부분 수정
+  if (elements.postImages) {
+    // 이미지 URL 존재 여부 로깅
+    console.log('게시글 이미지 URL 목록:', post.imageUrls);
+
+    // 게시글 내용에 이미지 태그가 있는지 확인
+    const contentHasImages = elements.postContentBody &&
+        elements.postContentBody.innerHTML &&
+        elements.postContentBody.innerHTML.includes('<img');
+
+    console.log('게시글 내용에 이미지 태그 존재 여부:', contentHasImages);
+
+    // 게시글 내용에 이미지가 없고, imageUrls가 있는 경우에만 별도로 이미지 표시
+    if (!contentHasImages && post.imageUrls && post.imageUrls.length > 0) {
+      // 배열인 경우
+      if (Array.isArray(post.imageUrls)) {
+        elements.postImages.innerHTML = post.imageUrls.map(url => `
+                <div class="mb-3">
+                    <img src="${url}" alt="게시글 이미지" class="rounded-md max-w-full" onerror="this.onerror=null; this.src='./assets/images/image-error.png'; console.error('이미지 로드 실패:', this.src);">
+                </div>
+            `).join('');
+      }
+      // 문자열인 경우 (여러 URL이 콤마로 구분된 형태일 수 있음)
+      else if (typeof post.imageUrls === 'string') {
+        // 콤마로 구분된 경우 배열로 변환
+        const urlArray = post.imageUrls.includes(',')
+            ? post.imageUrls.split(',').map(url => url.trim())
+            : [post.imageUrls.trim()];
+
+        elements.postImages.innerHTML = urlArray.map(url => `
+                <div class="mb-3">
+                    <img src="${url}" alt="게시글 이미지" class="rounded-md max-w-full" onerror="this.onerror=null; this.src='./assets/images/image-error.png'; console.error('이미지 로드 실패:', this.src);">
+                </div>
+            `).join('');
+      }
+
+      // 이미지 컨테이너 표시
+      elements.postImages.style.display = 'block';
+    } else {
+      // 이미지가 없거나 게시글 내용에 이미지가 이미 포함된 경우 숨김
+      elements.postImages.style.display = 'none';
+    }
+
+    // 게시글 내용의 모든 이미지 태그에 오류 처리 및 스타일 추가
+    if (elements.postContentBody) {
+      const contentImages = elements.postContentBody.querySelectorAll('img');
+      if (contentImages.length > 0) {
+        contentImages.forEach(img => {
+          // 이미지 로드 오류 처리
+          img.onerror = function() {
+            this.onerror = null;
+            this.src = './assets/images/image-error.png';
+            console.error('내용 내 이미지 로드 실패:', this.src);
+          };
+
+          // 이미지 클래스 추가
+          img.classList.add('rounded-md', 'max-w-full', 'my-4');
+        });
+      }
+    }
   }
 
   // 태그 표시

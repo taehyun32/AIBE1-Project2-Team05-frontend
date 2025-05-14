@@ -230,15 +230,15 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("editor").focus();
             return;
         }
+        // 게시글 생성 API 호출
+        const postData = {
+            title: title,
+            category: category.toUpperCase(), // 백엔드 enum과 일치시키기
+            tags: Array.from(tags),
+            content: content
+        };
 
         try {
-            // 게시글 생성 API 호출
-            const postData = {
-                title: title,
-                category: category.toUpperCase(), // 백엔드 enum과 일치시키기
-                tags: Array.from(tags),
-                content: content
-            };
 
             const response = await fetch('/api/v1/community/new', {
                 method: 'POST',
@@ -262,54 +262,93 @@ document.addEventListener("DOMContentLoaded", function () {
             const postId = result.data.id;
 
             // 이미지가 있으면 이미지 업로드 진행
+            let uploadSuccessful = true;
+            let updatedContent = content;
+
+// 게시글 생성 시 이미지 업로드 부분 수정
+// 이미지가 있으면 이미지 업로드 진행
             if (uploadedFiles.length > 0) {
                 const formData = new FormData();
                 uploadedFiles.forEach(file => {
                     formData.append('images', file);
                 });
 
-                const imageResponse = await fetch(`/api/v1/community/${postId}/images`, {
-                    method: 'POST',
-                    credentials: 'include',
-                    body: formData
-                });
-
-                if (!imageResponse.ok) {
-                    console.error('이미지 업로드 실패');
-                } else {
-                    // 업로드 성공 시 응답으로 받은 이미지 URL들을 콘텐츠에 추가
-                    const imageResult = await imageResponse.json();
-                    const object_path = imageResult.data;
-
-                    // 이미지 태그를 추가한 새로운 콘텐츠 생성
-                    let updatedContent = content;
-                    object_path.forEach(url => {
-                        updatedContent += `<br><img src="${url}" alt="업로드된 이미지" class="max-w-full my-4" />`;
-                    });
-
-                    // 게시글 업데이트 (선택사항 - 필요한 경우에만)
-                    const updateResponse = await fetch(`/api/v1/community/detail/${postId}`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
+                try {
+                    const imageResponse = await fetch(`/api/v1/community/${postId}/images`, {
+                        method: 'POST',
                         credentials: 'include',
-                        body: JSON.stringify({
-                            title: title,
-                            category: category.toUpperCase(),
-                            tags: Array.from(tags),
-                            content: updatedContent
-                        })
+                        body: formData
                     });
 
-                    if (!updateResponse.ok) {
-                        console.error('게시글 업데이트 실패');
+                    if (!imageResponse.ok) {
+                        console.error('이미지 업로드 실패:', await imageResponse.text());
+                        alert('게시글은 등록되었으나 이미지 첨부에 실패했습니다.');
+                    } else {
+                        // 업로드 성공 시 응답으로 받은 이미지 URL들을 콘텐츠에 추가
+                        const imageResult = await imageResponse.json();
+
+                        // 응답 구조 확인 및 로깅
+                        console.log('이미지 업로드 응답:', imageResult);
+
+                        // 데이터 구조 검증
+                        if (!imageResult || !imageResult.data) {
+                            console.error('이미지 URL 데이터가 없습니다:', imageResult);
+                            alert('게시글은 등록되었으나 이미지 처리 중 오류가 발생했습니다.');
+                        } else {
+                            const imageUrls = imageResult.data;
+
+                            // URL 형식 확인
+                            console.log('이미지 URL 목록:', imageUrls);
+
+                            // 이미지 태그를 추가한 새로운 콘텐츠 생성
+                            let updatedContent = content;
+                            imageUrls.forEach(url => {
+                                // URL 형식 검증
+                                if (typeof url === 'string' && url.trim() !== '') {
+                                    updatedContent += `<br><img src="${url}" alt="업로드된 이미지" class="max-w-full my-4" />`;
+                                } else {
+                                    console.warn('유효하지 않은 이미지 URL:', url);
+                                }
+                            });
+
+                            // 게시글 업데이트 - 내용이 변경된 경우만 수행
+                            if (updatedContent !== content) {
+                                try {
+                                    const updateResponse = await fetch(`/api/v1/community/detail/${postId}`, {
+                                        method: 'PATCH',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                        },
+                                        credentials: 'include',
+                                        body: JSON.stringify({
+                                            title: title,
+                                            category: category.toUpperCase(),
+                                            tags: Array.from(tags),
+                                            content: updatedContent
+                                        })
+                                    });
+
+                                    if (!updateResponse.ok) {
+                                        console.error('게시글 업데이트 실패:', await updateResponse.text());
+                                        alert('게시글은 등록되었으나 이미지 첨부에 문제가 발생했습니다.');
+                                    } else {
+                                        console.log('게시글 업데이트 성공');
+                                    }
+                                } catch (updateError) {
+                                    console.error('게시글 업데이트 중 오류 발생:', updateError);
+                                    alert('게시글은 등록되었으나 이미지 첨부에 문제가 발생했습니다.');
+                                }
+                            }
+                        }
                     }
+                } catch (error) {
+                    console.error('이미지 업로드 중 오류 발생:', error);
+                    alert('게시글은 등록되었으나 이미지 첨부 중 오류가 발생했습니다.');
                 }
             }
 
             alert('게시글이 등록되었습니다.');
-            window.location.href = '/community';
+            window.location.href = `/community-detail.html?postId=${postId}`;
         } catch (error) {
             console.error('Error:', error);
             alert('게시글 작성 중 오류가 발생했습니다.');
