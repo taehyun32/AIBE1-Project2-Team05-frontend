@@ -5,14 +5,6 @@ function handleImageError(image) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  // include 요소 처리
-  const includeElements = document.querySelectorAll("[data-include-path]");
-  includeElements.forEach(async function (el) {
-    const path = el.getAttribute("data-include-path");
-    const response = await fetch(path);
-    const html = await response.text();
-    el.innerHTML = html;
-  });
 
   // 탭 전환 기능
   const tabButtons = document.querySelectorAll(".tab-button");
@@ -48,9 +40,10 @@ document.addEventListener("DOMContentLoaded", function () {
       } else if (tabId === "reviews") {
         // 작성 리뷰 API 호출
         loadReviewsData(nickname);
-      } else if (tabId === "settings") {
-        // 프로필 설정 API 호출
-        loadProfileSettingsData(nickname);
+      } if (typeof populateProfileData === "function") {
+        populateProfileData();
+      } else {
+        console.warn("populateProfileData 함수가 정의되어 있지 않습니다.");
       }
     });
   });
@@ -72,15 +65,10 @@ async function loadUserProfile() {
 
   try {
     // API 호출하여 사용자 정보 가져오기
-    const response = await fetch(`/api/v1/users/${nickname}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
+    const profileData = await window.getProfile(); // mypage.js의 getProfile 함수 호출
 
-    if (response.status === 401) {
+
+    if (!profileData) {
       const retry = await handle401Error();
       if (!retry) {
         window.location.href = "/login";
@@ -89,30 +77,12 @@ async function loadUserProfile() {
       // 토큰 갱신 성공, 요청 재시도
       return await loadUserProfile();
     }
-
-    if (!response.ok) {
-      console.error("사용자 정보 요청 실패:", response.status);
-      showErrorMessage("사용자 정보를 불러올 수 없습니다.");
-      return;
-    }
-
-    const result = await response.json();
-
-    if (result.status === 200 && result.code === "SUCCESS" && result.data) {
-      // 만약 사용자가 mentor인 경우 /mypage로 리다이렉트
-      if (result.data.role === "MENTOR") {
-        window.location.href = "/mypage";
-        return;
-      }
-
-      updateUserProfile(result.data);
-
+    const me = checkMe() === profileData.nickname;
+    console.log(checkMe())
+      updateUserProfile(profileData);
       // me 값에 따라 탭 버튼 표시/숨김 처리
-      handleTabVisibility(result.data.me);
-    } else {
-      console.error("API 응답 형식이 예상과 다릅니다:", result);
-      showErrorMessage("사용자 정보를 불러올 수 없습니다.");
-    }
+      handleTabVisibility(me);
+
   } catch (error) {
     console.error("사용자 정보 조회 중 오류 발생:", error);
     showErrorMessage("사용자 정보를 불러올 수 없습니다.");
@@ -138,8 +108,9 @@ function updateUserProfile(userData) {
 
   // 관심 분야 및 지역 업데이트
   const infoElement = document.getElementById("user-info");
+
   if (infoElement) {
-    const interest = userData.interest || "";
+    const interest = userData.interestDisplayName || "";
     const location = (userData.area || "") + (userData.sigungu ? " " + userData.sigungu : "");
     infoElement.textContent = `${interest} | ${location}`;
   }
@@ -179,12 +150,13 @@ function handleTabVisibility(isMe) {
     // 본인이 아닌 경우 리뷰 및 설정 탭 버튼 숨김
     if (reviewsTabButton) reviewsTabButton.style.display = "none";
     if (settingsTabButton) settingsTabButton.style.display = "none";
-  } else {
+  }
     // 본인인 경우 모든 탭 버튼 표시
     if (reviewsTabButton) reviewsTabButton.style.display = "";
     if (settingsTabButton) settingsTabButton.style.display = "";
-  }
 }
+
+window.handleTabVisibility = handleTabVisibility;
 
 // 활동 내역 데이터 로드
 async function loadActivityData(nickname) {
@@ -201,20 +173,20 @@ async function loadActivityData(nickname) {
   console.log("활동 내역 데이터 로드:", nickname);
 }
 
-// 프로필 설정 데이터 로드
-async function loadProfileSettingsData(nickname) {
-  // nickname이 없으면 세션스토리지에서 가져옵니다
-  if (!nickname) {
-    nickname = sessionStorage.getItem("nickname");
-    if (!nickname) {
-      console.error("닉네임 정보가 없습니다.");
-      return;
-    }
-  }
-
-  // 여기에 프로필 설정 데이터 로드 로직 구현 (틀만)
-  console.log("프로필 설정 데이터 로드:", nickname);
-}
+// // 프로필 설정 데이터 로드
+// async function loadProfileSettingsData(nickname) {
+//   // nickname이 없으면 세션스토리지에서 가져옵니다
+//   if (!nickname) {
+//     nickname = sessionStorage.getItem("nickname");
+//     if (!nickname) {
+//       console.error("닉네임 정보가 없습니다.");
+//       return;
+//     }
+//   }
+//
+//   // 여기에 프로필 설정 데이터 로드 로직 구현 (틀만)
+//   console.log("프로필 설정 데이터 로드:", nickname);
+// }
 
 // 작성 리뷰 데이터 로드
 async function loadReviewsData(nickname, page = 0) {
@@ -594,3 +566,84 @@ function showErrorMessage(message) {
     mainContainer.appendChild(errorDiv);
   }
 }
+
+async function checkMe() {
+  try {
+    const response = await fetch("/api/v1/authUser/me", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+    if(response.status === 200) {
+      const result = await response.json();
+      return result.data.nickname;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+// ===== 지역/시군구 드롭다운 전체 로직 (멘티 페이지용) =====
+document.addEventListener("DOMContentLoaded", () => {
+  const regionButton    = document.getElementById("regionButton");
+  const regionDropdown  = document.getElementById("regionDropdown");
+  const sigunguButton   = document.getElementById("sigunguButton");
+  const sigunguDropdown = document.getElementById("sigunguDropdown");
+  const sigunguOptions  = document.getElementById("sigunguOptions");
+
+  if (!regionButton || !regionDropdown || !sigunguButton || !sigunguDropdown || !sigunguOptions) {
+    console.error("[지역/시군구] 필요한 요소가 없습니다.");
+    return;
+  }
+
+  // 1) 토글: 지역 버튼 클릭 → 지역 드롭다운 토글
+  regionButton.addEventListener("click", e => {
+    e.stopPropagation();
+    regionDropdown.classList.toggle("hidden");
+    sigunguDropdown.classList.add("hidden");
+  });
+
+  // 2) 토글: 시군구 버튼 클릭 → 시군구 드롭다운 토글
+  sigunguButton.addEventListener("click", e => {
+    e.stopPropagation();
+    // 시군구 목록이 비어있으면, 지역 선택 후 fetchSigunguData가 채워줄 것
+    sigunguDropdown.classList.toggle("hidden");
+    regionDropdown.classList.add("hidden");
+  });
+
+  // 3) 바깥 클릭 시 모두 닫기
+  document.addEventListener("click", () => {
+    regionDropdown.classList.add("hidden");
+    sigunguDropdown.classList.add("hidden");
+  });
+
+  // 4) 지역 선택 → 버튼 반영 + 시군구 로드
+  regionDropdown.querySelectorAll("button[data-area]").forEach(opt => {
+    opt.addEventListener("click", e => {
+      e.preventDefault();
+      const name = opt.textContent.trim();
+      const code = opt.getAttribute("data-area");
+      // 버튼 텍스트/속성
+      regionButton.querySelector("span").textContent = name;
+      regionButton.setAttribute("data-area", code);
+      // 닫고, 시군구 불러오기
+      regionDropdown.classList.add("hidden");
+      if (typeof fetchSigunguData === "function") {
+        fetchSigunguData(code);
+      }
+    });
+  });
+
+  // 5) 시군구 선택 → 버튼 반영
+  sigunguOptions.addEventListener("click", e => {
+    const btn = e.target.closest("button[data-sigungu]");
+    if (!btn) return;
+    e.preventDefault();
+    const name = btn.textContent.trim();
+    const code = btn.getAttribute("data-sigungu");
+    sigunguButton.querySelector("span").textContent = name;
+    sigunguButton.setAttribute("data-sigungu", code);
+    sigunguDropdown.classList.add("hidden");
+  });
+});
