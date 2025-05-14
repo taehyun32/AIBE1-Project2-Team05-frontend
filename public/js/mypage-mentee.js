@@ -5,6 +5,7 @@ function handleImageError(image) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+
   // 탭 전환 기능
   const tabButtons = document.querySelectorAll(".tab-button");
   const tabContents = document.querySelectorAll(".tab-content");
@@ -31,7 +32,6 @@ document.addEventListener("DOMContentLoaded", function () {
         await loadUserProfile();
         return;
       }
-
       // 닉네임이 있으면 해당 탭에 맞는 API를 호출합니다
       if (tabId === "activity") {
         // 활동 내역 API 호출
@@ -39,10 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
       } else if (tabId === "reviews") {
         // 작성 리뷰 API 호출
         loadReviewsData(nickname);
-      }
-      if (typeof populateProfileData === "function") {
-        populateProfileData();
-      } else {
+      }  else {
         console.warn("populateProfileData 함수가 정의되어 있지 않습니다.");
       }
     });
@@ -67,6 +64,7 @@ async function loadUserProfile() {
     // API 호출하여 사용자 정보 가져오기
     const profileData = await window.getProfile(); // mypage.js의 getProfile 함수 호출
 
+
     if (!profileData) {
       const retry = await handle401Error();
       if (!retry) {
@@ -77,10 +75,12 @@ async function loadUserProfile() {
       return await loadUserProfile();
     }
     const me = checkMe() === profileData.nickname;
-    console.log(checkMe());
-    updateUserProfile(profileData);
-    // me 값에 따라 탭 버튼 표시/숨김 처리
-    handleTabVisibility(me);
+    console.log(checkMe())
+      updateUserProfile(profileData);
+      // me 값에 따라 탭 버튼 표시/숨김 처리
+      handleTabVisibility(me);
+    await populateProfileData();
+
   } catch (error) {
     console.error("사용자 정보 조회 중 오류 발생:", error);
     showErrorMessage("사용자 정보를 불러올 수 없습니다.");
@@ -584,16 +584,8 @@ async function checkMe() {
 }
 // ===== 지역/시군구 드롭다운 전체 로직 (멘티 페이지용) =====
 document.addEventListener("DOMContentLoaded", () => {
-  const regionButton = document.getElementById("regionButton");
-  const regionDropdown = document.getElementById("regionDropdown");
-  const sigunguButton = document.getElementById("sigunguButton");
-  const sigunguDropdown = document.getElementById("sigunguDropdown");
-  const sigunguOptions = document.getElementById("sigunguOptions");
-
-  if (!regionButton || !regionDropdown || !sigunguButton || !sigunguDropdown || !sigunguOptions) {
-    console.error("[지역/시군구] 필요한 요소가 없습니다.");
-    return;
-  }
+  const regionButton    = document.getElementById("regionButton");
+  // const regionDropdown  = document.getElementById("regionDropdown");
 
   // 1) 토글: 지역 버튼 클릭 → 지역 드롭다운 토글
   regionButton.addEventListener("click", (e) => {
@@ -602,23 +594,9 @@ document.addEventListener("DOMContentLoaded", () => {
     sigunguDropdown.classList.add("hidden");
   });
 
-  // 2) 토글: 시군구 버튼 클릭 → 시군구 드롭다운 토글
-  sigunguButton.addEventListener("click", (e) => {
-    e.stopPropagation();
-    // 시군구 목록이 비어있으면, 지역 선택 후 fetchSigunguData가 채워줄 것
-    sigunguDropdown.classList.toggle("hidden");
-    regionDropdown.classList.add("hidden");
-  });
-
-  // 3) 바깥 클릭 시 모두 닫기
-  document.addEventListener("click", () => {
-    regionDropdown.classList.add("hidden");
-    sigunguDropdown.classList.add("hidden");
-  });
-
-  // 4) 지역 선택 → 버튼 반영 + 시군구 로드
-  regionDropdown.querySelectorAll("button[data-area]").forEach((opt) => {
-    opt.addEventListener("click", (e) => {
+    // 4) 지역 선택 → 버튼 반영 + 시군구 로드
+  regionDropdown.querySelectorAll("button[data-area]").forEach(opt => {
+    opt.addEventListener("click", e => {
       e.preventDefault();
       const name = opt.textContent.trim();
       const code = opt.getAttribute("data-area");
@@ -631,17 +609,5 @@ document.addEventListener("DOMContentLoaded", () => {
         fetchSigunguData(code);
       }
     });
-  });
-
-  // 5) 시군구 선택 → 버튼 반영
-  sigunguOptions.addEventListener("click", (e) => {
-    const btn = e.target.closest("button[data-sigungu]");
-    if (!btn) return;
-    e.preventDefault();
-    const name = btn.textContent.trim();
-    const code = btn.getAttribute("data-sigungu");
-    sigunguButton.querySelector("span").textContent = name;
-    sigunguButton.setAttribute("data-sigungu", code);
-    sigunguDropdown.classList.add("hidden");
   });
 });
