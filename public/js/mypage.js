@@ -269,7 +269,8 @@ async function populateProfileData() {
               el.innerHTML = html;
             })
         );
-        // ✅ include가 끝난 후에만 실행하도록 여기에 탭/렌더링 JS를 배치해야 해!
+
+        // include가 끝난 후에만 실행하도록 여기에 탭/렌더링 JS를 배치
         initMyPage();
       });
 
@@ -903,39 +904,99 @@ async function populateProfileData() {
 
 
 // ✅ [추가] 진행 중인 매칭 섹션 렌더링 함수
-  function renderOngoingMatchingSection(matchings) {
-    const container = document.getElementById("ongoing-matching-list");
-    if (!container || !matchings || matchings.length === 0) return;
+//   function renderOngoingMatchingSection(matchings) {
+//     const container = document.getElementById("ongoing-matching-list");
+//     if (!container || !matchings || matchings.length === 0) return;
+//
+//     container.innerHTML = '';
+//
+//     matchings.forEach(match => {
+//       // 기본값 처리
+//       const profileImage = match.menteeProfileImageUrl || '/images/default-profile.png';
+//       const nickname = match.menteeNickname || '닉네임 없음';
+//       const matchingDate = match.matchingDate?.split("T")[0] || '날짜 없음';
+//       const category = match.category || '카테고리 없음';
+//       const tag = match.tag || '-';
+//       const description = match.description || '';
+//       const contactLink = match.contactLink || '#';
+//       const status = match.status || '진행중';
+//
+//       // 상태 pill 색상 지정
+//       const statusColorClass = status === "진행중"
+//           ? "bg-yellow-100 text-yellow-700"
+//           : "bg-green-100 text-green-700";
+//
+//       const card = document.createElement("div");
+//       card.className = "border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition";
+//
+//       card.innerHTML = `
+//       <div class="flex items-start gap-3">
+//         <!-- 프로필 이미지 -->
+//         <div class="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
+//           <img src="${profileImage}" alt="프로필" class="w-full h-full object-cover">
+//         </div>
+//
+//         <!-- 본문 -->
+//         <div class="flex-1">
+//           <div class="flex justify-between items-start mb-1">
+//             <div>
+//               <p class="text-sm font-medium text-gray-800">${nickname}</p>
+//               <p class="text-xs text-gray-500">${matchingDate} 매칭</p>
+//             </div>
+//             <span class="text-xs ${statusColorClass} px-2 py-1 rounded-full whitespace-nowrap font-medium">
+//               ${status}
+//             </span>
+//           </div>
+//
+//           <div class="text-xs text-purple-600 font-semibold mb-1">${category}</div>
+//           <p class="text-sm text-gray-700 line-clamp-2">${description}</p>
+//
+//           <div class="mt-2 flex justify-end">
+//             <a href="${contactLink || '#'}"
+//                target="_blank"
+//                class="text-sm text-blue-800 font-extrabold hover:underline open-chat-link"
+//                data-haslink="${!!contactLink}">
+//                연락하기
+//             </a>
+//           </div>
+//         </div>
+//       </div>
+//     `;
+//
+//       container.appendChild(card);
+//     });
+//   }
+function renderOngoingMatchingSection(matchings) {
+  const container = document.getElementById("ongoing-matching-list");
+  if (!container || !matchings || matchings.length === 0) return;
 
-    container.innerHTML = '';
+  container.innerHTML = '';
 
-    matchings.forEach(match => {
-      // 기본값 처리
-      const profileImage = match.menteeProfileImageUrl || '/images/default-profile.png';
-      const nickname = match.menteeNickname || '닉네임 없음';
-      const matchingDate = match.matchingDate?.split("T")[0] || '날짜 없음';
-      const category = match.category || '카테고리 없음';
-      const tag = match.tag || '-';
-      const description = match.description || '';
-      const contactLink = match.contactLink || '#';
-      const status = match.status || '진행중';
+  matchings.forEach(match => {
+    // 기본값 처리
+    const profileImage = match.menteeProfileImageUrl || '/images/default-profile.png';
+    const nickname = match.menteeNickname || '닉네임 없음';
+    const matchingDate = match.matchingDate?.split("T")[0] || '날짜 없음';
+    const category = match.category || '카테고리 없음';
+    const tag = match.tag || '-';
+    const description = match.description || '';
+    const contactLink = match.contactLink;  // 빈 문자열 또는 null일 수도 있음
+    const status = match.status || '진행중';
 
-      // 상태 pill 색상 지정
-      const statusColorClass = status === "진행중"
-          ? "bg-yellow-100 text-yellow-700"
-          : "bg-green-100 text-green-700";
+    // 상태 pill 색상 지정
+    const statusColorClass = status === "진행중"
+        ? "bg-green-100 text-green-700"
+        : "bg-gray-100 text-gray-700";
 
-      const card = document.createElement("div");
-      card.className = "border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition";
+    const card = document.createElement("div");
+    card.className = "border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition";
 
-      card.innerHTML = `
+    // 카드 내부 HTML 렌더링
+    card.innerHTML = `
       <div class="flex items-start gap-3">
-        <!-- 프로필 이미지 -->
         <div class="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
           <img src="${profileImage}" alt="프로필" class="w-full h-full object-cover">
         </div>
-
-        <!-- 본문 -->
         <div class="flex-1">
           <div class="flex justify-between items-start mb-1">
             <div>
@@ -946,19 +1007,67 @@ async function populateProfileData() {
               ${status}
             </span>
           </div>
-
           <div class="text-xs text-purple-600 font-semibold mb-1">${category}</div>
           <p class="text-sm text-gray-700 line-clamp-2">${description}</p>
-
-          <div class="mt-2 flex justify-end">
-            <a href="${contactLink}" target="_blank" class="text-sm text-blue-800 font-extrabold hover:underline">연락하기</a>
-          </div>
         </div>
       </div>
     `;
 
-      container.appendChild(card);
-    });
-  }
+// 🔹 연락하기 링크 추가
+    const linkWrapper = document.createElement("div");
+    linkWrapper.className = "mt-2 flex justify-end";
+    linkWrapper.style.position = "relative";
+
+    const link = document.createElement("a");
+    link.href = contactLink || "#";
+    link.target = "_blank";
+    link.className = "text-sm font-extrabold open-chat-link";
+    link.textContent = "연락하기";
+
+    if (status === "완료") {
+      link.classList.add("text-gray-400", "cursor-not-allowed");
+      link.setAttribute("aria-disabled", "true");
+      // ✅ hover용 title 제거
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        // 이미 툴팁이 있다면 제거
+        const existingTooltip = linkWrapper.querySelector('.custom-tooltip');
+        if (existingTooltip) existingTooltip.remove();
+
+        const tooltip = document.createElement("div");
+        tooltip.className = "custom-tooltip";
+        tooltip.innerHTML = `
+      <span class="tooltip-icon">❗</span>
+      <span class="tooltip-text">매칭이 완료된 멘티입니다.</span>
+    `;
+        linkWrapper.appendChild(tooltip);
+
+        setTimeout(() => {
+          tooltip.classList.add("fade-out");
+        }, 2000);
+
+        setTimeout(() => {
+          tooltip.remove();
+        }, 2500);
+      });
+    } else {
+      link.classList.add("text-blue-800", "hover:underline");
+
+      // ✅ 진행중인데 연락처가 없는 경우 alert
+      link.addEventListener("click", (e) => {
+        if (!contactLink || contactLink.trim() === "") {
+          e.preventDefault();
+          alert("이 유저는 오픈채팅 링크를 등록하지 않았습니다.");
+        }
+      });
+    }
+
+    linkWrapper.appendChild(link);
+    card.querySelector(".flex-1").appendChild(linkWrapper);
+
+    container.appendChild(card);
+  });
+}
 
 
