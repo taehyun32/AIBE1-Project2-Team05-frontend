@@ -148,6 +148,8 @@ async function getProfile() {
   return result.data;
 }
 
+window.getProfile = getProfile;
+
 async function populateProfileData() {
   try {
     const data = await getProfile();
@@ -532,6 +534,10 @@ async function populateProfileData() {
           });
         });
 
+        // const Me = checkMe();
+        // const check = sessionStorage.getItem('nickname') === Me;
+
+        // handleTabVisibility(check)
         populateProfileData();
 
         // 지역 드롭다운
@@ -768,6 +774,7 @@ async function populateProfileData() {
       });
 
       if (response.status === 200) {
+        sessionStorage.setItem('nickname', nick);
         await populateProfileData();
         console.log("성공")
       } else {
