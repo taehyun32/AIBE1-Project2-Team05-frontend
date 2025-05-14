@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LinkUp | 마이페이지</title>
+    <title>재능 기부 플랫폼 - 마이페이지</title>
     <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicon/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png" />
@@ -21,30 +21,31 @@
   </head>
   <body class="bg-gray-50">
     <div id="header-placeholder"></div>
-  <main class="container mx-auto px-4 py-8">
-    <!-- 사용자 프로필 헤더 -->
-    <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-      <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
-        <div class="relative">
-          <div class="w-32 h-32 rounded-full bg-gray-200 overflow-hidden">
-            <img
-                    id="profile-image"
-                    src=""
-                    alt="프로필 이미지"
-                    class="w-full h-full object-cover"
-            />
+
+    <main class="container mx-auto px-4 py-8">
+      <!-- 사용자 프로필 헤더 -->
+      <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
+          <div class="relative">
+            <div class="w-32 h-32 rounded-full bg-gray-200 overflow-hidden">
+              <img id="profile-image" src="" alt="프로필 이미지" class="w-full h-full object-cover" />
+            </div>
           </div>
-        </div>
-        <div class="flex-1 text-center md:text-left">
-          <div class="flex flex-col md:flex-row md:items-center gap-2 mb-2">
-            <h1 class="text-2xl font-bold"></h1>
-            <span class="bg-primary text-white text-xs px-2 py-1 rounded-full">멘토</span>
-          </div>
-          <p class="text-gray-600 mb-4"></p>
-          <p class="text-gray-700 mb-4">
-          </p>
-          <div class="flex flex-wrap gap-2">
-            <span class="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full"></span>
+          <div class="flex-1 text-center md:text-left">
+            <div class="flex flex-col md:flex-row md:items-center gap-2 mb-2">
+              <h1 class="text-2xl font-bold">행복한멘토</h1>
+              <span class="bg-primary text-white text-xs px-2 py-1 rounded-full">멘토</span>
+            </div>
+            <p class="text-gray-600 mb-4">웹 개발 전문가 | 서울 강남구</p>
+            <p class="text-gray-700 mb-4">
+              5년차 웹 개발자입니다. 기초부터 실무까지 웹 개발 지식을 나누고 싶습니다. React, Node.js 전문.
+            </p>
+            <div class="flex flex-wrap gap-2">
+              <span class="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full">#프로그래밍</span>
+              <span class="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full">#웹개발</span>
+              <span class="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full">#React</span>
+              <span class="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full">#Node.js</span>
+            </div>
           </div>
         </div>
       </div>
@@ -53,22 +54,22 @@
       <div class="bg-white rounded-lg shadow-sm mb-6">
         <div class="border-b border-gray-200">
           <nav class="flex overflow-x-auto">
-            <button class="tab-button active" data-tab="activity">나의 활동 내역</button>
+            <button class="tab-button active" data-tab="activity">활동 내역</button>
             <button class="tab-button" data-tab="matching">매칭 현황</button>
             <button class="tab-button" data-tab="settings">프로필 설정</button>
           </nav>
         </div>
       </div>
 
-      <!-- 탭 컨텐츠 - 나의 활동 내역 -->
+      <!-- 탭 컨텐츠 - 활동 내역 -->
       <div class="tab-content" id="activity-content">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- 내가 등록한 재능 목록 -->
+          <!-- 등록한 재능 목록 -->
           <div class="bg-white rounded-lg shadow-sm p-6">
             <div class="flex justify-between items-center mb-4">
-              <h2 class="text-lg font-semibold">내가 등록한 재능 목록</h2>
+              <h2 class="text-lg font-semibold">등록한 재능 목록</h2>
               <a
-                href="more-details.html?type=my-talents"
+                href="more-details?type=my-talents"
                 class="text-primary text-sm font-medium hover:underline flex items-center">
                 <i class="ri-add-line mr-1"></i> 더보기
               </a>
@@ -78,12 +79,12 @@
             </ul>
           </div>
 
-          <!-- 내가 작성한 커뮤니티 게시글 목록 -->
+          <!-- 작성 커뮤니티 게시글 목록 -->
           <div class="bg-white rounded-lg shadow-sm p-6">
             <div class="flex justify-between items-center mb-4">
-              <h2 class="text-lg font-semibold">내가 작성한 커뮤니티 게시글</h2>
+              <h2 class="text-lg font-semibold">작성 커뮤니티 목록</h2>
               <a
-                href="more-details.html?type=my-posts"
+                href="more-details?type=my-posts"
                 class="text-primary text-sm font-medium hover:underline flex items-center">
                 <i class="ri-add-line mr-1"></i> 더보기
               </a>
@@ -93,12 +94,12 @@
             </ul>
           </div>
 
-          <!-- 내가 작성한 댓글 목록 -->
+          <!-- 작성 댓글 목록 -->
           <div class="bg-white rounded-lg shadow-sm p-6">
             <div class="flex justify-between items-center mb-4">
-              <h2 class="text-lg font-semibold mb-4">내가 작성한 댓글</h2>
+              <h2 class="text-lg font-semibold mb-4">작성 댓글</h2>
               <a
-                href="more-details.html?type=my-comments"
+                href="more-details?type=my-comments"
                 class="text-primary text-sm font-medium hover:underline flex items-center">
                 <i class="ri-add-line mr-1"></i> 더보기
               </a>
@@ -113,7 +114,7 @@
             <div class="flex justify-between items-center mb-4">
               <h2 class="text-lg font-semibold">관심 목록</h2>
               <a
-                href="more-details.html?type=my-interests&filter=all"
+                href="more-details?type=my-interests&filter=all"
                 class="text-primary text-sm font-medium hover:underline flex items-center">
                 <i class="ri-add-line mr-1"></i> 더보기
               </a>
@@ -147,7 +148,7 @@
               <h2 class="text-lg font-semibold">받은 리뷰</h2>
               <div class="flex items-center gap-2">
                 <a
-                  href="more-details.html?type=reviews"
+                  href="more-details?type=reviews"
                   class="text-primary text-sm font-medium hover:underline flex items-center">
                   <i class="ri-add-line mr-1"></i> 더 보기
                 </a>
@@ -168,12 +169,12 @@
             <div class="flex justify-between items-center mb-2">
               <h2 class="text-lg font-semibold">커뮤니티 질문 답변</h2>
               <!--            <a-->
-              <!--                    href="more-details.html?type=my-posts"-->
+              <!--                    href="more-details?type=my-posts"-->
               <!--                    class="text-primary text-sm font-medium hover:underline flex items-center">-->
               <!--              <i class="ri-add-line mr-1"></i> 더보기-->
               <!--            </a>-->
               <a
-                href="more-details.html?type=interest-qna"
+                href="more-details?type=interest-qna"
                 class="text-sm text-primary font-medium hover:underline whitespace-nowrap flex items-center">
                 더 많은 질문 보기
                 <i class="ri-arrow-right-s-line ml-1"></i>
@@ -229,22 +230,7 @@
             <!-- 상위 2개 항목만 JS가 여기에 렌더링 -->
             <div class="space-y-4" id="mentor-stat-list"></div>
           </div>
-        </div>
-        <!-- 상위 2개 항목만 JS가 여기에 렌더링 -->
-        <div class="space-y-4" id="mentor-stat-list"></div>
-        </div>
 
-        <!-- 진행 중인 매칭 -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-semibold">진행 중인 매칭</h2>
-            <a href="more-details.html?type=ongoing"
-               class="text-primary text-sm font-medium hover:underline flex items-center">
-              <i class="ri-add-line mr-1"></i> 더보기
-            </a>
-          </div>
-          <div class="space-y-4" id="ongoing-matching-list">
-            <!-- JS가 카드들을 렌더링할 영역 -->
           <!-- 진행 중인 매칭 -->
           <div class="bg-white rounded-lg shadow-sm p-6">
             <h2 class="text-lg font-semibold mb-4">진행 중인 매칭</h2>

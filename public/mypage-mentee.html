@@ -4,23 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>재능 기부 플랫폼 - 마이페이지</title>
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="./assets/favicon/apple-touch-icon.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="./assets/favicon/favicon-32x32.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="./assets/favicon/favicon-16x16.png"
-    />
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicon/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png" />
     <link rel="manifest" href="./assets/favicon/site.webmanifest" />
 
     <link rel="stylesheet" href="css/main.compiled.css" />
@@ -28,12 +14,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+KR:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
-      rel="stylesheet"
-    />
+      rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
     <link rel="stylesheet" href="./css/mypage.css" />
     <link rel="stylesheet" href="./css/match.css" />
   </head>
@@ -42,32 +24,23 @@
     <main class="container mx-auto px-4 py-8">
       <!-- 사용자 프로필 헤더 -->
       <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-        <div
-          class="flex flex-col md:flex-row items-center md:items-start gap-6"
-        >
+        <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
           <div class="relative">
             <div class="w-32 h-32 rounded-full bg-gray-200 overflow-hidden">
               <img
                 id="profile-image"
                 src="../assets/images/default-profile.png"
                 alt="프로필 이미지"
-                class="w-full h-full object-cover"
-              />
+                class="w-full h-full object-cover" />
             </div>
           </div>
           <div class="flex-1 text-center md:text-left">
             <div class="flex flex-col md:flex-row md:items-center gap-2 mb-2">
               <h1 id="user-nickname" class="text-2xl font-bold">사용자명</h1>
-              <span
-                id="user-role"
-                class="bg-primary text-white text-xs px-2 py-1 rounded-full"
-                >멘티</span
-              >
+              <span id="user-role" class="bg-primary text-white text-xs px-2 py-1 rounded-full">멘티</span>
             </div>
             <p id="user-info" class="text-gray-600 mb-4">관심분야 | 지역</p>
-            <p id="user-introduction" class="text-gray-700 mb-4">
-              사용자 소개글
-            </p>
+            <p id="user-introduction" class="text-gray-700 mb-4">사용자 소개글</p>
             <div id="user-tags" class="flex flex-wrap gap-2">
               <!-- 태그는 동적으로 추가됩니다 -->
             </div>
@@ -79,19 +52,9 @@
       <div class="bg-white rounded-lg shadow-sm mb-6">
         <div class="border-b border-gray-200">
           <nav class="flex overflow-x-auto">
-            <button
-              id="activity-tab"
-              class="tab-button active"
-              data-tab="activity"
-            >
-              활동 내역
-            </button>
-            <button id="reviews-tab" class="tab-button" data-tab="reviews">
-              작성 리뷰
-            </button>
-            <button id="settings-tab" class="tab-button" data-tab="settings">
-              프로필 설정
-            </button>
+            <button id="activity-tab" class="tab-button active" data-tab="activity">활동 내역</button>
+            <button id="reviews-tab" class="tab-button" data-tab="reviews">작성 리뷰</button>
+            <button id="settings-tab" class="tab-button" data-tab="settings">프로필 설정</button>
           </nav>
         </div>
       </div>
@@ -105,22 +68,20 @@
               <h2 class="text-lg font-semibold">신청한 매칭</h2>
               <a
                 href="more-details.html?type=my-matches"
-                class="text-primary text-sm font-medium hover:underline flex items-center"
-              >
+                class="text-primary text-sm font-medium hover:underline flex items-center">
                 <i class="ri-add-line mr-1"></i> 더보기
               </a>
             </div>
             <div id="matching-list" class="space-y-4"></div>
           </div>
 
-          <!-- 내가 작성한 커뮤니티 게시글 목록 -->
+          <!-- 작성 커뮤니티 목록 -->
           <div class="bg-white rounded-lg shadow-sm p-6">
             <div class="flex justify-between items-center mb-4">
-              <h2 class="text-lg font-semibold">내가 작성한 커뮤니티 게시글</h2>
+              <h2 class="text-lg font-semibold">작성 커뮤니티 목록</h2>
               <a
                 href="more-details.html?type=my-posts"
-                class="text-primary text-sm font-medium hover:underline flex items-center"
-              >
+                class="text-primary text-sm font-medium hover:underline flex items-center">
                 <i class="ri-add-line mr-1"></i> 더보기
               </a>
             </div>
@@ -129,14 +90,13 @@
             </ul>
           </div>
 
-          <!-- 내가 작성한 댓글 목록 -->
+          <!-- 작성 댓글 목록 -->
           <div class="bg-white rounded-lg shadow-sm p-6">
             <div class="flex justify-between items-center mb-4">
-              <h2 class="text-lg font-semibold mb-4">내가 작성한 댓글</h2>
+              <h2 class="text-lg font-semibold mb-4">작성 댓글</h2>
               <a
                 href="more-details.html?type=my-comments"
-                class="text-primary text-sm font-medium hover:underline flex items-center"
-              >
+                class="text-primary text-sm font-medium hover:underline flex items-center">
                 <i class="ri-add-line mr-1"></i> 더보기
               </a>
             </div>
@@ -151,17 +111,14 @@
               <h2 class="text-lg font-semibold">관심 목록</h2>
               <a
                 href="more-details.html?type=my-interests&filter=all"
-                class="text-primary text-sm font-medium hover:underline flex items-center"
-              >
+                class="text-primary text-sm font-medium hover:underline flex items-center">
                 <i class="ri-add-line mr-1"></i> 더보기
               </a>
             </div>
 
             <!-- 북마크한 게시글 -->
             <div class="mb-6">
-              <h3 class="text-base font-semibold mb-2 text-gray-800">
-                📌 북마크한 게시글
-              </h3>
+              <h3 class="text-base font-semibold mb-2 text-gray-800">📌 북마크한 게시글</h3>
               <ul id="bookmark-list" class="space-y-4">
                 <!-- 북마크한 게시글 목록이 동적으로 추가됩니다. -->
               </ul>
@@ -169,9 +126,7 @@
 
             <!-- 좋아요한 게시글 -->
             <div>
-              <h3 class="text-base font-semibold mb-2 text-gray-800">
-                ❤️ 좋아요한 게시글
-              </h3>
+              <h3 class="text-base font-semibold mb-2 text-gray-800">❤️ 좋아요한 게시글</h3>
               <ul id="like-list" class="space-y-4">
                 <!-- 좋아요한 게시글 목록이 동적으로 추가됩니다. -->
               </ul>
@@ -186,8 +141,7 @@
             <h2 class="text-xl font-semibold">작성 리뷰</h2>
             <a
               href="/write-review.html"
-              class="bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap hover:bg-indigo-600 flex items-center"
-            >
+              class="bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap hover:bg-indigo-600 flex items-center">
               <div class="w-5 h-5 flex items-center justify-center mr-1">
                 <i class="ri-add-line"></i>
               </div>
@@ -222,69 +176,44 @@
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- 프로필 이미지 -->
                 <div class="flex flex-col items-center md:items-start">
-                  <label class="block text-sm font-medium text-gray-700 mb-2"
-                    >프로필 이미지</label
-                  >
+                  <label class="block text-sm font-medium text-gray-700 mb-2">프로필 이미지</label>
                   <div class="relative">
-                    <div
-                      class="w-32 h-32 rounded-full bg-gray-200 overflow-hidden"
-                    >
-                      <img
-                        id="profile-image-preview"
-                        src=""
-                        alt="프로필 이미지"
-                        class="w-full h-full object-cover"
-                      />
+                    <div class="w-32 h-32 rounded-full bg-gray-200 overflow-hidden">
+                      <img id="profile-image-preview" src="" alt="프로필 이미지" class="w-full h-full object-cover" />
                     </div>
                     <button
                       type="button"
-                      class="absolute bottom-0 right-0 bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-indigo-600"
-                    >
+                      class="absolute bottom-0 right-0 bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-indigo-600">
                       <i class="ri-camera-line"></i>
                     </button>
                   </div>
-                  <p class="text-xs text-gray-500 mt-2">
-                    권장 크기: 500x500 픽셀
-                  </p>
+                  <p class="text-xs text-gray-500 mt-2">권장 크기: 500x500 픽셀</p>
                 </div>
 
                 <!-- 닉네임 및 사용자 유형 -->
                 <div class="space-y-4">
                   <div class="flex items-center gap-2">
                     <div>
-                      <label
-                        for="nickname"
-                        class="block text-sm font-medium text-gray-700 mb-1"
-                        >닉네임</label
-                      >
+                      <label for="nickname" class="block text-sm font-medium text-gray-700 mb-1">닉네임</label>
                       <input
                         type="text"
                         id="nickname"
                         name="nickname"
                         value=""
-                        class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                      />
+                        class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
                     </div>
                     <button
                       type="button"
                       class="bg-primary text-white text-xs px-2 py-2 rounded mb-1 ml-2 mt-6"
-                      onclick="window.checkNickname()"
-                    >
+                      onclick="window.checkNickname()">
                       <span> 중복 확인</span>
                     </button>
                   </div>
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1"
-                      >사용자 유형</label
-                    >
+                    <label class="block text-sm font-medium text-gray-700 mb-1">사용자 유형</label>
                     <div class="flex items-center gap-2">
-                      <span
-                        class="bg-primary text-white text-xs px-2 py-1 rounded-full"
-                        >멘토</span
-                      >
-                      <span class="text-xs text-gray-500"
-                        >(회원가입 시 선택한 유형은 변경할 수 없습니다)</span
-                      >
+                      <span class="bg-primary text-white text-xs px-2 py-1 rounded-full">멘토</span>
+                      <span class="text-xs text-gray-500">(회원가입 시 선택한 유형은 변경할 수 없습니다)</span>
                     </div>
                   </div>
                 </div>
@@ -295,17 +224,14 @@
             <div class="w-full">
               <div class="flex items-center gap-2 mb-4">
                 <div class="flex-1">
-                  <label class="block text-sm font-medium text-gray-700 mb-1"
-                    >지역</label
-                  >
+                  <label class="block text-sm font-medium text-gray-700 mb-1">지역</label>
                   <div class="flex gap-2">
                     <!-- 지역 선택 -->
                     <div class="relative w-full">
                       <button
                         type="button"
                         class="w-full bg-white border border-gray-300 rounded px-6 py-2 text-left flex items-center justify-between"
-                        id="regionButton"
-                      >
+                        id="regionButton">
                         <span>지역</span>
                         <div class="w-5 h-5 flex items-center justify-center">
                           <i class="ri-arrow-down-s-line"></i>
@@ -313,128 +239,57 @@
                       </button>
                       <div
                         class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden"
-                        id="regionDropdown"
-                      >
-                        <div
-                          class="py-1 max-h-60 overflow-y-auto custom-scrollbar"
-                        >
-                          <button
-                            type="button"
-                            class="w-full text-left px-4 py-2 hover:bg-gray-100"
-                            data-area="1"
-                          >
+                        id="regionDropdown">
+                        <div class="py-1 max-h-60 overflow-y-auto custom-scrollbar">
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="1">
                             서울
                           </button>
-                          <button
-                            type="button"
-                            class="w-full text-left px-4 py-2 hover:bg-gray-100"
-                            data-area="2"
-                          >
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="2">
                             인천
                           </button>
-                          <button
-                            type="button"
-                            class="w-full text-left px-4 py-2 hover:bg-gray-100"
-                            data-area="3"
-                          >
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="3">
                             대전
                           </button>
-                          <button
-                            type="button"
-                            class="w-full text-left px-4 py-2 hover:bg-gray-100"
-                            data-area="4"
-                          >
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="4">
                             대구
                           </button>
-                          <button
-                            type="button"
-                            class="w-full text-left px-4 py-2 hover:bg-gray-100"
-                            data-area="5"
-                          >
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="5">
                             광주
                           </button>
-                          <button
-                            type="button"
-                            class="w-full text-left px-4 py-2 hover:bg-gray-100"
-                            data-area="6"
-                          >
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="6">
                             부산
                           </button>
-                          <button
-                            type="button"
-                            class="w-full text-left px-4 py-2 hover:bg-gray-100"
-                            data-area="7"
-                          >
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="7">
                             울산
                           </button>
-                          <button
-                            type="button"
-                            class="w-full text-left px-4 py-2 hover:bg-gray-100"
-                            data-area="8"
-                          >
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="8">
                             세종
                           </button>
-                          <button
-                            type="button"
-                            class="w-full text-left px-4 py-2 hover:bg-gray-100"
-                            data-area="31"
-                          >
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="31">
                             경기
                           </button>
-                          <button
-                            type="button"
-                            class="w-full text-left px-4 py-2 hover:bg-gray-100"
-                            data-area="32"
-                          >
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="32">
                             강원
                           </button>
-                          <button
-                            type="button"
-                            class="w-full text-left px-4 py-2 hover:bg-gray-100"
-                            data-area="33"
-                          >
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="33">
                             충북
                           </button>
-                          <button
-                            type="button"
-                            class="w-full text-left px-4 py-2 hover:bg-gray-100"
-                            data-area="34"
-                          >
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="34">
                             충남
                           </button>
-                          <button
-                            type="button"
-                            class="w-full text-left px-4 py-2 hover:bg-gray-100"
-                            data-area="35"
-                          >
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="35">
                             경북
                           </button>
-                          <button
-                            type="button"
-                            class="w-full text-left px-4 py-2 hover:bg-gray-100"
-                            data-area="36"
-                          >
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="36">
                             경남
                           </button>
-                          <button
-                            type="button"
-                            class="w-full text-left px-4 py-2 hover:bg-gray-100"
-                            data-area="37"
-                          >
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="37">
                             전북
                           </button>
-                          <button
-                            type="button"
-                            class="w-full text-left px-4 py-2 hover:bg-gray-100"
-                            data-area="38"
-                          >
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="38">
                             전남
                           </button>
-                          <button
-                            type="button"
-                            class="w-full text-left px-4 py-2 hover:bg-gray-100"
-                            data-area="39"
-                          >
+                          <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" data-area="39">
                             제주
                           </button>
                         </div>
@@ -445,8 +300,7 @@
                       <button
                         type="button"
                         class="w-full bg-white border border-gray-300 rounded px-4 py-2 text-left flex items-center justify-between"
-                        id="sigunguButton"
-                      >
+                        id="sigunguButton">
                         <span>시군구</span>
                         <div class="w-5 h-5 flex items-center justify-center">
                           <i class="ri-arrow-down-s-line"></i>
@@ -454,12 +308,8 @@
                       </button>
                       <div
                         class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden"
-                        id="sigunguDropdown"
-                      >
-                        <div
-                          class="py-1 max-h-60 overflow-y-auto custom-scrollbar"
-                          id="sigunguOptions"
-                        >
+                        id="sigunguDropdown">
+                        <div class="py-1 max-h-60 overflow-y-auto custom-scrollbar" id="sigunguOptions">
                           <!-- 시군구 옵션은 지역에 따라 동적으로 생성 -->
                         </div>
                       </div>
@@ -467,16 +317,13 @@
                   </div>
                 </div>
                 <div class="flex-1">
-                  <label
-                    for="available_time"
-                    class="block text-sm font-medium text-gray-700 mb-1"
+                  <label for="available_time" class="block text-sm font-medium text-gray-700 mb-1"
                     >활동 가능 시간대</label
                   >
                   <select
                     id="available_time"
                     name="available_time"
-                    class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                  >
+                    class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                     <option value="WEEKDAY_MORNING">평일 오전</option>
                     <option value="WEEKDAY_AFTERNOON">평일 오후</option>
                     <option value="WEEKDAY_EVENING">평일 저녁</option>
@@ -488,17 +335,12 @@
                 </div>
               </div>
               <div class="mt-4">
-                <label
-                  for="introduction"
-                  class="block text-sm font-medium text-gray-700 mb-1"
-                  >소개글</label
-                >
+                <label for="introduction" class="block text-sm font-medium text-gray-700 mb-1">소개글</label>
                 <textarea
                   id="introduction"
                   name="introduction"
                   rows="4"
-                  class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                >
+                  class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                 </textarea>
               </div>
             </div>
@@ -508,16 +350,11 @@
               <h3 class="text-lg font-medium mb-4">멘티 설정</h3>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label
-                    for="expertise"
-                    class="block text-sm font-medium text-gray-700 mb-1"
-                    >관심 분야</label
-                  >
+                  <label for="expertise" class="block text-sm font-medium text-gray-700 mb-1">관심 분야</label>
                   <select
                     id="expertise"
                     name="expertise"
-                    class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                  >
+                    class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                     <option value="선택">선택</option>
                     <option value="WEB_DEV">프로그래밍 / 웹개발</option>
                     <option value="APP_DEV">프로그래밍 / 앱개발</option>
@@ -530,18 +367,13 @@
                   </select>
                 </div>
                 <div>
-                  <label
-                    for="tags"
-                    class="block text-sm font-medium text-gray-700 mb-1"
-                    >태그 (쉼표로 구분)</label
-                  >
+                  <label for="tags" class="block text-sm font-medium text-gray-700 mb-1">태그 (쉼표로 구분)</label>
                   <input
                     type="text"
                     id="tags"
                     name="tags"
                     value=""
-                    class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                  />
+                    class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
                 </div>
               </div>
             </div>
@@ -552,8 +384,7 @@
                 type="submit"
                 id="save-settings-btn"
                 class="bg-primary text-white px-6 py-2 rounded-button whitespace-nowrap hover:bg-indigo-600"
-                onclick="window.saveProfileChanges()"
-              >
+                onclick="window.saveProfileChanges()">
                 변경사항 저장
               </button>
             </div>
