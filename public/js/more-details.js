@@ -97,9 +97,11 @@ function setupPage(type, id) {
       break;
     case "my-interests":
       pageTitle.textContent = "관심 목록";
-      // 검색창은 숨김 처리 (선택)
       if (filterSection) filterSection.classList.remove("hidden");
-      // ✅ 여기서 필요한 필터 버튼은 my-interests.js가 생성함
+
+      const script = document.createElement("script");
+      script.src = "js/my-interests.js";
+      document.body.appendChild(script);
       break;
     default:
       pageTitle.textContent = "상세 정보";
