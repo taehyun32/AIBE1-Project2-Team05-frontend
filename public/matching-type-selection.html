@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>재능 기부 플랫폼 - 매칭 유형 선택</title>
-    <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png">
-    <link rel="manifest" href="./assets/favicon/site.webmanifest">
+    <title>LinkUp | 매칭 유형 선택</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicon/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png" />
+    <link rel="manifest" href="./assets/favicon/site.webmanifest" />
 
     <link rel="stylesheet" href="css/main.compiled.css" />
     <link rel="stylesheet" href="css/match.css" />
@@ -15,27 +15,39 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Pacifico&family=Noto+Sans+KR:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
-      rel="stylesheet"
-    />
+      rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
     <script src="js/include.js"></script>
     <style>
       @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(-20px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       @keyframes scaleIn {
-        from { transform: scale(0.95); opacity: 0; }
-        to { transform: scale(1); opacity: 1; }
+        from {
+          transform: scale(0.95);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
       }
 
       @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
 
       .animate-fadeIn {
@@ -47,8 +59,8 @@
       }
 
       .matching-type-option.selected {
-        border-color: #4F46E5;
-        background-color: #EEF2FF;
+        border-color: #4f46e5;
+        background-color: #eef2ff;
       }
 
       .hover-scale:hover {
@@ -65,7 +77,7 @@
         height: 50px;
         border: 5px solid rgba(79, 70, 229, 0.2);
         border-radius: 50%;
-        border-top-color: #4F46E5;
+        border-top-color: #4f46e5;
         animation: spin 1s linear infinite;
         margin: 0 auto;
       }
@@ -77,6 +89,17 @@
         justify-content: center;
         height: 300px;
       }
+
+      /* 매칭 옵션 박스 크기 조정 */
+      @media (min-width: 768px) {
+        #matching-selection-container {
+          max-width: 900px;
+        }
+        .matching-type-option {
+          min-width: 100%;
+          min-height: 200px; /* 높이 줄임 */
+        }
+      }
     </style>
   </head>
   <body class="bg-gray-50">
@@ -85,9 +108,12 @@
     <main class="py-16">
       <div class="container mx-auto px-4">
         <!-- 매칭 유형 선택 화면 -->
-        <div id="matching-selection-container" class="max-w-2xl mx-auto bg-white rounded-lg shadow-sm p-8 selection-container">
+        <div
+          id="matching-selection-container"
+          class="max-w-2xl mx-auto bg-white rounded-lg shadow-sm p-8 selection-container">
           <div class="text-center mb-8">
-            <div class="w-20 h-20 bg-indigo-100 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
+            <div
+              class="w-20 h-20 bg-indigo-100 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
               <i class="ri-user-search-line text-4xl"></i>
             </div>
             <h1 class="text-3xl font-bold mb-3">매칭 유형 선택</h1>
@@ -95,11 +121,14 @@
             <div class="w-24 h-1 bg-primary mx-auto mt-4"></div>
           </div>
 
+          <!-- 수정된 부분: 매칭 유형 선택 옵션 -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div class="border-2 border-gray-200 rounded-lg p-6 hover:shadow-md transition cursor-pointer matching-type-option" data-type="ai">
+            <div
+              class="border-2 border-gray-200 rounded-lg p-6 hover:shadow-md transition cursor-pointer matching-type-option"
+              data-type="ai">
               <div class="flex items-center gap-3 mb-3">
                 <div class="w-6 h-6 flex items-center justify-center">
-                  <input type="radio" name="matchingType" value="ai" class="custom-radio" checked>
+                  <input type="radio" name="matchingType" value="ai" class="custom-radio" checked />
                 </div>
                 <h4 class="font-medium text-lg">AI 매칭</h4>
               </div>
@@ -113,10 +142,12 @@
                 </ul>
               </div>
             </div>
-            <div class="border-2 border-gray-200 rounded-lg p-6 hover:shadow-md transition cursor-pointer matching-type-option" data-type="manual">
+            <div
+              class="border-2 border-gray-200 rounded-lg p-6 hover:shadow-md transition cursor-pointer matching-type-option"
+              data-type="manual">
               <div class="flex items-center gap-3 mb-3">
                 <div class="w-6 h-6 flex items-center justify-center">
-                  <input type="radio" name="matchingType" value="manual" class="custom-radio">
+                  <input type="radio" name="matchingType" value="manual" class="custom-radio" />
                 </div>
                 <h4 class="font-medium text-lg">수동 매칭</h4>
               </div>
@@ -131,17 +162,21 @@
               </div>
             </div>
           </div>
+          <!-- 수정 부분 끝 -->
 
           <div class="text-center">
-            <button id="confirmMatchingType"
-                    class="bg-primary text-white text-lg px-10 py-4 w-full max-w-xs rounded-button font-semibold hover:bg-indigo-600 transition-all transform hover:scale-105">
+            <button
+              id="confirmMatchingType"
+              class="bg-primary text-white text-lg px-10 py-4 w-full max-w-xs rounded-button font-semibold hover:bg-indigo-600 transition-all transform hover:scale-105">
               선택 완료
             </button>
           </div>
         </div>
 
         <!-- 로딩 화면 (초기에는 숨김) -->
-        <div id="loading-container" class="max-w-2xl mx-auto bg-white rounded-lg shadow-sm p-8 selection-container hidden">
+        <div
+          id="loading-container"
+          class="max-w-2xl mx-auto bg-white rounded-lg shadow-sm p-8 selection-container hidden">
           <div class="loading-container">
             <div class="loading-spinner mb-6"></div>
             <h2 class="text-xl font-semibold text-gray-800 mb-2">AI 매칭 진행 중...</h2>
@@ -150,9 +185,12 @@
         </div>
 
         <!-- AI 매칭 완료 화면 (초기에는 숨김) -->
-        <div id="ai-matching-result-container" class="max-w-4xl mx-auto bg-white rounded-lg shadow-sm p-8 selection-container hidden">
+        <div
+          id="ai-matching-result-container"
+          class="max-w-4xl mx-auto bg-white rounded-lg shadow-sm p-8 selection-container hidden">
           <div class="text-center mb-8">
-            <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div
+              class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
               <i class="ri-check-line text-4xl"></i>
             </div>
             <h1 class="text-3xl font-bold mb-3">AI 매칭 완료</h1>
@@ -165,7 +203,10 @@
             <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition cursor-pointer hover-scale">
               <div class="text-center">
                 <div class="w-20 h-20 bg-gray-200 rounded-full mx-auto mb-3 overflow-hidden">
-                  <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="프로필 이미지" class="w-full h-full object-cover">
+                  <img
+                    src="https://randomuser.me/api/portraits/women/32.jpg"
+                    alt="프로필 이미지"
+                    class="w-full h-full object-cover" />
                 </div>
                 <h4 class="font-medium text-lg">김지연</h4>
                 <p class="text-sm text-gray-600 mb-2">멘토 • 서울시</p>
@@ -181,7 +222,10 @@
             <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition cursor-pointer hover-scale">
               <div class="text-center">
                 <div class="w-20 h-20 bg-gray-200 rounded-full mx-auto mb-3 overflow-hidden">
-                  <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="프로필 이미지" class="w-full h-full object-cover">
+                  <img
+                    src="https://randomuser.me/api/portraits/men/45.jpg"
+                    alt="프로필 이미지"
+                    class="w-full h-full object-cover" />
                 </div>
                 <h4 class="font-medium text-lg">박민수</h4>
                 <p class="text-sm text-gray-600 mb-2">멘토 • 인천시</p>
@@ -197,7 +241,10 @@
             <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition cursor-pointer hover-scale">
               <div class="text-center">
                 <div class="w-20 h-20 bg-gray-200 rounded-full mx-auto mb-3 overflow-hidden">
-                  <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="프로필 이미지" class="w-full h-full object-cover">
+                  <img
+                    src="https://randomuser.me/api/portraits/women/68.jpg"
+                    alt="프로필 이미지"
+                    class="w-full h-full object-cover" />
                 </div>
                 <h4 class="font-medium text-lg">이수진</h4>
                 <p class="text-sm text-gray-600 mb-2">멘토 • 부산시</p>
@@ -213,7 +260,10 @@
             <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition cursor-pointer hover-scale">
               <div class="text-center">
                 <div class="w-20 h-20 bg-gray-200 rounded-full mx-auto mb-3 overflow-hidden">
-                  <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="프로필 이미지" class="w-full h-full object-cover">
+                  <img
+                    src="https://randomuser.me/api/portraits/men/22.jpg"
+                    alt="프로필 이미지"
+                    class="w-full h-full object-cover" />
                 </div>
                 <h4 class="font-medium text-lg">최준호</h4>
                 <p class="text-sm text-gray-600 mb-2">멘토 • 대전시</p>
@@ -227,8 +277,9 @@
           </div>
 
           <div class="text-center">
-            <button id="continueToMatching" 
-                    class="bg-green-600 text-white text-lg px-10 py-4 w-full max-w-xs rounded-button font-semibold hover:bg-green-700 transition-all transform hover:scale-105">
+            <button
+              id="continueToMatching"
+              class="bg-green-600 text-white text-lg px-10 py-4 w-full max-w-xs rounded-button font-semibold hover:bg-green-700 transition-all transform hover:scale-105">
               매칭 상세 보기
             </button>
           </div>

@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   if (isEditMode) {
     // HTML 문서의 <title> 변경
-    document.title = "재능 기부 플랫폼 - 리뷰 수정";
+    document.title = "LinkUp | 리뷰 수정";
   }
 
   // 페이지 제목과 버튼 텍스트 변경

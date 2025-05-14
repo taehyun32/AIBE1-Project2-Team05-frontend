@@ -584,3 +584,66 @@ async function checkMe() {
     console.log(error);
   }
 }
+// ===== 지역/시군구 드롭다운 전체 로직 (멘티 페이지용) =====
+document.addEventListener("DOMContentLoaded", () => {
+  const regionButton    = document.getElementById("regionButton");
+  const regionDropdown  = document.getElementById("regionDropdown");
+  const sigunguButton   = document.getElementById("sigunguButton");
+  const sigunguDropdown = document.getElementById("sigunguDropdown");
+  const sigunguOptions  = document.getElementById("sigunguOptions");
+
+  if (!regionButton || !regionDropdown || !sigunguButton || !sigunguDropdown || !sigunguOptions) {
+    console.error("[지역/시군구] 필요한 요소가 없습니다.");
+    return;
+  }
+
+  // 1) 토글: 지역 버튼 클릭 → 지역 드롭다운 토글
+  regionButton.addEventListener("click", e => {
+    e.stopPropagation();
+    regionDropdown.classList.toggle("hidden");
+    sigunguDropdown.classList.add("hidden");
+  });
+
+  // 2) 토글: 시군구 버튼 클릭 → 시군구 드롭다운 토글
+  sigunguButton.addEventListener("click", e => {
+    e.stopPropagation();
+    // 시군구 목록이 비어있으면, 지역 선택 후 fetchSigunguData가 채워줄 것
+    sigunguDropdown.classList.toggle("hidden");
+    regionDropdown.classList.add("hidden");
+  });
+
+  // 3) 바깥 클릭 시 모두 닫기
+  document.addEventListener("click", () => {
+    regionDropdown.classList.add("hidden");
+    sigunguDropdown.classList.add("hidden");
+  });
+
+  // 4) 지역 선택 → 버튼 반영 + 시군구 로드
+  regionDropdown.querySelectorAll("button[data-area]").forEach(opt => {
+    opt.addEventListener("click", e => {
+      e.preventDefault();
+      const name = opt.textContent.trim();
+      const code = opt.getAttribute("data-area");
+      // 버튼 텍스트/속성
+      regionButton.querySelector("span").textContent = name;
+      regionButton.setAttribute("data-area", code);
+      // 닫고, 시군구 불러오기
+      regionDropdown.classList.add("hidden");
+      if (typeof fetchSigunguData === "function") {
+        fetchSigunguData(code);
+      }
+    });
+  });
+
+  // 5) 시군구 선택 → 버튼 반영
+  sigunguOptions.addEventListener("click", e => {
+    const btn = e.target.closest("button[data-sigungu]");
+    if (!btn) return;
+    e.preventDefault();
+    const name = btn.textContent.trim();
+    const code = btn.getAttribute("data-sigungu");
+    sigunguButton.querySelector("span").textContent = name;
+    sigunguButton.setAttribute("data-sigungu", code);
+    sigunguDropdown.classList.add("hidden");
+  });
+});
